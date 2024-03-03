@@ -12,13 +12,12 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: SafeArea(
-        child: Column(
-          children: [
-            NavBar(),
-          ],
+        child: Scaffold(
+        appBar: NavBar(),
         ),
       ),
     );
   }
 }
+
 
