@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/navbar.dart';
 import 'package:frontend/perfil.dart';
+
 
 void main() {
   runApp(const MainApp());
@@ -13,12 +13,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-          appBar: NavBar(),
-          body: UserProfileContent(),
-        ),
-      ),
+      home: UserProfileContent(),
     );
   }
 }
