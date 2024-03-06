@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/navbar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,6 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: SafeArea(
         child: Scaffold(
             appBar: const NavBar(),
@@ -45,10 +47,18 @@ class MainApp extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 100.0,),
-                    _texto('Nombre', _textStyle()),
-                    _texto('Patente', _textStyle()),
-                    _texto('Vehículo', _textStyle()),
+                      height: 95.0,),
+                    SvgPicture.asset('assets/icon1.svg',height: 44, width: 44,),
+                    _texto('Nombre', _textStyle(Colors.red.shade600, FontWeight.bold)),
+                    _texto('Benjamín Hidalgo', _textStyle(Colors.black, FontWeight.normal)),
+                    const SizedBox(height: 10,),
+                    SvgPicture.asset('assets/icon2.svg',height: 44, width: 44,),
+                    _texto('Patente', _textStyle(Colors.red.shade600, FontWeight.bold)),
+                    _texto('DXDUI11', _textStyle(Colors.black, FontWeight.normal)),
+                    const SizedBox(height: 10,),
+                    SvgPicture.asset('assets/icon3.svg',height: 44, width: 44,),
+                    _texto('Vehículo', _textStyle(Colors.red.shade600, FontWeight.bold)),
+                    _texto('Ford Fiesta', _textStyle(Colors.black, FontWeight.normal))
                   ],
                 ),
               ],
@@ -57,10 +67,10 @@ class MainApp extends StatelessWidget {
     );
   }
 
-  TextStyle _textStyle() {
+  TextStyle _textStyle(Color color, FontWeight fontWeight) {
     return TextStyle(
-        color: Colors.red.shade600,
-        fontWeight: FontWeight.bold,
+        color: color,
+        fontWeight: fontWeight,
         fontSize: 24.2,
         shadows:const [
           Shadow(
