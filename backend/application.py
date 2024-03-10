@@ -11,5 +11,7 @@ db = SQLAlchemy(app)
 from app.main.views import main_bp
 app.register_blueprint(main_bp)
 
+db.init_app(app)
+
 if __name__ == "__main__":
     app.run(debug=True)
