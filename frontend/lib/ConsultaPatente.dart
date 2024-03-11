@@ -1,32 +1,13 @@
 import 'package:flutter/material.dart';
-import 'ConsultaPatente.dart';
+import 'Usuario.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter App',
-      theme: ThemeData(
-        primaryColor: Colors.orange,
-      ),
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+class ConsultaPatente extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('HuechurabaSafe', style: TextStyle(color: Colors.white)),
+        title: Text('Consulta de Patente', style: TextStyle(color: Colors.white)),
         leading: Builder(
           builder: (context) => IconButton(
             icon: Icon(Icons.menu, color: Colors.white),
@@ -73,44 +54,45 @@ class HomePage extends StatelessWidget {
             ListTile(
               title: Text('Btn 4'),
               onTap: () {
-                // Redirige a la pantalla de consulta de patente
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConsultaPatente()), // Crea una instancia de ConsultaPatente
-                );
+                // Implementar la funcionalidad del botón 4 aquí
               },
             ),
           ],
         ),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                // Implementar la funcionalidad de escanear QR aquí
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange, // color de fondo
-                foregroundColor: Colors.white, // color del texto
+            Text(
+              'Ingrese Patente',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
-              child: Text('Escanear QR'),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Ingrese la patente',
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Redirigir a la pantalla de consulta de patente
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ConsultaPatente()),
+                  MaterialPageRoute(builder: (context) => UsuarioPage(patente: "DUIXD11")),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange, // color de fondo
-                foregroundColor: Colors.white, // color del texto
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
               ),
-              child: Text('Consultar Patente'),
+              child: Text('Buscar'),
             ),
           ],
         ),
