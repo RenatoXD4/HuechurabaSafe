@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'Usuario.dart';
 
-class ConsultaPatente extends StatelessWidget {
+class ConsultaPatente extends StatelessWidget {  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
+      appBar: AppBar( //Revisa el navbar.dart y modificalo con los estilos que tienes acá e importalo como componente.
+        backgroundColor: Colors.orange,  //Recuerda que hay que reutilizar el código de la barra de navegación(navbar) con el Menú para evitar código innecesario.
         title: Text('Consulta de Patente', style: TextStyle(color: Colors.white)),
         leading: Builder(
           builder: (context) => IconButton(
