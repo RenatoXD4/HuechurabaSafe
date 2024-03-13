@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/perfil.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() {  // Borra el void main - Renato
+  runApp(const MainApp()); 
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatelessWidget {  // Borra la clase de MainApp - Renato
   const MainApp({Key? key});
 
   @override
@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class UsuarioPage extends StatelessWidget {
+class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario por ahora, más tarde lo reviso.
   final String patente;
 
   const UsuarioPage({Key? key, required this.patente}) : super(key: key);
