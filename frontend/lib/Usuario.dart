@@ -1,26 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/perfil.dart';
 
-void main() {  // Borra el void main - Renato
-  runApp(const MainApp()); 
-}
-
-class MainApp extends StatelessWidget {  // Borra la clase de MainApp - Renato
-  const MainApp({Key? key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: UsuarioPage(patente: "DUIXD11"),
-    );
-  }
-}
 
 class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario por ahora, más tarde lo reviso.
   final String patente;
 
-  const UsuarioPage({Key? key, required this.patente}) : super(key: key);
+  const UsuarioPage({super.key, required this.patente});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +15,7 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
         backgroundColor: Colors.orange,
         actions: [
           IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
             },
           ),
@@ -40,7 +25,7 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.orange,
               ),
@@ -53,7 +38,7 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
               ),
             ),
             ListTile(
-              title: Text('Btn 1'),
+              title: const Text('Btn 1'),
               onTap: () {
                 Navigator.pop(context); // Cerrar el menú desplegable
                 // Implementar la redirección a la página principal
@@ -79,7 +64,7 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserProfileContent()),
+                  MaterialPageRoute(builder: (context) =>const UserProfileContent()),
                 );
               },
               style: ElevatedButton.styleFrom(

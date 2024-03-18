@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'usuario.dart';
+import 'package:frontend/ConsultaPatente.dart';
 
-class ConsultaPatente extends StatelessWidget {  
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( //Revisa el navbar.dart y modificalo con los estilos que tienes acá e importalo como componente.
-        backgroundColor: Colors.orange,  //Recuerda que hay que reutilizar el código de la barra de navegación(navbar) con el Menú para evitar código innecesario.
-        title: Text('Consulta de Patente', style: TextStyle(color: Colors.white)),
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: const Text('HuechurabaSafe', style: TextStyle(color: Colors.white)),
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: Colors.white),
+            icon: const Icon(Icons.menu, color: Colors.white),
             onPressed: () {
               Scaffold.of(context).openDrawer(); // Abre el drawer
             },
@@ -21,7 +24,7 @@ class ConsultaPatente extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.orange,
               ),
@@ -34,65 +37,64 @@ class ConsultaPatente extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Btn 1'),
+              title: const Text('Btn 1'),
               onTap: () {
                 // Implementar la funcionalidad del botón 1 aquí
               },
             ),
             ListTile(
-              title: Text('Btn 2'),
+              title: const Text('Btn 2'),
               onTap: () {
                 // Implementar la funcionalidad del botón 2 aquí
               },
             ),
             ListTile(
-              title: Text('Btn 3'),
+              title: const Text('Btn 3'),
               onTap: () {
                 // Implementar la funcionalidad del botón 3 aquí
               },
             ),
             ListTile(
-              title: Text('Btn 4'),
+              title: const Text('Btn 4'),
               onTap: () {
-                // Implementar la funcionalidad del botón 4 aquí
+                // Redirige a la pantalla de consulta de patente
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ConsultaPatente()), // Crea una instancia de ConsultaPatente
+                );
               },
             ),
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Ingrese Patente',
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Ingrese la patente',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                // Implementar la funcionalidad de escanear QR aquí
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange, // color de fondo
+                foregroundColor: Colors.white, // color del texto
+              ),
+              child: const Text('Escanear QR'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Redirigir a la pantalla de consulta de patente
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UsuarioPage(patente: "DUIXD11")),
+                  MaterialPageRoute(builder: (context) => ConsultaPatente()),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
+                backgroundColor: Colors.orange, // color de fondo
+                foregroundColor: Colors.white, // color del texto
               ),
-              child: Text('Buscar'),
+              child: const Text('Consultar Patente'),
             ),
           ],
         ),
