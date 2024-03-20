@@ -4,6 +4,8 @@ from backend.application import db
 
 main_bp = Blueprint('main', __name__)
 
+
+@main_bp.route('/crearConductor', methods = ['POST'])
 def crear_conductor():
     data = request.json
     nuevo_conductor = Conductor(patente=data['patente'], nombre=data['nombre'], auto=data['auto'])
