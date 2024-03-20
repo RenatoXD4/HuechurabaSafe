@@ -11,6 +11,13 @@ db = SQLAlchemy(app)
 from app.main.views import main_bp
 app.register_blueprint(main_bp)
 
+from app.usuario.views import usuario_bp
+app.register_blueprint(usuario_bp)
+
+
+from app.rol.views import rol_bp
+app.register_blueprint(rol_bp)
+
 db.init_app(app)
 
 if __name__ == "__main__":

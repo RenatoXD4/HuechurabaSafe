@@ -4,35 +4,32 @@ from backend.application import db
 
 main_bp = Blueprint('main', __name__)
 
-@main_bp.route('/crearConductor', methods = ['POST'])
-def crearConductor():
-    conductor = None
+def crear_conductor():
+    data = request.json
+    nuevo_conductor = Conductor(patente=data['patente'], nombre=data['nombre'], auto=data['auto'])
+    db.session.add(nuevo_conductor)
+    db.session.commit()
 
-    if request.form:
-        patente_conductor = request.form.get('patente')
-        nombre_conductor = request.form.get('nombre')
-        nombre_auto = request.form.get('auto')
-        foto_conductor = request.form.get('foto')
-        conductor = {
-            'patente': patente_conductor,
-            'nombre': nombre_conductor,
-            'auto': nombre_auto,
-            'foto': foto_conductor
-        }
-        db.session.add(conductor)
-        db.session.commit()
-    # Devuelve los datos como respuesta JSON
-    return jsonify({'conductor': conductor})
+    foto_conductor = request.files.get('foto')
+    if foto_conductor:
+        nuevo_conductor.save_foto(foto_conductor)
 
-@main_bp.route('/conductores', methods=['GET'])
-def obtenerConductores():
+    return jsonify({'mensaje': 'Conductor creado correctamente'}), 201
+
+@main_bp.route('/conductores', methods = ['GET'])
+def obtener_conductores():
     conductores = Conductor.query.all()
-    conductores_serializados = [{'id': conductor.id,
-                                 'nombre_conductor': conductor.nombre_conductor,
-                                 'patente': conductor.patente,
-                                 'nombre_vehiculo': conductor.nombre_vehiculo,
-                                 'foto_url': conductor.obtener_foto_url()} for conductor in conductores]
-    return jsonify({'conductores': conductores_serializados})
+    conductores_data = []
+    for conductor in conductores:
+        conductor_data = {
+            'id': conductor.id,
+            'nombre_conductor': conductor.nombre_conductor,
+            'patente': conductor.patente,
+            'nombre_vehiculo': conductor.nombre_vehiculo,
+            'foto_url': conductor.obtener_foto_url()
+        }
+        conductores_data.append(conductor_data)
+    return jsonify(conductores_data)
 
 
 @main_bp.route('/conductores/<int:id>', methods=['PUT'])
