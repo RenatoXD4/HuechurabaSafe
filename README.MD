@@ -19,33 +19,34 @@ VERSIÓN 0.0.1 - [26-02-2024]
 
 - Se adoptó la decisión de utilizar claves primarias y únicas en la tabla de conductor para garantizar la integridad de los datos.
 
--Cambios a realizar próximamente:
+- Cambios a realizar próximamente:
   - Crear las interfaces para el frontend a partir de los mockUps.
   - Implementar la lógica de negocio para interactuar con las tablas creadas hasta ahora.
   - Hacer las conexiones del backend hacia el frontend con sus end points.
   - Crear las operaciones CRUD en la base de datos en Flask.
 
+
 VERSIÓN 0.0.2 - [20-03-2024]
 
 - Creación de la base de datos con 2 tablas más:
   - Tabla de Usuario:
-      -ID
-      -username
-      -email
-      -ID_ROL
+      - ID
+      - username
+      - email
+      - ID_ROL
 
     - Tabla de Rol:
-      -ID
-      -Nombre_Rol
+      - ID
+      - Nombre_Rol
 
 - Se modificó la tabla de conductor para guardar fotos y obtenerlas desde la base de datos.
 - Se completa la API de las 3 tablas. Conductor, Usuario y Rol.
 
 - Se creó parte del diseño. Específicamente:
- -El perfil del conductor.
- -Barra de navegación.
- -Formulario para buscar la patente del auto.
- 
+  - El perfil del conductor.
+  - Barra de navegación.
+  - Formulario para buscar la patente del auto.
+  
 - Cambios a realizar próximamente:
   - Crear formulario de creación de cuenta de Usuario y Login.
   - Validar todos los formularios.
