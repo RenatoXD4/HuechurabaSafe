@@ -53,6 +53,8 @@ VERSIÓN 0.0.2 - [20-03-2024]
   - Conectar el frontend con el backend para hacer solicitudes CRUD.
   - Implementación del QR para buscar por patente.
   - Pestaña de Administrador con los conductores registrados.
+  - Temas de seguridad(Hasheo de contraseñas, proteger rutas, recuperar contraseña, etc).
+
 
  
 
