@@ -1,6 +1,26 @@
 import os
 from flask import url_for
-from backend.application import db
+from application import db
+
+
+class Usuario(db.Model):
+    from application import db
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    rol_id = db.Column(db.Integer, db.ForeignKey('rol.id'), nullable=False)
+
+    def __repr__(self):
+       return f'<Usuario: {self.username}>'
+    
+
+class Rol(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre_rol = db.Column(db.String(30), unique=True, nullable=False)
+
+    def __repr__(self):
+       return f'<Nombre Rol: {self.nombre_rol}>'
 
 class Conductor(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)

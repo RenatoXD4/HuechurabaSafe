@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request
-from usuario.models import Usuario
-from backend.application import db
+from extension import db
 
 usuario_bp = Blueprint('usuario', __name__)
 
 
 @usuario_bp.route('/usuarios', methods=['POST'])
 def crear_usuario():
+    from models import Usuario
     data = request.json
     nuevo_usuario = Usuario(username=data['username'], email=data['email'], password=data['password'])
     db.session.add(nuevo_usuario)
@@ -15,6 +15,7 @@ def crear_usuario():
 
 @usuario_bp.route('/usuarios/<int:id>', methods=['GET'])
 def obtener_usuario(id):
+    from models import Usuario
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
@@ -23,6 +24,7 @@ def obtener_usuario(id):
 
 @usuario_bp.route('/usuarios/<int:id>', methods=['PUT'])
 def actualizar_usuario(id):
+    from models import Usuario
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
@@ -41,6 +43,7 @@ def actualizar_usuario(id):
 
 @usuario_bp.route('/usuarios/<int:id>', methods=['DELETE'])
 def eliminar_usuario(id):
+    from models import Usuario
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
