@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'usuario.dart';
+import 'package:frontend/Usuario.dart';
 
 class ConsultaPatente extends StatelessWidget {  
   @override
