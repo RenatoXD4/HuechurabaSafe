@@ -64,7 +64,7 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>const UserProfileContent()),
+                  MaterialPageRoute(builder: (context) =>const ConductorContent()),
                 );
               },
               style: ElevatedButton.styleFrom(
