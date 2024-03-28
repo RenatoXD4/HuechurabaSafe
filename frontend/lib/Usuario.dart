@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/perfil.dart';
+import 'package:frontend/pages/perfil.dart';
 
 
 class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario por ahora, más tarde lo reviso.
