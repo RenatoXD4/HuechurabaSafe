@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:frontend/Usuario.dart';
 
 class ConsultaPatente extends StatelessWidget {  
+  const ConsultaPatente({super.key});
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( //Revisa el navbar.dart y modificalo con los estilos que tienes acá e importalo como componente.
-        backgroundColor: Colors.orange,  //Recuerda que hay que reutilizar el código de la barra de navegación(navbar) con el Menú para evitar código innecesario.
-        title: Text('Consulta de Patente', style: TextStyle(color: Colors.white)),
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: const Text('Consulta de Patente', style: TextStyle(color: Colors.white)),
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: Colors.white),
+            icon: const Icon(Icons.menu, color: Colors.white),
             onPressed: () {
-              Scaffold.of(context).openDrawer(); // Abre el drawer
+              Scaffold.of(context).openDrawer(); 
             },
           ),
         ),
@@ -21,7 +24,7 @@ class ConsultaPatente extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.orange,
               ),
@@ -34,25 +37,25 @@ class ConsultaPatente extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Btn 1'),
+              title: const Text('Btn 1'),
               onTap: () {
                 // Implementar la funcionalidad del botón 1 aquí
               },
             ),
             ListTile(
-              title: Text('Btn 2'),
+              title: const Text('Btn 2'),
               onTap: () {
                 // Implementar la funcionalidad del botón 2 aquí
               },
             ),
             ListTile(
-              title: Text('Btn 3'),
+              title: const Text('Btn 3'),
               onTap: () {
                 // Implementar la funcionalidad del botón 3 aquí
               },
             ),
             ListTile(
-              title: Text('Btn 4'),
+              title: const Text('Btn 4'),
               onTap: () {
                 // Implementar la funcionalidad del botón 4 aquí
               },
@@ -65,7 +68,7 @@ class ConsultaPatente extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Ingrese Patente',
               style: TextStyle(
                 color: Colors.red,
@@ -73,26 +76,26 @@ class ConsultaPatente extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
-            TextField(
+            const SizedBox(height: 20),
+            const TextField(
               decoration: InputDecoration(
                 hintText: 'Ingrese la patente',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UsuarioPage(patente: "DUIXD11")),
+                  MaterialPageRoute(builder: (context) =>const UsuarioPage(patente: "DUIXD11")),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
               ),
-              child: Text('Buscar'),
+              child: const Text('Buscar'),
             ),
           ],
         ),

@@ -13,8 +13,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerDelegate: RouterPages.router.routerDelegate,
-      routeInformationParser: RouterPages.router.routeInformationParser,
       routerConfig: RouterPages.router,
     );
   }

@@ -8,32 +8,12 @@ class RouterPages {
     routes: <RouteBase>[
       GoRoute(
         path: '/',
-        builder: (BuildContext context, GoRouterState state) => const MyApp(),
+        builder: (BuildContext context, GoRouterState state) => const HomeScreen(),
         routes: <RouteBase>[
           GoRoute(
-            path: '/perfilConductor',
+            path: 'perfilConductor',
             builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
           ),
-          GoRoute(
-            path: '/administrar',
-            builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
-          ),
-          GoRoute(
-            path: '/perfilUsuario',
-            builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
-          ),
-          GoRoute(
-            path: '/formularioUsuario',
-            builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
-          ),
-          GoRoute(
-            path: '/formCrearConductor',
-            builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
-          ),
-          GoRoute(
-            path: '/formLogin',
-            builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
-          )
         ],
       ),
     ],

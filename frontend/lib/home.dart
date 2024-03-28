@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/ConsultaPatente.dart';
+import 'package:frontend/components/navbar.dart';
+import 'package:frontend/pages/consulta_patente.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -8,18 +9,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text('HuechurabaSafe', style: TextStyle(color: Colors.white)),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () {
-              Scaffold.of(context).openDrawer(); // Abre el drawer
-            },
-          ),
-        ),
-      ),
+      appBar: const NavBar(),
+      drawer: _drawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -51,6 +42,52 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Drawer _drawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.orange,
+            ),
+            child: Text(
+              'Menú',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('Btn 1'),
+            onTap: () {
+              // Implementar la funcionalidad del botón 1 aquí
+            },
+          ),
+          ListTile(
+            title: const Text('Btn 2'),
+            onTap: () {
+              // Implementar la funcionalidad del botón 2 aquí
+            },
+          ),
+          ListTile(
+            title: const Text('Btn 3'),
+            onTap: () {
+              // Implementar la funcionalidad del botón 3 aquí
+            },
+          ),
+          ListTile(
+            title: const Text('Btn 4'),
+            onTap: () {
+              // Implementar la funcionalidad del botón 4 aquí
+            },
+          ),
+        ],
       ),
     );
   }
