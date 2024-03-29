@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/navbar.dart';
 
 class ConductorContent extends StatelessWidget {
@@ -9,7 +10,8 @@ class ConductorContent extends StatelessWidget {
 Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const NavBar(),
+        appBar: const CustomAppBar(),
+        drawer: const NavBar(),
         body: Stack(
           children: [
             Column(
@@ -74,13 +76,11 @@ Widget build(BuildContext context) {
     );
   }
 
-  Center _texto(String text, TextStyle textStyle) {
-    return Center(
-      child: Text(
+  Text _texto(String text, TextStyle textStyle) {
+    return Text(
         text,
         style: textStyle,
-      ),
-    );
+      );
   }
 
   BoxDecoration _boxShadow() {

@@ -1,72 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Usuario.dart';
-import 'package:frontend/pages/login.dart';
+import 'package:frontend/components/appbar.dart';
+import 'package:frontend/components/navbar.dart';
 
 class ConsultaPatente extends StatelessWidget {  
-  const ConsultaPatente({Key? key});
+  const ConsultaPatente({super.key});
   
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text('Consulta de Patente', style: TextStyle(color: Colors.white)),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () {
-              Scaffold.of(context).openDrawer(); 
-            },
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.orange,
-              ),
-              child: Text(
-                'Menú',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: const Text('Btn 1'),
-              onTap: () {
-                // Implementar la funcionalidad del botón 1 aquí
-              },
-            ),
-            ListTile(
-              title: const Text('Btn 2'),
-              onTap: () {
-                // Implementar la funcionalidad del botón 2 aquí
-              },
-            ),
-            ListTile(
-              title: const Text('Btn 3'),
-              onTap: () {
-                // Implementar la funcionalidad del botón 3 aquí
-              },
-            ),
-            ListTile(
-              title: const Text('Administrador'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      appBar: const CustomAppBar(),
+      drawer: const NavBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'package:frontend/home.dart';
 import 'package:frontend/routes/routes.dart';
 
 void main() {
