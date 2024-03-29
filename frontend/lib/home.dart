@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/navbar.dart';
 import 'package:frontend/pages/consulta_patente.dart';
-
+import 'package:frontend/pages/login.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const NavBar(),
-      drawer: _drawer(),
+      drawer: _drawer(context),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
                 // Redirigir a la pantalla de consulta de patente
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ConsultaPatente()),
+                  MaterialPageRoute(builder: (context) => const ConsultaPatente()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -46,7 +46,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Drawer _drawer() {
+  // Pasa el contexto como argumento
+  Drawer _drawer(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -82,9 +83,12 @@ class HomePage extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Btn 4'),
+            title: const Text('Administrador'),
             onTap: () {
-              // Implementar la funcionalidad del botón 4 aquí
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
             },
           ),
         ],

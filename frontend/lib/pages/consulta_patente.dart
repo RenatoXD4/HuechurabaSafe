@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Usuario.dart';
+import 'package:frontend/pages/login.dart';
 
 class ConsultaPatente extends StatelessWidget {  
-  const ConsultaPatente({super.key});
+  const ConsultaPatente({Key? key});
   
 
   @override
@@ -55,9 +56,12 @@ class ConsultaPatente extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Btn 4'),
+              title: const Text('Administrador'),
               onTap: () {
-                // Implementar la funcionalidad del botón 4 aquí
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
               },
             ),
           ],
@@ -88,7 +92,7 @@ class ConsultaPatente extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>const UsuarioPage(patente: "DUIXD11")),
+                  MaterialPageRoute(builder: (context) => const UsuarioPage(patente: "DUIXD11")),
                 );
               },
               style: ElevatedButton.styleFrom(
