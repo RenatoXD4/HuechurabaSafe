@@ -28,7 +28,6 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Redirigir a la pantalla de consulta de patente
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ConsultaPatente()),
@@ -46,7 +45,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Pasa el contexto como argumento
   Drawer _drawer(BuildContext context) {
     return Drawer(
       child: ListView(
