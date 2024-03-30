@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -22,19 +23,15 @@ class NavBar extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text('Item 1'),
-            onTap: () {
-              // Add your onTap action here
-            },
+            title: const Text('Inicio'),
+            onTap: () => context.go('/'),
           ),
           ListTile(
-            title: const Text('Item 2'),
-            onTap: () {
-              // Add your onTap action here
-            },
+            title: const Text('Iniciar sesión'),
+            onTap: () => context.go('/iniciarSesion'),
           ),
           ListTile(
-            title: const Text('Item 3'),
+            title: const Text('Ver reportes'),
             onTap: () {
               // Add your onTap action here
             },

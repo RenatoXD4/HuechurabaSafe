@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AdminPage extends StatefulWidget {
-  const AdminPage({Key? key});
+  const AdminPage({super.key});
 
   @override
   _AdminPageState createState() => _AdminPageState();
 }
 
 class _AdminPageState extends State<AdminPage> {
-  List<Map<String, String>> _drivers = [
+  final List<Map<String, String>> _drivers = [
     {'name': 'Nombre1', 'rut': 'RUT1', 'type': 'Tipo1', 'plate': 'Patente1'},
     {'name': 'Nombre2', 'rut': 'RUT2', 'type': 'Tipo2', 'plate': 'Patente2'},
     // Agrega más conductores aquí si es necesario

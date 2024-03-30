@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/admin.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
 
   @override
@@ -44,14 +44,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
               onPressed: () {
                 _login(context);
               },
               child: const Text('Ingresar'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                padding: EdgeInsets.symmetric(vertical: 16),
-              ),
             ),
             if (_errorMessage.isNotEmpty)
               Padding(
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text(
                   _errorMessage,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               ),
           ],
@@ -75,10 +75,7 @@ class _LoginPageState extends State<LoginPage> {
     // Verificar si el usuario y la contraseña son correctos
     if (username == 'admin' && password == 'admin') {
       // Si son correctos, navegar a la página de administrador
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => AdminPage()),
-      );
+      context.go('/adminPanel');
     } else {
       // Si son incorrectos, mostrar un mensaje de error
       setState(() {

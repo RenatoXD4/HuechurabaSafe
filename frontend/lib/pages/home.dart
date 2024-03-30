@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/navbar.dart';
-import 'package:frontend/pages/consulta_patente.dart';
+import 'package:go_router/go_router.dart';
 
 
 
@@ -30,13 +30,7 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Redirigir a la pantalla de consulta de patente
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConsultaPatente()),
-                );
-              },
+              onPressed: () => context.go('/consultarPatente'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,

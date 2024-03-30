@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/perfil.dart';
+import 'package:frontend/components/appbar.dart';
+import 'package:frontend/components/navbar.dart';
+import 'package:go_router/go_router.dart';
 
 
 class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario por ahora, más tarde lo reviso.
@@ -10,47 +12,8 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Usuario'),
-        backgroundColor: Colors.orange,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.orange,
-              ),
-              child: Text(
-                'Menú',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: const Text('Btn 1'),
-              onTap: () {
-                Navigator.pop(context); // Cerrar el menú desplegable
-                // Implementar la redirección a la página principal
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      appBar: const CustomAppBar(),
+      drawer: const NavBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -61,12 +24,7 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>const ConductorContent()),
-                );
-              },
+              onPressed: () => context.go('perfilConductor'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
@@ -80,17 +38,3 @@ class UsuarioPage extends StatelessWidget {   //Deja este componente de Usuario 
   }
 }
 
-class MainPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Página Principal'),
-        backgroundColor: Colors.orange,
-      ),
-      body: Center(
-        child: const Text('Contenido de la página principal'),
-      ),
-    );
-  }
-}

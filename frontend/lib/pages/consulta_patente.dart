@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/Usuario.dart';
+import 'package:frontend/pages/usuario.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/navbar.dart';
 
