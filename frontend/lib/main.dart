@@ -15,6 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: RouterPages.router,
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.amber.shade600,
+      ),
     );
   }
 }
@@ -25,11 +28,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const HomePage(),
-      theme: ThemeData(
-        primaryColor: Colors.orange,
-      ),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
     );
   }
 }

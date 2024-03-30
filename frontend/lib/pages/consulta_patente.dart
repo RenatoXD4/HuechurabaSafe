@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/usuario.dart';
-import 'package:frontend/components/appbar.dart';
-import 'package:frontend/components/navbar.dart';
-
 class ConsultaPatente extends StatelessWidget {  
   const ConsultaPatente({super.key});
   
@@ -10,8 +7,10 @@ class ConsultaPatente extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
-      drawer: const NavBar(),
+      appBar: AppBar(
+        title: const Text('Consultar patente'),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

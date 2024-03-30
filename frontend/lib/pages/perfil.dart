@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend/components/appbar.dart';
-import 'package:frontend/components/navbar.dart';
+import 'package:go_router/go_router.dart';
 
 class ConductorContent extends StatelessWidget {
   const ConductorContent({super.key});
@@ -10,8 +9,10 @@ class ConductorContent extends StatelessWidget {
 Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const CustomAppBar(),
-        drawer: const NavBar(),
+        appBar: AppBar(
+          title: const Text('Perfil conductor'),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
         body: Stack(
           children: [
             Column(
@@ -19,7 +20,7 @@ Widget build(BuildContext context) {
                 Container(
                   height: 180.0,
                   width: MediaQuery.of(context).size.width,
-                  decoration: _boxShadow(),
+                  decoration: _boxShadow(context),
                   child: OverflowBox(
                     maxHeight: double.infinity,
                     child: Container(
@@ -29,7 +30,7 @@ Widget build(BuildContext context) {
                         width: 150.0,
                         child: CircleAvatar(
                           radius: 56,
-                          backgroundColor: Colors.amber.shade600,
+                          backgroundColor: Theme.of(context).primaryColor,
                           child: Padding(
                             padding: const EdgeInsets.all(25),
                             child: ClipOval(
@@ -53,6 +54,23 @@ Widget build(BuildContext context) {
                 SvgPicture.asset('assets/icon3.svg', height: 44, width: 44),
                 _texto('Vehículo', _textStyle(Colors.red.shade600, FontWeight.bold)),
                 _texto('Ford Fiesta', _textStyle(Colors.black, FontWeight.normal)),
+                const SizedBox(height: 10,),
+                TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red.shade600),
+                    fixedSize: MaterialStateProperty.all(const Size.fromWidth(270)),
+                    shape: MaterialStateProperty.all(const RoundedRectangleBorder()),
+                  ),
+                  onPressed: () => context.go('/formularioReporte'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/danger.svg', height: 20, width: 20,), // Reemplaza 'assets/icono.svg' con la ubicación de tu archivo SVG
+                      const SizedBox(width: 10), // Espacio entre el icono y el texto
+                      _texto('Reportar conductor', _textStyle(Colors.black, FontWeight.normal)),
+                    ],
+                  ),
+                ),
               ],
             ),
           ],
@@ -83,9 +101,9 @@ Widget build(BuildContext context) {
       );
   }
 
-  BoxDecoration _boxShadow() {
+  BoxDecoration _boxShadow(context) {
     return BoxDecoration(
-      color: Colors.amber.shade600,
+      color: Theme.of(context).primaryColor,
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.5),
