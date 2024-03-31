@@ -32,7 +32,7 @@ class RouterPages {
           ),
           GoRoute(
             path: 'formularioReporte', // Ensure this path matches the one you're navigating to
-            builder: (BuildContext context, GoRouterState state) => const ReportForm(),
+            builder: (BuildContext context, GoRouterState state) => ReportForm(),
           ),
         ],
       ),
