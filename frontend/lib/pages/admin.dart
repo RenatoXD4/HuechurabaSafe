@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AdminPage extends StatefulWidget {
-  const AdminPage({super.key});
+  const AdminPage({Key? key});
 
   @override
   _AdminPageState createState() => _AdminPageState();
@@ -53,7 +53,10 @@ class _AdminPageState extends State<AdminPage> {
             const SizedBox(height: 20),
             _buildSectionTitle('Administración de Conductores'),
             Expanded(
-              child: _buildDriverTable(context),
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: _buildDriverTable(context),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -100,6 +103,7 @@ class _AdminPageState extends State<AdminPage> {
 
   Widget _buildDriverTable(BuildContext context) {
     return DataTable(
+      columnSpacing: 16, // Espaciado entre columnas
       columns: const [
         DataColumn(label: Text('Nombre')),
         DataColumn(label: Text('RUT')),
@@ -126,11 +130,21 @@ class _AdminPageState extends State<AdminPage> {
       DataCell(Text(type)),
       DataCell(Text(plate)),
       DataCell(
-        IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () {
-            _editDriver(context, name, rut, type, plate);
-          },
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                _editDriver(context, name, rut, type, plate);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                _deleteDriver(name);
+              },
+            ),
+          ],
         ),
       ),
     ]);
@@ -188,6 +202,13 @@ class _AdminPageState extends State<AdminPage> {
         _drivers[index]['type'] = type;
         _drivers[index]['plate'] = plate;
       }
+    });
+  }
+
+  void _deleteDriver(String name) {
+    setState(() {
+      // Elimina el conductor de la lista de conductores
+      _drivers.removeWhere((driver) => driver['name'] == name);
     });
   }
 }
