@@ -61,7 +61,7 @@ Widget build(BuildContext context) {
                     fixedSize: MaterialStateProperty.all(const Size.fromWidth(270)),
                     shape: MaterialStateProperty.all(const RoundedRectangleBorder()),
                   ),
-                  onPressed: () => context.go('/formularioReporte'),
+                  onPressed: () => context.go('/formReporte'),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

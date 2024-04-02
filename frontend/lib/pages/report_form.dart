@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 
 class ReportForm extends StatelessWidget {
-  final List<String> items = ['Opción 1', 'Opción 2', 'Opción 3'];
+  final List<String> items = ['Alargar trayecto a propósito', 'Conducción peligrosa', 'Exceso de velocidad'];
 
   ReportForm({super.key});
 
@@ -19,7 +19,7 @@ class ReportForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            const ReportField(label: 'Nombre del Conductor'),
+            const ReportField(label: 'Nombre'),
             _ReportReasonField(items: items), // Utiliza el nuevo campo de selección de razón de reporte
             const ReportField(label: 'Comentarios', isMultiline: true), // Hacer este campo multilínea
             const SizedBox(height: 20),
@@ -71,7 +71,7 @@ class ReportField extends StatelessWidget {
 
 
 class _ReportReasonField extends StatefulWidget {
-  final List<String> items; // Define items como una lista de strings
+  final List<String> items; //Definir un arreglo de strings
 
   const _ReportReasonField({required this.items});
 
@@ -80,7 +80,7 @@ class _ReportReasonField extends StatefulWidget {
 }
 
 class _ReportReasonFieldState extends State<_ReportReasonField> {
-  String _selectedReason = 'Opción 1'; // Variable para almacenar la razón seleccionada
+  String _selectedReason = 'Alargar trayecto a propósito'; // Variable para almacenar la razón seleccionada
 
   @override
   Widget build(BuildContext context) {
