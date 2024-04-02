@@ -45,7 +45,7 @@ Widget build(BuildContext context) {
                 const SizedBox(height: 95.0),
                 SvgPicture.asset('assets/icon1.svg', height: 44, width: 44),
                 _texto('Nombre', _textStyle(Colors.red.shade600, FontWeight.bold)),
-                _texto('Benjamín Hidalgo', _textStyle(Colors.black, FontWeight.normal)),
+                _texto('Juan Perez', _textStyle(Colors.black, FontWeight.normal)),
                 const SizedBox(height: 10),
                 SvgPicture.asset('assets/icon2.svg', height: 44, width: 44),
                 _texto('Patente', _textStyle(Colors.red.shade600, FontWeight.bold)),

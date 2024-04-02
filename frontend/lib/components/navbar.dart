@@ -15,7 +15,7 @@ class NavBar extends StatelessWidget {
               color: Colors.amber.shade600,
             ),
             child: const Text(
-              'Drawer Header',
+              'Menú',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,

@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class Scanner extends StatefulWidget {
@@ -60,7 +59,7 @@ class _ScannerState extends State<Scanner> {
       if (await canLaunchUrlString(scannedUrl)) {
         await launchUrlString(scannedUrl);
       } else {
-        Text('Cannot launch URL: $scannedUrl');
+        Text('No se puede validar la url:$scannedUrl');
       }
 
       // Reanudar la cámara después de lanzar el enlace
