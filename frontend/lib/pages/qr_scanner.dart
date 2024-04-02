@@ -1,40 +1,32 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-class QRScanPage extends StatefulWidget {
-  const QRScanPage({Key? key}) : super(key: key);
+class Scanner extends StatefulWidget {
+  const Scanner({super.key});
 
   @override
-  _QRScanPageState createState() => _QRScanPageState();
+  _ScannerState createState() => _ScannerState();
 }
 
-class _QRScanPageState extends State<QRScanPage> {
-  Barcode? result;
-  QRViewController? controller;
+class _ScannerState extends State<Scanner> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    }
-    controller!.resumeCamera();
-  }
+  late QRViewController controller;
+  String scannedUrl = '';
 
   @override
   Widget build(BuildContext context) {
-        var scanArea = (MediaQuery.of(context).size.width < 400 ||
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
         ? 250.0
         : 300.0;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QR Scanner'),
+        title: const Text("Escanee el QR"),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(
         children: [
@@ -43,12 +35,14 @@ class _QRScanPageState extends State<QRScanPage> {
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
               overlay: QrScannerOverlayShape(
-              borderColor: Colors.grey.shade400,
-              borderRadius: 10,
-              borderLength: 30,
-              borderWidth: 10,
-              cutOutSize: scanArea),
-              onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
+                borderColor: Colors.red,
+                borderRadius: 10,
+                borderLength: 30,
+                borderWidth: 10,
+                cutOutSize: scanArea,
+              ),
+              onPermissionSet: (ctrl, p) =>
+                  _onPermissionSet(context, ctrl, p),
             ),
           ),
         ],
@@ -56,21 +50,24 @@ class _QRScanPageState extends State<QRScanPage> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() async {
-        result = scanData;
-        if (await canLaunchUrl(result?.code as Uri)) {
-          await launchUrl(result?.code as Uri);
-        } else {
-          print('No se pudo abrir el enlace: ${scanData.code}');
-        }
+    void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) async {
+      setState(() {
+        scannedUrl = scanData.code!;
       });
+
+      if (await canLaunchUrlString(scannedUrl)) {
+        await launchUrlString(scannedUrl);
+      } else {
+        Text('Cannot launch URL: $scannedUrl');
+      }
+
+      // Reanudar la cámara después de lanzar el enlace
+      controller.resumeCamera();
     });
   }
+
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
@@ -83,7 +80,7 @@ class _QRScanPageState extends State<QRScanPage> {
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }

@@ -42,7 +42,7 @@ class RouterPages {
           ),
           GoRoute(
             path: 'scannerQr', // Ensure this path matches the one you're navigating to
-            builder: (BuildContext context, GoRouterState state) => QRScanPage(),
+            builder: (BuildContext context, GoRouterState state) => const Scanner(),
           ),
         ],
       ),
