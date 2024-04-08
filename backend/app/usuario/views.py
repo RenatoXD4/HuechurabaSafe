@@ -1,14 +1,18 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from extension import db
 
 usuario_bp = Blueprint('usuario', __name__)
 
 
-@usuario_bp.route('/usuarios', methods=['POST'])
 def crear_usuario():
     from models import Usuario
     data = request.json
-    nuevo_usuario = Usuario(username=data['username'], email=data['email'], password=data['password'])
+    nuevo_usuario = Usuario(username=data['username'], email=data['email'])
+
+    # Hashear la contraseña antes de almacenarla en la base de datos
+    hashed_password = nuevo_usuario.hash_password(data['password'])
+    nuevo_usuario.password = hashed_password
+
     db.session.add(nuevo_usuario)
     db.session.commit()
     return jsonify({'mensaje': 'Usuario creado correctamente'}), 201
@@ -51,3 +55,27 @@ def eliminar_usuario(id):
     db.session.delete(usuario)
     db.session.commit()
     return jsonify({'mensaje': 'Usuario eliminado correctamente'}), 200
+
+
+
+# Ruta para iniciar sesión
+@usuario_bp.route('/login', methods=['POST'])
+def login():
+    from models import Usuario
+    username = request.json.get('username')
+    password = request.json.get('password')
+
+    usuario = Usuario.query.filter_by(username=username).first()
+
+    if usuario and Usuario.verificar_password(usuario.password, password):
+        session['user_id'] = usuario.id
+        return jsonify({'mensaje': 'Inicio de sesión exitoso'}), 200
+    else:
+        return jsonify({'error': 'Nombre de usuario o contraseña incorrectos'}), 401
+
+# Ruta para cerrar sesión
+@usuario_bp.route('/logout')
+def logout():
+    # Eliminar el ID del usuario de la sesión
+    session.pop('user_id', None)
+    return jsonify({'mensaje': 'Sesión cerrada correctamente'}), 200
