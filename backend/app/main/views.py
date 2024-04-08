@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request
-from main.models import Conductor
-from backend.application import db
+from extension import db
 
 main_bp = Blueprint('main', __name__)
 
 
 @main_bp.route('/crearConductor', methods = ['POST'])
 def crear_conductor():
+    from models import Conductor
     data = request.json
     nuevo_conductor = Conductor(patente=data['patente'], nombre=data['nombre'], auto=data['auto'])
     db.session.add(nuevo_conductor)
@@ -20,6 +20,7 @@ def crear_conductor():
 
 @main_bp.route('/conductores', methods = ['GET'])
 def obtener_conductores():
+    from models import Conductor
     conductores = Conductor.query.all()
     conductores_data = []
     for conductor in conductores:
@@ -36,6 +37,7 @@ def obtener_conductores():
 
 @main_bp.route('/conductores/<int:id>', methods=['PUT'])
 def actualizar_conductor(id):
+    from models import Conductor
     conductor = Conductor.query.get(id)
     if conductor is None:
         return jsonify({'error': 'Conductor no encontrado'}), 404
@@ -55,8 +57,9 @@ def actualizar_conductor(id):
     return jsonify({'message': 'Conductor actualizado correctamente'}), 200
 
 
-@main_bp.route('/conductor/<str:patente>', methods = ['GET'])
+@main_bp.route('/conductor/<string:patente>', methods = ['GET'])
 def obtenerConductor(patente):
+    from models import Conductor
     patente = any
 
     conductor = Conductor.query.filter_by(patente=patente).first()
@@ -71,8 +74,9 @@ def obtenerConductor(patente):
         return jsonify({'mensaje': 'Conductor no encontrado'}), 404
     
 
-@main_bp.route('/borrar/<str:patente>', methods=['DELETE'])
+@main_bp.route('/borrar/<string:patente>', methods=['DELETE'])
 def borrarConductor(patente):
+    from models import Conductor
     conductor = Conductor.query.filter_by(patente=patente).first()
 
     if conductor:
