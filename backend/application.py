@@ -7,7 +7,7 @@ from app.usuario.views import usuario_bp
 from app.rol.views import rol_bp
 
 
-from app.models import Usuario, Rol, Conductor
+from app.models import Usuario, Rol, Conductor, Reporte
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -25,4 +25,4 @@ migrate = Migrate(app, db)
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=3306)
