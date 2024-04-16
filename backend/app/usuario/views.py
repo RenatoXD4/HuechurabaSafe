@@ -4,11 +4,11 @@ from extension import db
 usuario_bp = Blueprint('usuario', __name__)
 
 
+@usuario_bp.route('/crearUsuario', methods=['POST'])
 def crear_usuario():
     from models import Usuario
     data = request.json
     nuevo_usuario = Usuario(username=data['username'], email=data['email'])
-
     # Hashear la contraseña antes de almacenarla en la base de datos
     hashed_password = nuevo_usuario.hash_password(data['password'])
     nuevo_usuario.password = hashed_password
