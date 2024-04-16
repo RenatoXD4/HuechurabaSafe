@@ -4,7 +4,9 @@ class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
 
   @override
-  _AdminPageState createState() => _AdminPageState();
+  State<AdminPage> createState() { // Avoid using private types in public APIs.
+    return _AdminPageState();
+  }
 }
 
 class _AdminPageState extends State<AdminPage> {
@@ -54,7 +56,7 @@ class _AdminPageState extends State<AdminPage> {
             _buildSectionTitle('Administración de Conductores'),
             Expanded(
               child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 child: _buildDriverTable(context),
               ),
             ),

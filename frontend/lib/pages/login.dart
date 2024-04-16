@@ -5,7 +5,9 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() { // Avoid using private types in public APIs.
+    return _LoginPageState();
+  }
 }
 
 class _LoginPageState extends State<LoginPage> {

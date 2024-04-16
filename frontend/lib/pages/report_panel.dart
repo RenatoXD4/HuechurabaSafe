@@ -4,11 +4,14 @@ import 'package:frontend/models/report_class.dart';
 class ReportPanel extends StatefulWidget {
   const ReportPanel({super.key});
   @override
-  _ReportPanelState createState() => _ReportPanelState();
+  State<ReportPanel> createState() {
+    // Avoid using private types in public APIs.
+    return _ReportPanelState();
+  }
 }
 
 class _ReportPanelState extends State<ReportPanel> {
-    final List<Report> reports = [
+  final List<Report> reports = [
     Report(
       reason: 'Exceso de velocidad',
       reporterName: 'Juan Pérez',
