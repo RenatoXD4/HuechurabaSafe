@@ -34,6 +34,17 @@ class Rol(db.Model):
 
     def __repr__(self):
        return f'<Nombre Rol: {self.nombre_rol}>'
+    
+if not Rol.query.filter_by(nombre_rol='Usuario').first():
+    rol_usuario = Rol(nombre_rol='Usuario')
+    db.session.add(rol_usuario)
+
+if not Rol.query.filter_by(nombre_rol='Administrador').first():
+    rol_administrador = Rol(nombre_rol='Administrador')
+    db.session.add(rol_administrador)
+
+# Confirmar cambios en la base de datos
+db.session.commit()
 
 class Conductor(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
