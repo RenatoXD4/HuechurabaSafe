@@ -35,15 +35,13 @@ class Rol(db.Model):
     def __repr__(self):
        return f'<Nombre Rol: {self.nombre_rol}>'
     
-if not Rol.query.filter_by(nombre_rol='Usuario').first():
-    rol_usuario = Rol(nombre_rol='Usuario')
-    db.session.add(rol_usuario)
+# Crear roles predeterminados
+rol_usuario = Rol(nombre_rol='Usuario')
+rol_administrador = Rol(nombre_rol='Administrador')
 
-if not Rol.query.filter_by(nombre_rol='Administrador').first():
-    rol_administrador = Rol(nombre_rol='Administrador')
-    db.session.add(rol_administrador)
-
-# Confirmar cambios en la base de datos
+# Agregar roles predeterminados a la sesión y confirmar cambios
+db.session.add(rol_usuario)
+db.session.add(rol_administrador)
 db.session.commit()
 
 class Conductor(db.Model):
