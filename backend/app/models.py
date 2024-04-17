@@ -35,14 +35,7 @@ class Rol(db.Model):
     def __repr__(self):
        return f'<Nombre Rol: {self.nombre_rol}>'
     
-# Crear roles predeterminados
-rol_usuario = Rol(nombre_rol='Usuario')
-rol_administrador = Rol(nombre_rol='Administrador')
-
-# Agregar roles predeterminados a la sesión y confirmar cambios
-db.session.add(rol_usuario)
-db.session.add(rol_administrador)
-db.session.commit()
+    
 
 class Conductor(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
