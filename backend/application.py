@@ -6,6 +6,7 @@ from app.main.views import main_bp
 from app.usuario.views import usuario_bp
 from app.rol.views import rol_bp
 from app.reporte.views import reporte_bp
+from app.razon.views import razon_bp
 
 
 from app.models import Usuario, Rol, Conductor, Reporte
@@ -21,6 +22,8 @@ app.register_blueprint(usuario_bp)
 app.register_blueprint(rol_bp)
 
 app.register_blueprint(reporte_bp)
+
+app.register_blueprint(razon_bp)
 
 db.init_app(app)
 migrate = Migrate(app, db)

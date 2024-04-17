@@ -20,10 +20,27 @@ def crear_usuario():
 @usuario_bp.route('/usuarios/<int:id>', methods=['GET'])
 def obtener_usuario(id):
     from models import Usuario
+    from models import Rol
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
-    usuario_data = {'id': usuario.id, 'usuario': usuario.username, 'email': usuario.email}
+    
+    # Obtener el rol del usuario
+    rol_usuario = Rol.query.get(usuario.rol_id)
+    if rol_usuario is None:
+        return jsonify({'error': 'Rol del usuario no encontrado'}), 404
+    
+    # Crear un diccionario con los datos del usuario y su rol
+    usuario_data = {
+        'id': usuario.id,
+        'usuario': usuario.username,
+        'email': usuario.email,
+        'rol': {
+            'id': rol_usuario.id,
+            'nombre': rol_usuario.nombre_rol
+        }
+    }
+    
     return jsonify(usuario_data), 200
 
 @usuario_bp.route('/usuarios/<int:id>', methods=['PUT'])
