@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
 import 'package:frontend/pages/admin.dart';
 import 'package:frontend/pages/consulta_patente.dart';
+import 'package:frontend/pages/crear_usuario_form.dart';
 import 'package:frontend/pages/login.dart';
 import 'package:frontend/pages/perfil.dart';
 import 'package:frontend/pages/qr_scanner.dart';
@@ -43,6 +44,10 @@ class RouterPages {
           GoRoute(
             path: 'scannerQr', // Ensure this path matches the one you're navigating to
             builder: (BuildContext context, GoRouterState state) => const Scanner(),
+          ),
+          GoRoute(
+            path: 'registrarse', // Ensure this path matches the one you're navigating to
+            builder: (BuildContext context, GoRouterState state) => const UsuarioForm(),
           ),
         ],
       ),

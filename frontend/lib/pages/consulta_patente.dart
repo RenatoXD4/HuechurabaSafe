@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/usuario.dart';
+import 'package:go_router/go_router.dart';
+
 class ConsultaPatente extends StatelessWidget {  
   const ConsultaPatente({super.key});
   
@@ -34,10 +35,7 @@ class ConsultaPatente extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const UsuarioPage(patente: "DUIXD11")),
-                );
+                context.go('/perfilConductor');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
