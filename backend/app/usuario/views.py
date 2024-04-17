@@ -17,7 +17,7 @@ def crear_usuario():
     db.session.commit()
     return jsonify({'mensaje': 'Usuario creado correctamente'}), 201
 
-@usuario_bp.route('/usuarios/<int:id>', methods=['GET'])
+@usuario_bp.route('/usuario/<int:id>', methods=['GET'])
 def obtener_usuario(id):
     from models import Usuario
     from models import Rol
