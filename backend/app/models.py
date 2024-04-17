@@ -9,7 +9,7 @@ class Usuario(db.Model):
     username = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    rol_id = db.Column(db.Integer, db.ForeignKey('rol.id'))
+    rol_id = db.Column(db.Integer, db.ForeignKey('rol.id') nullable=False)
     usuarios = db.relationship('Reporte', backref="usuario")
 
     def __repr__(self):
