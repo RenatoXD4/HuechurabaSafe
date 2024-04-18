@@ -20,7 +20,7 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.orange,
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           'Panel de Administrador',
           style: TextStyle(color: Colors.white),

@@ -32,10 +32,8 @@ class _InicioState extends State<Inicio> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              style: TextStyle(),
               controller: _passwordController,
               decoration: const InputDecoration(
-
                 labelText: 'Contraseña',
                 prefixIcon: Icon(Icons.lock),
               ),
