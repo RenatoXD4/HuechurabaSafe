@@ -36,8 +36,9 @@ class _ReportPanelState extends State<ReportPanel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Report Panel'),
+        title: const Text('Panel de Reportes'),
         backgroundColor: Theme.of(context).primaryColor,
+        
       ),
       body: ListView.builder(
         itemCount: reports.length,

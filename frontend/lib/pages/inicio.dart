@@ -32,7 +32,7 @@ class _InicioState extends State<Inicio> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              textAlign: TextAlign.justify,
+              style: TextStyle(),
               controller: _passwordController,
               decoration: const InputDecoration(
 
@@ -75,7 +75,7 @@ class _InicioState extends State<Inicio> {
     // Verificar si el usuario y la contraseña son correctos
     if (username == 'admin' && password == 'admin') {
       // Si son correctos, navegar a la página de administrador
-      context.go('/adminPanel');
+      context.go('/home');
     } else {
       // Si son incorrectos, mostrar un mensaje de error
       setState(() {

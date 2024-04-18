@@ -131,7 +131,7 @@ class ConductorContent extends StatelessWidget {
           const SizedBox(width: 10),
           Column(
             children: [
-              _texto(title, _textStyle(Colors.red.shade600, FontWeight.bold)),
+              _texto(title, _textStyle(Colors.black, FontWeight.bold)),
               _texto(content, _textStyle(Colors.black, FontWeight.normal)),
             ],
           ),
