@@ -21,6 +21,8 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => context.go('/scannerQr'),
               style: ElevatedButton.styleFrom(
+                shape: const BeveledRectangleBorder(),
+                fixedSize: const Size(250, 100),
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
               ),
@@ -30,6 +32,8 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => context.go('/consultarPatente'),
               style: ElevatedButton.styleFrom(
+                shape: const BeveledRectangleBorder(),
+                fixedSize: const Size(250, 100),
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
               ),
