@@ -4,7 +4,7 @@ from extension import db
 usuario_bp = Blueprint('usuario', __name__)
 
 
-@usuario_bp.route('api/crearUsuario', methods=['POST'])
+@usuario_bp.route('/api/crearUsuario', methods=['POST'])
 def crear_usuario():
     from models import Usuario
     data = request.json
@@ -17,7 +17,7 @@ def crear_usuario():
     db.session.commit()
     return jsonify({'mensaje': 'Usuario creado correctamente'}), 201
 
-@usuario_bp.route('api/usuario/<int:id>', methods=['GET'])
+@usuario_bp.route('/api/usuario/<int:id>', methods=['GET'])
 def obtener_usuario(id):
     from models import Usuario
     from models import Rol
@@ -43,7 +43,7 @@ def obtener_usuario(id):
     
     return jsonify(usuario_data), 200
 
-@usuario_bp.route('api/updateUsuario/<int:id>', methods=['PUT'])
+@usuario_bp.route('/api/updateUsuario/<int:id>', methods=['PUT'])
 def actualizar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
@@ -62,7 +62,7 @@ def actualizar_usuario(id):
     return jsonify({'mensaje': 'Usuario actualizado correctamente'}), 200
 
 
-@usuario_bp.route('api/deleteUsuario/<int:id>', methods=['DELETE'])
+@usuario_bp.route('/api/deleteUsuario/<int:id>', methods=['DELETE'])
 def eliminar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
@@ -76,7 +76,7 @@ def eliminar_usuario(id):
 
 
 # Ruta para iniciar sesión
-@usuario_bp.route('api/login', methods=['POST'])
+@usuario_bp.route('/api/login', methods=['POST'])
 def login():
     from models import Usuario
     username = request.json.get('username')
@@ -91,7 +91,7 @@ def login():
         return jsonify({'error': 'Nombre de usuario o contraseña incorrectos'}), 401
 
 # Ruta para cerrar sesión
-@usuario_bp.route('api/logout')
+@usuario_bp.route('/api/logout')
 def logout():
     # Eliminar el ID del usuario de la sesión
     session.pop('user_id', None)
