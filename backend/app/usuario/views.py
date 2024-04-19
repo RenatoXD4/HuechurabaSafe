@@ -43,7 +43,7 @@ def obtener_usuario(id):
     
     return jsonify(usuario_data), 200
 
-@usuario_bp.route('/usuarios/<int:id>', methods=['PUT'])
+@usuario_bp.route('/updateUsuario/<int:id>', methods=['PUT'])
 def actualizar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
@@ -62,7 +62,7 @@ def actualizar_usuario(id):
     return jsonify({'mensaje': 'Usuario actualizado correctamente'}), 200
 
 
-@usuario_bp.route('/usuarios/<int:id>', methods=['DELETE'])
+@usuario_bp.route('/deleteUsuario/<int:id>', methods=['DELETE'])
 def eliminar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
