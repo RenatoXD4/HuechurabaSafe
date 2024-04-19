@@ -7,11 +7,13 @@ from app.usuario.views import usuario_bp
 from app.rol.views import rol_bp
 from app.reporte.views import reporte_bp
 from app.razon.views import razon_bp
+from flask_cors import CORS
 
 
 from app.models import Usuario, Rol, Conductor, Reporte
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(Config)
 
 
