@@ -21,7 +21,7 @@ class _UsuarioFormState extends State<UsuarioForm> {
   final Regex _regex = Regex();
 
   Future<void> _crearUsuario() async {
-    final url = Uri.parse('http://127.0.0.1:5000/crearUsuario');
+    final url = Uri.parse('http://34.176.53.68:9090/api/crearUsuario');
     final response = await http.post(
       url,
       body: {
