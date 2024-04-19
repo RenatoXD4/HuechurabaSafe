@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/regex.dart';
+import 'package:http/http.dart' as http;
 
 class UsuarioForm extends StatefulWidget {
   const UsuarioForm({super.key});
@@ -18,6 +19,27 @@ class _UsuarioFormState extends State<UsuarioForm> {
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   final Regex _regex = Regex();
+
+  Future<void> _crearUsuario() async {
+    final url = Uri.parse('http://127.0.0.1:5000/crearUsuario');
+    final response = await http.post(
+      url,
+      body: {
+        'username': _usernameController.text,
+        'email': _emailController.text,
+        'password': _passwordController.text,
+        'rol': '1', // ID del rol de Usuario
+      },
+    );
+
+    if (response.statusCode == 201) {
+      // Usuario creado correctamente
+      print('Usuario creado correctamente');
+    } else {
+      // Error al crear usuario
+      print('Error al crear usuario: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +119,7 @@ class _UsuarioFormState extends State<UsuarioForm> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Realizar el registro del usuario
-                    _registroUsuario();
+                    _crearUsuario();
                   }
                 },
                 child: const Text('Registrarse', ),
@@ -109,17 +131,4 @@ class _UsuarioFormState extends State<UsuarioForm> {
     );
   }
 
-  void _registroUsuario() {
-    // Aquí puedes realizar el registro del usuario
-    String username = _usernameController.text;
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    // Por ejemplo, puedes imprimir los datos del usuario
-    print('Nombre de usuario: $username');
-    print('Correo electrónico: $email');
-    print('Contraseña: $password');
-
-    // También puedes llamar a tu API para registrar el usuario en el backend
-  }
 }
