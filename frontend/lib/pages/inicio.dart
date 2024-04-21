@@ -26,7 +26,7 @@ class _InicioState extends State<Inicio> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Image(image: AssetImage('assets/logoTaxi.png'), width: 250, height: 250),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
@@ -42,7 +42,7 @@ class _InicioState extends State<Inicio> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
@@ -59,7 +59,7 @@ class _InicioState extends State<Inicio> {
                     obscureText: true,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
@@ -79,17 +79,17 @@ class _InicioState extends State<Inicio> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
                     // Lógica para manejar la acción de "¿Olvidó su contraseña?"
                   },
-                  child: Text(
+                  child: const Text(
                     '¿Olvidó su contraseña?',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -97,7 +97,7 @@ class _InicioState extends State<Inicio> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   ),
                   onPressed: () {
-                    // Lógica para manejar la acción de "Ingresar como invitado"
+                    context.go('/home');
                   },
                   child: const Text('Ingresar como invitado'),
                 ),

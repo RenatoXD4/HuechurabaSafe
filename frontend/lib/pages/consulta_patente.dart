@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ConsultaPatente extends StatelessWidget {
-  const ConsultaPatente({Key? key});
+  const ConsultaPatente({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +11,12 @@ class ConsultaPatente extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Consultar patente'),
         backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/home');
+            },
+          )
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

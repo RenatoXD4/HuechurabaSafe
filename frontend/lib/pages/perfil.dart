@@ -12,6 +12,12 @@ class ConductorContent extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Perfil conductor'),
           backgroundColor: Theme.of(context).primaryColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/consultarPatente');
+            },
+          )
         ),
         body: Center(
           child: Column(

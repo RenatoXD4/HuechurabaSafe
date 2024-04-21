@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/components/appbar.dart';
+import 'package:frontend/components/navbar.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(),
+      drawer: const NavBar(),
       backgroundColor: Colors.orange,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
