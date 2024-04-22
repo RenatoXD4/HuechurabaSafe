@@ -5,6 +5,6 @@ razon_bp = Blueprint('razon', __name__)
 
 @razon_bp.route('/razones', methods=['GET'])
 def obtener_razones():
-    from backend.models import Razon
+    from models import Razon
     razones = Razon.query.all()
     return jsonify([razon.serialize() for razon in razones])

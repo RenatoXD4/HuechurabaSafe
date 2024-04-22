@@ -6,7 +6,7 @@ reporte_bp = Blueprint('reporte', __name__)
 
 @reporte_bp.route('/crearReporte', methods=['POST'])
 def crear_reporte():
-    from backend.models import Reporte
+    from models import Reporte
     data = request.json
     nuevo_reporte = Reporte(
         razon_reporte=data['razon_reporte'],
@@ -19,7 +19,7 @@ def crear_reporte():
 
 @reporte_bp.route('/obtenerReporte/<int:id>', methods=['GET'])
 def obtener_reporte(id):
-    from backend.models import Reporte
+    from models import Reporte
     reporte = Reporte.query.get(id)
     if reporte is None:
         return jsonify({'error': 'Reporte no encontrado'}), 404
@@ -33,7 +33,7 @@ def obtener_reporte(id):
 
 @reporte_bp.route('/obtenerReportes', methods=['GET'])
 def obtener_todos_los_reportes():
-    from backend.models import Reporte
+    from models import Reporte
     reportes = Reporte.query.all()
     if not reportes:
         return jsonify({'mensaje': 'No hay reportes disponibles'}), 404
@@ -53,7 +53,7 @@ def obtener_todos_los_reportes():
 
 @reporte_bp.route('/eliminarReporte/<int:id>', methods=['DELETE'])
 def eliminar_reporte(id):
-    from backend.models import Reporte
+    from models import Reporte
     reporte = Reporte.query.get(id)
     if reporte is None:
         return jsonify({'error': 'Reporte no encontrado'}), 404
