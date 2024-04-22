@@ -4,12 +4,15 @@ from extension import db
 usuario_bp = Blueprint('usuario', __name__)
 
 
+@usuario_bp.route('/api/crearUsuario', methods=['POST'])
 def crear_usuario():
     from models import Usuario
     data = request.json
-    nuevo_usuario = Usuario(username=data['username'], email=data['email'])
-
-    # Hashear la contraseña antes de almacenarla en la base de datos
+    # Verificar si el correo electrónico ya está registrado
+    if Usuario.query.filter_by(email=data['email']).first():
+        return jsonify({'error': 'El correo electrónico ya está registrado'}), 400
+    # Si el correo electrónico no está registrado, crear un nuevo usuario
+    nuevo_usuario = Usuario(username=data['username'], email=data['email'], rol_id=data['rol'])
     hashed_password = nuevo_usuario.hash_password(data['password'])
     nuevo_usuario.password = hashed_password
 
@@ -17,16 +20,33 @@ def crear_usuario():
     db.session.commit()
     return jsonify({'mensaje': 'Usuario creado correctamente'}), 201
 
-@usuario_bp.route('/usuarios/<int:id>', methods=['GET'])
+@usuario_bp.route('/api/usuario/<int:id>', methods=['GET'])
 def obtener_usuario(id):
     from models import Usuario
+    from models import Rol
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
-    usuario_data = {'id': usuario.id, 'usuario': usuario.username, 'email': usuario.email}
+    
+    # Obtener el rol del usuario
+    rol_usuario = Rol.query.get(usuario.rol_id)
+    if rol_usuario is None:
+        return jsonify({'error': 'Rol del usuario no encontrado'}), 404
+    
+    # Crear un diccionario con los datos del usuario y su rol
+    usuario_data = {
+        'id': usuario.id,
+        'usuario': usuario.username,
+        'email': usuario.email,
+        'rol': {
+            'id': rol_usuario.id,
+            'nombre': rol_usuario.nombre_rol
+        }
+    }
+    
     return jsonify(usuario_data), 200
 
-@usuario_bp.route('/usuarios/<int:id>', methods=['PUT'])
+@usuario_bp.route('/api/updateUsuario/<int:id>', methods=['PUT'])
 def actualizar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
@@ -45,7 +65,7 @@ def actualizar_usuario(id):
     return jsonify({'mensaje': 'Usuario actualizado correctamente'}), 200
 
 
-@usuario_bp.route('/usuarios/<int:id>', methods=['DELETE'])
+@usuario_bp.route('/api/deleteUsuario/<int:id>', methods=['DELETE'])
 def eliminar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
@@ -59,7 +79,7 @@ def eliminar_usuario(id):
 
 
 # Ruta para iniciar sesión
-@usuario_bp.route('/login', methods=['POST'])
+@usuario_bp.route('/api/login', methods=['POST'])
 def login():
     from models import Usuario
     username = request.json.get('username')
@@ -74,7 +94,7 @@ def login():
         return jsonify({'error': 'Nombre de usuario o contraseña incorrectos'}), 401
 
 # Ruta para cerrar sesión
-@usuario_bp.route('/logout')
+@usuario_bp.route('/api/logout')
 def logout():
     # Eliminar el ID del usuario de la sesión
     session.pop('user_id', None)

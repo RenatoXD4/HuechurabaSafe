@@ -10,6 +10,7 @@ class Usuario(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     rol_id = db.Column(db.Integer, db.ForeignKey('rol.id'), nullable=False)
+    usuarios = db.relationship('Reporte', backref="usuario")
 
     def __repr__(self):
        return f'<Usuario: {self.username}>'
@@ -29,9 +30,12 @@ class Usuario(db.Model):
 class Rol(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
     nombre_rol = db.Column(db.String(30), unique=True, nullable=False)
+    users = db.relationship('Usuario', backref='rol')
 
     def __repr__(self):
        return f'<Nombre Rol: {self.nombre_rol}>'
+    
+    
 
 class Conductor(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
@@ -39,6 +43,7 @@ class Conductor(db.Model):
     patente = db.Column(db.String(80), unique=True, nullable=False, index=True)
     nombre_vehiculo = db.Column(db.String(80), nullable=False)
     foto_path = db.Column(db.String(255)) 
+    conductores = db.relationship('Reporte', backref="conductor")
 
     def __repr__(self):
         return f'<Conductor: {self.nombre_conductor}>'
@@ -56,10 +61,18 @@ class Conductor(db.Model):
     
 class Reporte(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    razon_reporte = db.Column(db.String(80), nullable=False)
+    razon_reporte = db.Column(db.Integer, db.ForeignKey('razon.id'), nullable=False)
     comentarios = db.Column(db.String(500), nullable=True)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     id_conductor = db.Column(db.Integer, db.ForeignKey('conductor.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Reporte: {self.id}>'
+
+class Razon(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    razon = db.Column(db.String(80), nullable=False)
+    razones = db.relationship('Reporte', backref="razon")
 
     def __repr__(self):
         return f'<Reporte: {self.id}>'
