@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/regex.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class UsuarioForm extends StatefulWidget {
   const UsuarioForm({super.key});
@@ -20,16 +21,19 @@ class _UsuarioFormState extends State<UsuarioForm> {
 
   final Regex _regex = Regex();
 
-  Future<void> _crearUsuario() async {
-    final url = Uri.parse('http://34.176.53.68:9090/api/crearUsuario');
+    Future<void> _crearUsuario() async {
+    final url = Uri.parse('http://34.176.128.126:9090/api/crearUsuario');
+    final headers = {'Content-Type': 'application/json'};
+    final body = {
+      'username': _usernameController.text,
+      'email': _emailController.text,
+      'password': _passwordController.text,
+      'rol': "1", // ID del rol de Usuario
+    };
     final response = await http.post(
       url,
-      body: {
-        'username': _usernameController.text,
-        'email': _emailController.text,
-        'password': _passwordController.text,
-        'rol': '1', // ID del rol de Usuario
-      },
+      headers: headers,
+      body: jsonEncode(body),
     );
 
     if (response.statusCode == 201) {
