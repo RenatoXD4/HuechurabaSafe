@@ -8,8 +8,11 @@ usuario_bp = Blueprint('usuario', __name__)
 def crear_usuario():
     from models import Usuario
     data = request.json
+    # Verificar si el correo electrónico ya está registrado
+    if Usuario.query.filter_by(email=data['email']).first():
+        return jsonify({'error': 'El correo electrónico ya está registrado'}), 400
+    # Si el correo electrónico no está registrado, crear un nuevo usuario
     nuevo_usuario = Usuario(username=data['username'], email=data['email'], rol_id=data['rol'])
-    # Hashear la contraseña antes de almacenarla en la base de datos
     hashed_password = nuevo_usuario.hash_password(data['password'])
     nuevo_usuario.password = hashed_password
 
