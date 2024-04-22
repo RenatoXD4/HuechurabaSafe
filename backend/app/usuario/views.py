@@ -6,7 +6,7 @@ usuario_bp = Blueprint('usuario', __name__)
 
 @usuario_bp.route('/api/crearUsuario', methods=['POST'])
 def crear_usuario():
-    from models import Usuario
+    from backend.models import Usuario
     data = request.json
     nuevo_usuario = Usuario(username=data['username'], email=data['email'], rol_id=data['rol'])
     # Hashear la contraseña antes de almacenarla en la base de datos
@@ -19,8 +19,8 @@ def crear_usuario():
 
 @usuario_bp.route('/api/usuario/<int:id>', methods=['GET'])
 def obtener_usuario(id):
-    from models import Usuario
-    from models import Rol
+    from backend.models import Usuario
+    from backend.models import Rol
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
@@ -45,7 +45,7 @@ def obtener_usuario(id):
 
 @usuario_bp.route('/api/updateUsuario/<int:id>', methods=['PUT'])
 def actualizar_usuario(id):
-    from models import Usuario
+    from backend.models import Usuario
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
@@ -64,7 +64,7 @@ def actualizar_usuario(id):
 
 @usuario_bp.route('/api/deleteUsuario/<int:id>', methods=['DELETE'])
 def eliminar_usuario(id):
-    from models import Usuario
+    from backend.models import Usuario
     usuario = Usuario.query.get(id)
     if usuario is None:
         return jsonify({'error': 'Usuario no encontrado'}), 404
@@ -78,7 +78,7 @@ def eliminar_usuario(id):
 # Ruta para iniciar sesión
 @usuario_bp.route('/api/login', methods=['POST'])
 def login():
-    from models import Usuario
+    from backend.models import Usuario
     username = request.json.get('username')
     password = request.json.get('password')
 
