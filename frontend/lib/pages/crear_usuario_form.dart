@@ -20,8 +20,29 @@ class _UsuarioFormState extends State<UsuarioForm> {
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   final Regex _regex = Regex();
+  
+  void mostrarError(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ERROR'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-    Future<void> _crearUsuario() async {
+     // Función para crear el usuario
+  Future<void> _crearUsuario() async {
     final url = Uri.parse('http://34.176.128.126:9090/api/crearUsuario');
     final headers = {'Content-Type': 'application/json'};
     final body = {
@@ -39,8 +60,16 @@ class _UsuarioFormState extends State<UsuarioForm> {
     if (response.statusCode == 201) {
       // Usuario creado correctamente
       print('Usuario creado correctamente');
+    } else if (response.statusCode == 400) {
+      // El correo electrónico ya está registrado
+      final responseData = json.decode(response.body);
+      final errorMessage = responseData['error']; // Usar la clave correcta del mensaje de error
+      // Verificar si el widget está montado antes de mostrar el diálogo
+      if (mounted) {
+        mostrarError(errorMessage);
+      }
     } else {
-      // Error al crear usuario
+      // Otro error
       print('Error al crear usuario: ${response.statusCode}');
     }
   }
