@@ -4,7 +4,9 @@ class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
 
   @override
-  _AdminPageState createState() => _AdminPageState();
+  State<AdminPage> createState() { // Avoid using private types in public APIs.
+    return _AdminPageState();
+  }
 }
 
 class _AdminPageState extends State<AdminPage> {
@@ -18,7 +20,7 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.orange,
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           'Panel de Administrador',
           style: TextStyle(color: Colors.white),
@@ -54,7 +56,7 @@ class _AdminPageState extends State<AdminPage> {
             _buildSectionTitle('Administración de Conductores'),
             Expanded(
               child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 child: _buildDriverTable(context),
               ),
             ),

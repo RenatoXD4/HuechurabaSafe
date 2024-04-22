@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 
-
 class ReportForm extends StatelessWidget {
   final List<String> items = ['Alargar trayecto a propósito', 'Conducción peligrosa', 'Exceso de velocidad'];
 

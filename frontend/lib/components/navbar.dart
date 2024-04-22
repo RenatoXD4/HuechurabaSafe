@@ -34,6 +34,10 @@ class NavBar extends StatelessWidget {
             title: const Text('Ver reportes'),
             onTap: () => context.go('/verReportes'),
           ),
+          ListTile(
+            title: const Text('Registrarse'),
+            onTap: () => context.go('/registrarse'),
+          ),
         ],
       ),
     );

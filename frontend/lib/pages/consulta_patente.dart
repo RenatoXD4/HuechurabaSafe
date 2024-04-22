@@ -1,49 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/usuario.dart';
-class ConsultaPatente extends StatelessWidget {  
+import 'package:go_router/go_router.dart';
+
+class ConsultaPatente extends StatelessWidget {
   const ConsultaPatente({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange,
       appBar: AppBar(
         title: const Text('Consultar patente'),
         backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/home');
+            },
+          )
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset('assets/logoTaxi.png'), 
+            const SizedBox(height: 20),
             const Text(
-              'Ingrese Patente',
+              'Busqueda por Patente',
               style: TextStyle(
-                color: Colors.red,
+                color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 20),
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Ingrese la patente',
-                border: OutlineInputBorder(),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextField(
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                  hintText: 'Ingrese la patente',
+                  hintStyle: TextStyle(color: Colors.black),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                  contentPadding: const EdgeInsets.all(16),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const UsuarioPage(patente: "DUIXD11")),
-                );
+                context.go('/perfilConductor');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 30),
               ),
-              child: const Text('Buscar'),
+              child: const Text('Buscar Patente', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

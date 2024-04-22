@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       routerConfig: RouterPages.router,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.amber.shade600,
+        primaryColor:const Color.fromRGBO(246, 162, 8, 1)
       ),
     );
   }

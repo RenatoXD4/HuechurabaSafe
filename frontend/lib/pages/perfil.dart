@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,6 +12,12 @@ class ConductorContent extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Perfil conductor'),
           backgroundColor: Theme.of(context).primaryColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/consultarPatente');
+            },
+          )
         ),
         body: Center(
           child: Column(
@@ -132,7 +137,7 @@ class ConductorContent extends StatelessWidget {
           const SizedBox(width: 10),
           Column(
             children: [
-              _texto(title, _textStyle(Colors.red.shade600, FontWeight.bold)),
+              _texto(title, _textStyle(Colors.black, FontWeight.bold)),
               _texto(content, _textStyle(Colors.black, FontWeight.normal)),
             ],
           ),

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/report_class.dart';
+import 'package:go_router/go_router.dart';
 
 class ReportPanel extends StatefulWidget {
   const ReportPanel({super.key});
   @override
-  _ReportPanelState createState() => _ReportPanelState();
+  State<ReportPanel> createState() {
+    // Avoid using private types in public APIs.
+    return _ReportPanelState();
+  }
 }
 
 class _ReportPanelState extends State<ReportPanel> {
-    final List<Report> reports = [
+  final List<Report> reports = [
     Report(
       reason: 'Exceso de velocidad',
       reporterName: 'Juan Pérez',
@@ -32,50 +36,54 @@ class _ReportPanelState extends State<ReportPanel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Report Panel'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: ListView.builder(
-        itemCount: reports.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: ListTile(
-              title: Text(reports[index].reason),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Reportado por: ${reports[index].reporterName}'),
-                  Text('Patente: ${reports[index].licensePlate}'),
-                ],
+        appBar: AppBar(
+          title: const Text('Panel de Reportes'),
+          backgroundColor: Theme.of(context).primaryColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/home');
+            },
+          ),
+        ),
+        body: ListView.builder(
+          itemCount: reports.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ListTile(
+                title: Text(reports[index].reason),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Reportado por: ${reports[index].reporterName}'),
+                    Text('Patente: ${reports[index].licensePlate}'),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          reports.removeAt(index);
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.info),
+                      onPressed: () {
+                        _showReportDetails(context, reports[index]);
+                      },
+                    ),
+                  ],
+                ),
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      // Implementa la lógica para eliminar el reporte
-                      setState(() {
-                        reports.removeAt(index);
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.info),
-                    onPressed: () {
-                      // Implementa la lógica para ver más información del reporte
-                      _showReportDetails(context, reports[index]);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
+            );
+          },
+        ),
+      );
   }
 
   void _showReportDetails(BuildContext context, Report report) {
@@ -93,7 +101,7 @@ class _ReportPanelState extends State<ReportPanel> {
               Text('Patente: ${report.licensePlate}'),
               const SizedBox(height: 10),
               const Text('Comentarios adicionales:'),
-              Text(report.comments), // Mostrar comentarios
+              Text(report.comments),
             ],
           ),
           actions: [

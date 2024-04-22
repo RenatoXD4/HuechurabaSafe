@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
 import 'package:frontend/pages/admin.dart';
 import 'package:frontend/pages/consulta_patente.dart';
-import 'package:frontend/pages/login.dart';
+import 'package:frontend/pages/crear_conductor_form.dart';
+import 'package:frontend/pages/crear_usuario_form.dart';
+import 'package:frontend/pages/inicio.dart';
 import 'package:frontend/pages/perfil.dart';
 import 'package:frontend/pages/qr_scanner.dart';
 import 'package:frontend/pages/report_form.dart';
@@ -14,15 +16,11 @@ class RouterPages {
     routes: <RouteBase>[
       GoRoute(
         path: '/',
-        builder: (BuildContext context, GoRouterState state) => const HomeScreen(),
+        builder: (BuildContext context, GoRouterState state) => const Inicio(),
         routes: <RouteBase>[
           GoRoute(
             path: 'perfilConductor',
             builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
-          ),
-          GoRoute(
-            path: 'iniciarSesion',
-            builder: (BuildContext context, GoRouterState state) => const LoginPage(),
           ),
           GoRoute(
             path: 'consultarPatente', // Ensure this path matches the one you're navigating to
@@ -43,6 +41,18 @@ class RouterPages {
           GoRoute(
             path: 'scannerQr', // Ensure this path matches the one you're navigating to
             builder: (BuildContext context, GoRouterState state) => const Scanner(),
+          ),
+          GoRoute(
+            path: 'registrarse', // Ensure this path matches the one you're navigating to
+            builder: (BuildContext context, GoRouterState state) => const UsuarioForm(),
+          ),
+          GoRoute(
+            path: 'crearConductor', // Ensure this path matches the one you're navigating to
+            builder: (BuildContext context, GoRouterState state) => const ConductorForm(),
+          ),
+          GoRoute(
+            path: 'home', // Ensure this path matches the one you're navigating to
+            builder: (BuildContext context, GoRouterState state) => const HomeScreen(),
           ),
         ],
       ),
