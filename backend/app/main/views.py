@@ -14,7 +14,7 @@ def crear_conductor():
         return jsonify({'error': 'La patente ya está registrada'}), 400
 
     # Crear un nuevo conductor si la patente no está en uso
-    nuevo_conductor = Conductor(patente=data['patente'], nombre=data['nombre'], auto=data['auto'])
+    nuevo_conductor = Conductor(patente=data['patente'], nombre_conductor=data['nombre'], nombre_vehiculo=data['auto'])
     db.session.add(nuevo_conductor)
     db.session.commit()
 
