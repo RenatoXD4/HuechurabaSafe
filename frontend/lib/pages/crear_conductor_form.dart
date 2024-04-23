@@ -60,7 +60,7 @@ class _ConductorFormState extends State<ConductorForm> {
         'foto',
         bytes,
         filename: 'foto.jpg',
-        contentType: http_parser.MediaType('image', 'jpg'),
+        contentType: http_parser.MediaType('image', 'jpeg'),
       );
       request.files.add(file);
     }
