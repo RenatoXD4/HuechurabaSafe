@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/regex.dart';
 import 'package:frontend/services/ip_request.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -81,6 +82,12 @@ class _UsuarioFormState extends State<UsuarioForm> {
       appBar: AppBar(
         title: const Text('Registro de Usuario'),
         backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/home');
+            },
+          )
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

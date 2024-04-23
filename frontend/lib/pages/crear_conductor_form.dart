@@ -28,56 +28,56 @@ class _ConductorFormState extends State<ConductorForm> {
   final ImagePicker _picker = ImagePicker();
 
   void mostrarError(String errorMessage) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('ERROR'),
-        content: Text(errorMessage),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('OK'),
-          ),
-        ],
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('ERROR'),
+            content: Text(errorMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
       );
-    },
-  );
-}
-
-  Future<void> _crearConductor() async {
-    final url = Uri.parse('http://$apiIp:9090/api/crearConductor');
-    final request = http.MultipartRequest('POST', url);
-    request.fields['nombre'] = _nombreController.text;
-    request.fields['patente'] = _patenteController.text;
-    request.fields['auto'] = _tipoVehiculoController.text;
-    request.headers['Content-Type'] = 'multipart/form-data';
-    if (_fotoConductor != null) {
-      final bytes = base64Decode(_fotoConductor!);
-      final file = http.MultipartFile.fromBytes(
-        'foto',
-        bytes,
-        filename: 'foto.jpg',
-        contentType: http_parser.MediaType('image', 'jpeg'),
-      );
-      request.files.add(file);
     }
 
-    final response = await request.send();
+    Future<void> _crearConductor() async {
+      final url = Uri.parse('http://$apiIp:9090/api/crearConductor');
+      final request = http.MultipartRequest('POST', url);
+      request.fields['nombre'] = _nombreController.text;
+      request.fields['patente'] = _patenteController.text;
+      request.fields['auto'] = _tipoVehiculoController.text;
+      request.headers['Content-Type'] = 'multipart/form-data';
+      if (_fotoConductor != null) {
+        final bytes = base64Decode(_fotoConductor!);
+        final file = http.MultipartFile.fromBytes(
+          'foto',
+          bytes,
+          filename: 'foto.jpg',
+          contentType: http_parser.MediaType('image', 'jpeg'),
+        );
+        request.files.add(file);
+      }
 
-    if (response.statusCode == 201) {
-      print('Conductor creado correctamente');
-    } else if (response.statusCode == 400) {
-      // La patente ya está registrada
-      final errorMessage = await response.stream.bytesToString();
-      print('Error al crear conductor: $errorMessage');
-      // Aquí puedes mostrar el mensaje de error al usuario si lo deseas
-    } else {
-      print('Error al crear conductor: ${response.reasonPhrase}');
+      final response = await request.send();
+
+      if (response.statusCode == 201) {
+        print('Conductor creado correctamente');
+      } else if (response.statusCode == 400) {
+        // La patente ya está registrada
+        final errorMessage = await response.stream.bytesToString();
+        print('Error al crear conductor: $errorMessage');
+        mostrarError(errorMessage); // Mostrar el mensaje de error en un diálogo
+      } else {
+        print('Error al crear conductor: ${response.reasonPhrase}');
+      }
     }
-  }
 
    Future<void> selectImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
