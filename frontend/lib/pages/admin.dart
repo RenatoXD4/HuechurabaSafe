@@ -115,14 +115,14 @@ class _AdminPageState extends State<AdminPage> {
         DataColumn(label: Text('Acciones')),
       ],
       rows: _drivers
-          .map((driver) => _buildDriverDataRow(
-                context,
-                driver['name']!,
-                driver['rut']!,
-                driver['type']!,
-                driver['plate']!,
-              ))
-          .toList(),
+      .map((driver) => _buildDriverDataRow(
+            context,
+            driver['name'] ?? '',
+            driver['rut'] ?? '',
+            driver['type'] ?? '',
+            driver['plate'] ?? '',
+          ))
+      .toList(),
     );
   }
 

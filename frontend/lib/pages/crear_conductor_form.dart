@@ -1,10 +1,13 @@
 //import 'dart:io';
-import 'dart:io';
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../models/regex.dart';
 import '../services/ip_request.dart';
+import 'package:http_parser/http_parser.dart' as http_parser;
 
 class ConductorForm extends StatefulWidget {
   const ConductorForm({super.key});
@@ -20,7 +23,7 @@ class _ConductorFormState extends State<ConductorForm> {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _patenteController = TextEditingController();
   final TextEditingController _tipoVehiculoController = TextEditingController();
-  File? _fotoConductor;
+  String? _fotoConductor;
   final Regex _regex = Regex();
   final ImagePicker _picker = ImagePicker();
 
@@ -50,29 +53,42 @@ class _ConductorFormState extends State<ConductorForm> {
     request.fields['nombre'] = _nombreController.text;
     request.fields['patente'] = _patenteController.text;
     request.fields['auto'] = _tipoVehiculoController.text;
+    request.headers['Content-Type'] = 'multipart/form-data';
     if (_fotoConductor != null) {
-      request.files.add(await http.MultipartFile.fromPath('foto', _fotoConductor!.path));
+      final bytes = base64Decode(_fotoConductor!);
+      final file = http.MultipartFile.fromBytes(
+        'foto',
+        bytes,
+        filename: 'foto.jpg',
+        contentType: http_parser.MediaType('image', 'jpg'),
+      );
+      request.files.add(file);
     }
 
     final response = await request.send();
 
     if (response.statusCode == 201) {
       print('Conductor creado correctamente');
+    } else if (response.statusCode == 400) {
+      // La patente ya está registrada
+      final errorMessage = await response.stream.bytesToString();
+      print('Error al crear conductor: $errorMessage');
+      // Aquí puedes mostrar el mensaje de error al usuario si lo deseas
     } else {
       print('Error al crear conductor: ${response.reasonPhrase}');
     }
   }
 
-  Future<void> selectImage() async {
-  final pickedFile = await _picker.pickImage(source: ImageSource.gallery); // Puedes cambiar ImageSource.gallery por ImageSource.camera si deseas tomar una foto
+   Future<void> selectImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-  if (pickedFile != null) {
-    // La imagen fue seleccionada correctamente
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      final base64String = base64Encode(bytes);
       setState(() {
-        _fotoConductor = File(pickedFile.path); // _imageFile es una variable de tipo File para almacenar la imagen seleccionada
+        _fotoConductor = base64String;
       });
     } else {
-      // El usuario canceló la selección
       print('No se seleccionó ninguna imagen.');
     }
   }
@@ -159,5 +175,4 @@ class _ConductorFormState extends State<ConductorForm> {
       ),
     );
   }
-
 }
