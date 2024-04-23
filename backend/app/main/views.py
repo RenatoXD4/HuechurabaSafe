@@ -4,7 +4,7 @@ from extension import db
 main_bp = Blueprint('main', __name__)
 
 
-@main_bp.route('/crearConductor', methods = ['POST'])
+@main_bp.route('/api/crearConductor', methods = ['POST'])
 def crear_conductor():
     from models import Conductor
     data = request.json
@@ -18,7 +18,7 @@ def crear_conductor():
 
     return jsonify({'mensaje': 'Conductor creado correctamente'}), 201
 
-@main_bp.route('/conductores', methods = ['GET'])
+@main_bp.route('/api/obtenerConductores', methods = ['GET'])
 def obtener_conductores():
     from models import Conductor
     conductores = Conductor.query.all()
@@ -35,7 +35,7 @@ def obtener_conductores():
     return jsonify(conductores_data)
 
 
-@main_bp.route('/conductores/<int:id>', methods=['PUT'])
+@main_bp.route('/api/updateConductor/<int:id>', methods=['PUT'])
 def actualizar_conductor(id):
     from models import Conductor
     conductor = Conductor.query.get(id)
@@ -57,7 +57,7 @@ def actualizar_conductor(id):
     return jsonify({'message': 'Conductor actualizado correctamente'}), 200
 
 
-@main_bp.route('/conductor/<string:patente>', methods = ['GET'])
+@main_bp.route('/api/obtenerConductor/<string:patente>', methods = ['GET'])
 def obtenerConductor(patente):
     from models import Conductor
     patente = any
@@ -74,7 +74,7 @@ def obtenerConductor(patente):
         return jsonify({'mensaje': 'Conductor no encontrado'}), 404
     
 
-@main_bp.route('/borrar/<string:patente>', methods=['DELETE'])
+@main_bp.route('/api/borrarConductor/<string:patente>', methods=['DELETE'])
 def borrarConductor(patente):
     from models import Conductor
     conductor = Conductor.query.filter_by(patente=patente).first()

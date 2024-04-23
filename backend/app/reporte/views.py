@@ -4,7 +4,7 @@ from extension import db
 reporte_bp = Blueprint('reporte', __name__)
 
 
-@reporte_bp.route('/crearReporte', methods=['POST'])
+@reporte_bp.route('/api/crearReporte', methods=['POST'])
 def crear_reporte():
     from models import Reporte
     data = request.json
@@ -17,7 +17,7 @@ def crear_reporte():
     db.session.commit()
     return jsonify({'mensaje': 'Reporte creado correctamente'}), 201
 
-@reporte_bp.route('/obtenerReporte/<int:id>', methods=['GET'])
+@reporte_bp.route('/api/obtenerReporte/<int:id>', methods=['GET'])
 def obtener_reporte(id):
     from models import Reporte
     reporte = Reporte.query.get(id)
@@ -31,7 +31,7 @@ def obtener_reporte(id):
     }
     return jsonify(reporte_data), 200
 
-@reporte_bp.route('/obtenerReportes', methods=['GET'])
+@reporte_bp.route('/api/obtenerReportes', methods=['GET'])
 def obtener_todos_los_reportes():
     from models import Reporte
     reportes = Reporte.query.all()
@@ -51,7 +51,7 @@ def obtener_todos_los_reportes():
     return jsonify(reportes_data), 200
 
 
-@reporte_bp.route('/eliminarReporte/<int:id>', methods=['DELETE'])
+@reporte_bp.route('/api/eliminarReporte/<int:id>', methods=['DELETE'])
 def eliminar_reporte(id):
     from models import Reporte
     reporte = Reporte.query.get(id)
