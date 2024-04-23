@@ -51,7 +51,7 @@ class Conductor(db.Model):
     def save_foto(self, foto_data):
         if foto_data:
             filename = f"{self.id}_foto.jpg"
-            foto_path = os.path.join('static', 'img', filename) 
+            foto_path = os.path.join('img', filename)  # Ruta relativa desde la carpeta raíz
             foto_data.save(foto_path)
             self.foto_path = url_for('static', filename=f'img/{filename}')
             db.session.commit()
