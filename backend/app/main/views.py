@@ -7,17 +7,22 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/api/crearConductor', methods=['POST'])
 def crear_conductor():
     from models import Conductor
-    data = request.json
+
+    # Acceder a los campos del formulario
+    nombre = request.form.get('nombre')
+    patente = request.form.get('patente')
+    auto = request.form.get('auto')
 
     # Verificar si la patente ya está en uso
-    if Conductor.query.filter_by(patente=data['patente']).first():
+    if Conductor.query.filter_by(patente=patente).first():
         return jsonify({'error': 'La patente ya está registrada'}), 400
 
     # Crear un nuevo conductor si la patente no está en uso
-    nuevo_conductor = Conductor(patente=data['patente'], nombre_conductor=data['nombre'], nombre_vehiculo=data['auto'])
+    nuevo_conductor = Conductor(nombre_conductor=nombre,patente=patente, nombre_vehiculo=auto)
     db.session.add(nuevo_conductor)
     db.session.commit()
 
+    # Guardar la foto del conductor si se adjuntó
     foto_conductor = request.files.get('foto')
     if foto_conductor:
         nuevo_conductor.save_foto(foto_conductor)
