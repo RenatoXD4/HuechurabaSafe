@@ -4,10 +4,16 @@ from extension import db
 main_bp = Blueprint('main', __name__)
 
 
-@main_bp.route('/api/crearConductor', methods = ['POST'])
+@main_bp.route('/api/crearConductor', methods=['POST'])
 def crear_conductor():
     from models import Conductor
     data = request.json
+
+    # Verificar si la patente ya está en uso
+    if Conductor.query.filter_by(patente=data['patente']).first():
+        return jsonify({'error': 'La patente ya está registrada'}), 400
+
+    # Crear un nuevo conductor si la patente no está en uso
     nuevo_conductor = Conductor(patente=data['patente'], nombre=data['nombre'], auto=data['auto'])
     db.session.add(nuevo_conductor)
     db.session.commit()
