@@ -1,7 +1,10 @@
 //import 'dart:io';
+import 'dart:io';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import '../models/regex.dart';
+import '../services/ip_request.dart';
 
 class ConductorForm extends StatefulWidget {
   const ConductorForm({super.key});
@@ -17,8 +20,62 @@ class _ConductorFormState extends State<ConductorForm> {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _patenteController = TextEditingController();
   final TextEditingController _tipoVehiculoController = TextEditingController();
-  //File? _fotoConductor;
+  File? _fotoConductor;
   final Regex _regex = Regex();
+  final ImagePicker _picker = ImagePicker();
+
+  void mostrarError(String errorMessage) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('ERROR'),
+        content: Text(errorMessage),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+  Future<void> _crearConductor() async {
+    final url = Uri.parse('http://$apiIp:9090/api/crearConductor');
+    final request = http.MultipartRequest('POST', url);
+    request.fields['nombre'] = _nombreController.text;
+    request.fields['patente'] = _patenteController.text;
+    request.fields['auto'] = _tipoVehiculoController.text;
+    if (_fotoConductor != null) {
+      request.files.add(await http.MultipartFile.fromPath('foto', _fotoConductor!.path));
+    }
+
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      print('Conductor creado correctamente');
+    } else {
+      print('Error al crear conductor: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<void> selectImage() async {
+  final pickedFile = await _picker.pickImage(source: ImageSource.gallery); // Puedes cambiar ImageSource.gallery por ImageSource.camera si deseas tomar una foto
+
+  if (pickedFile != null) {
+    // La imagen fue seleccionada correctamente
+      setState(() {
+        _fotoConductor = File(pickedFile.path); // _imageFile es una variable de tipo File para almacenar la imagen seleccionada
+      });
+    } else {
+      // El usuario canceló la selección
+      print('No se seleccionó ninguna imagen.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +129,7 @@ class _ConductorFormState extends State<ConductorForm> {
                 child: ElevatedButton(
                   style: ButtonStyle(fixedSize: MaterialStateProperty.all(const Size(270, 30)), shape: const MaterialStatePropertyAll(LinearBorder.none)),
                   onPressed: () {
-                    // Aquí puedes implementar la lógica para seleccionar una foto del conductor
+                    selectImage();
                   },
                   child:const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -103,13 +160,4 @@ class _ConductorFormState extends State<ConductorForm> {
     );
   }
 
-  void _crearConductor() {
-    // Aquí puedes implementar la lógica para guardar el nuevo conductor en la base de datos
-    //String nombre = _nombreController.text;
-    //String patente = _patenteController.text;
-    //String tipoVehiculo = _tipoVehiculoController.text;
-    // File _fotoConductor contiene la foto seleccionada
-
-    // Lógica para guardar el nuevo conductor...
-  }
 }

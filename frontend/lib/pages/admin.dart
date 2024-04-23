@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -62,7 +63,7 @@ class _AdminPageState extends State<AdminPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                // Implementa la lógica para agregar un nuevo conductor
+                 context.go('/crearConductor');
               },
               child: const Text('Agregar Conductor'),
             ),

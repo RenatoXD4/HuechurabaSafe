@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/regex.dart';
+import 'package:frontend/services/ip_request.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -43,7 +44,7 @@ class _UsuarioFormState extends State<UsuarioForm> {
 
      // Función para crear el usuario
   Future<void> _crearUsuario() async {
-    final url = Uri.parse('http://34.176.128.126:9090/api/crearUsuario');
+    final url = Uri.parse('http://$apiIp:9090/api/crearUsuario');
     final headers = {'Content-Type': 'application/json'};
     final body = {
       'username': _usernameController.text,
