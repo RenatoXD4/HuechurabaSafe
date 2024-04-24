@@ -1,6 +1,6 @@
 import os
 from flask import url_for
-from application import db, app
+from application import db
 import bcrypt
 
 
@@ -50,6 +50,7 @@ class Conductor(db.Model):
         return f'<Conductor: {self.nombre_conductor}>'
 
     def save_foto(self, foto_data):
+        from application import app
         if foto_data:
             filename = f"{self.id}_foto.jpg"
             foto = os.path.join(app.config['IMAGES_UPLOAD_DIR'], filename)  # Ruta completa al archivo
