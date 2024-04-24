@@ -6,4 +6,4 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'mysql://prueba1:admin@0.0.0.0/prueba'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
-    IMAGES_UPLOAD_DIR = os.path.join(os.getcwd(), 'static', 'images')
+    IMAGES_UPLOAD_DIR = os.path.join(os.getcwd(), 'static', 'img')
