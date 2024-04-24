@@ -53,7 +53,8 @@ class Conductor(db.Model):
         from application import app
         if foto_data:
             filename = f"{self.id}_foto.jpg"
-            foto = os.path.join(app.config['IMAGES_UPLOAD_DIR'], filename)  # Ruta completa al archivo
+            basedir = os.path.abspath(os.path.dirname(__file__))
+            foto = os.path.join(basedir,app.config['IMAGES_UPLOAD_DIR'], filename)  # Ruta completa al archivo
             foto_data.save(foto)
             self.foto = url_for('static', filename=f'img/{filename}')
             db.session.commit()
