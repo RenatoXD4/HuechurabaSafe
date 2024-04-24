@@ -1,7 +1,8 @@
 import os
 from flask import url_for
-from application import db
+from application import db, app
 import bcrypt
+
 
 
 class Usuario(db.Model):
@@ -51,7 +52,7 @@ class Conductor(db.Model):
     def save_foto(self, foto_data):
         if foto_data:
             filename = f"{self.id}_foto.jpg"
-            foto = os.path.join('static', 'img', filename)  # Ruta completa al archivo
+            foto = os.path.join(app.config['IMAGES_UPLOAD_DIR'], filename)  # Ruta completa al archivo
             foto_data.save(foto)
             self.foto = url_for('static', filename=f'img/{filename}')
             db.session.commit()
