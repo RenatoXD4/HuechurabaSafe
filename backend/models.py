@@ -42,7 +42,7 @@ class Conductor(db.Model):
     nombre_conductor = db.Column(db.String(80), nullable=False)
     patente = db.Column(db.String(80), unique=True, nullable=False, index=True)
     nombre_vehiculo = db.Column(db.String(80), nullable=False)
-    foto_path = db.Column(db.String(255)) 
+    foto = db.Column(db.String(255)) 
     conductores = db.relationship('Reporte', backref="conductor")
 
     def __repr__(self):
@@ -51,13 +51,13 @@ class Conductor(db.Model):
     def save_foto(self, foto_data):
         if foto_data:
             filename = f"{self.id}_foto.jpg"
-            foto_path = os.path.join('static', 'img', filename) 
-            foto_data.save(foto_path)
-            self.foto_path = url_for('static', filename=f'img/{filename}')
+            foto = os.path.join('static', 'img', filename) 
+            foto_data.save(foto)
+            self.foto = url_for('static', filename=f'img/{filename}')
             db.session.commit()
 
     def obtener_foto_url(self):
-        return url_for('static', filename=self.foto_path)
+        return url_for('static', filename=self.foto)
     
 class Reporte(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
