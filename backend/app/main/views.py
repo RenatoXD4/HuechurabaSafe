@@ -54,14 +54,15 @@ def actualizar_conductor(id):
         return jsonify({'error': 'Conductor no encontrado'}), 404
 
     data = request.get_json()
+    dataFoto = request._get_file_stream()
     if 'nombre_conductor' in data:
         conductor.nombre_conductor = data['nombre_conductor']
     if 'patente' in data:
         conductor.patente = data['patente']
     if 'nombre_vehiculo' in data:
         conductor.nombre_vehiculo = data['nombre_vehiculo']
-    if 'foto_path' in data:
-        conductor.foto_path = data['foto_path']
+    if 'foto' in dataFoto:
+        conductor.foto = dataFoto['foto']
 
     db.session.commit()
 
@@ -80,6 +81,7 @@ def obtenerConductor(patente):
             'nombre': conductor.nombre,
             'patente': conductor.patente,
             'auto': conductor.auto,
+            'foto': conductor.foto
         }})
     else:
         return jsonify({'mensaje': 'Conductor no encontrado'}), 404
