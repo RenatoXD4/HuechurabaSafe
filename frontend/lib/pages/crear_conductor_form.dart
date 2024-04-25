@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../models/regex.dart';
@@ -28,58 +29,68 @@ class _ConductorFormState extends State<ConductorForm> {
   final ImagePicker _picker = ImagePicker();
 
   void mostrarError(String errorMessage) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('ERROR'),
-            content: Text(errorMessage),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    Future<void> _crearConductor() async {
-      final url = Uri.parse('http://$apiIp:9090/api/crearConductor');
-      final request = http.MultipartRequest('POST', url);
-      request.fields['nombre'] = _nombreController.text;
-      request.fields['patente'] = _patenteController.text;
-      request.fields['auto'] = _tipoVehiculoController.text;
-      request.headers['Content-Type'] = 'multipart/form-data';
-      if (_fotoConductor != null) {
-        final bytes = base64Decode(_fotoConductor!);
-        final file = http.MultipartFile.fromBytes(
-          'foto',
-          bytes,
-          filename: 'foto.jpg',
-          contentType: http_parser.MediaType('image', 'jpeg'),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ERROR'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
         );
-        request.files.add(file);
-      }
+      },
+    );
+  }
 
-      final response = await request.send();
-
-      if (response.statusCode == 201) {
-        print('Conductor creado correctamente');
-      } else if (response.statusCode == 400) {
-        // La patente ya está registrada
-        final errorMessage = await response.stream.bytesToString();
-        print('Error al crear conductor: $errorMessage');
-        mostrarError(errorMessage); // Mostrar el mensaje de error en un diálogo
-      } else {
-        print('Error al crear conductor: ${response.reasonPhrase}');
-      }
+  Future<void> _crearConductor() async {
+    final url = Uri.parse('http://$apiIp:9090/api/crearConductor');
+    final request = http.MultipartRequest('POST', url);
+    request.fields['nombre'] = _nombreController.text;
+    request.fields['patente'] = _patenteController.text;
+    request.fields['auto'] = _tipoVehiculoController.text;
+    request.headers['Content-Type'] = 'multipart/form-data';
+    String nombreConductor = _nombreController.text;
+    if (_fotoConductor != null) {
+      final bytes = base64Decode(_fotoConductor!);
+      final file = http.MultipartFile.fromBytes(
+        'foto',
+        bytes,
+        filename: 'foto.jpg',
+        contentType: http_parser.MediaType('image', 'jpeg'),
+      );
+      request.files.add(file);
     }
 
-   Future<void> selectImage() async {
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      print('Conductor creado correctamente');
+      Fluttertoast.showToast(
+          msg: "Conductor $nombreConductor creado exitosamente",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: const Color.fromARGB(255, 17, 255, 0),
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } else if (response.statusCode == 400) {
+      // La patente ya está registrada
+      final errorMessage = await response.stream.bytesToString();
+      print('Error al crear conductor: $errorMessage');
+      mostrarError(errorMessage); // Mostrar el mensaje de error en un diálogo
+    } else {
+      print('Error al crear conductor: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<void> selectImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
@@ -106,73 +117,104 @@ class _ConductorFormState extends State<ConductorForm> {
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                controller: _nombreController,
-                decoration: const InputDecoration(labelText: 'Nombre del Conductor'),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingrese el nombre del conductor';
-                  }
-                  return _regex.formValidate(_regex.name, value, 'El nombre del conductor es inválido');
-                },
-              ),
-              TextFormField(
-                controller: _patenteController,
-                decoration: const InputDecoration(labelText: 'Patente'),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingrese la patente';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _tipoVehiculoController,
-                decoration: const InputDecoration(labelText: 'Tipo de Vehículo'),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingrese el tipo de vehículo';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 15,),
-              Center(
-                child: ElevatedButton(
-                  style: ButtonStyle(fixedSize: MaterialStateProperty.all(const Size(270, 30)), shape: const MaterialStatePropertyAll(LinearBorder.none)),
-                  onPressed: () {
-                    selectImage();
-                  },
-                  child:const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.photo),
-                      SizedBox(width: 10),
-                      Text('Subir foto')
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Aquí puedes implementar la lógica para guardar el nuevo conductor en la base de datos
-                      _crearConductor();
-                    }
-                  },
-                  child: const Text('Crear Conductor'),
-                ),
-              ),
-            ],
+            children: _camposForm(context),
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _camposForm(BuildContext context) {
+    return <Widget>[
+            TextFormField(
+              controller: _nombreController,
+              decoration:
+                  const InputDecoration(labelText: 'Nombre del Conductor'),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, ingrese el nombre del conductor';
+                }
+                return _regex.formValidate(_regex.name, value,
+                    'El nombre del conductor es inválido');
+              },
+            ),
+            TextFormField(
+              controller: _patenteController,
+              decoration: const InputDecoration(labelText: 'Patente'),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, ingrese la patente';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _tipoVehiculoController,
+              decoration:
+                  const InputDecoration(labelText: 'Tipo de Vehículo'),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, ingrese el tipo de vehículo';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Center(
+              child: _fotoConductor != null
+                ? Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: Theme.of(context).primaryColor, width: 10),
+                      image: DecorationImage(
+                        image: MemoryImage(base64Decode(_fotoConductor!)),
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                  )
+                : const Text('Por favor, seleccione una foto'),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Center(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(const Size(270, 30)),
+                    shape: const MaterialStatePropertyAll(LinearBorder.none)),
+                onPressed: () {
+                  selectImage();
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.photo),
+                    SizedBox(width: 10),
+                    Text('Subir foto')
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: _fotoConductor != null
+                  ? () {
+                      if (_formKey.currentState!.validate()) {
+                        _crearConductor();
+                      }
+                    }
+                  : null, // Deshabilitar el botón si no se ha seleccionado una foto
+                child: const Text('Crear Conductor'),
+              ),
+            ),
+          ];
   }
 }
