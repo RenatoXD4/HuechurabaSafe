@@ -57,7 +57,7 @@ class HomePage extends StatelessWidget {
               backgroundColor: Colors.orange[800],
               foregroundColor: Colors.white,
             ),
-            child: const Text('Salir', style: TextStyle(fontSize: 18)),
+            child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 18)),
           ),
           const SizedBox(height: 20),
         ],

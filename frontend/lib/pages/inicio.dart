@@ -36,7 +36,7 @@ class _InicioState extends State<Inicio> {
                   child: TextFormField(
                     controller: _usernameController,
                     decoration: const InputDecoration(
-                      labelText: 'Usuario',
+                      labelText: 'Correo electrónico',
                       prefixIcon: Icon(Icons.person),
                       border: InputBorder.none,
                     ),
@@ -86,6 +86,16 @@ class _InicioState extends State<Inicio> {
                   },
                   child: const Text(
                     '¿Olvidó su contraseña?',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    context.go('/registrarse');
+                  },
+                  child: const Text(
+                    'Registrarse',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
