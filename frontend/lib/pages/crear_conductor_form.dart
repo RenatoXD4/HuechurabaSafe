@@ -3,13 +3,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../models/regex.dart';
-import '../services/ip_request.dart';
-import 'package:http_parser/http_parser.dart' as http_parser;
-
+import '../services/conductor_service.dart';
 class ConductorForm extends StatefulWidget {
   const ConductorForm({super.key});
 
@@ -49,44 +45,16 @@ class _ConductorFormState extends State<ConductorForm> {
   }
 
   Future<void> _crearConductor() async {
-    final url = Uri.parse('http://$apiIp:9090/api/crearConductor');
-    final request = http.MultipartRequest('POST', url);
-    request.fields['nombre'] = _nombreController.text;
-    request.fields['patente'] = _patenteController.text;
-    request.fields['auto'] = _tipoVehiculoController.text;
-    request.headers['Content-Type'] = 'multipart/form-data';
-    String nombreConductor = _nombreController.text;
-    if (_fotoConductor != null) {
-      final bytes = base64Decode(_fotoConductor!);
-      final file = http.MultipartFile.fromBytes(
-        'foto',
-        bytes,
-        filename: 'foto.jpg',
-        contentType: http_parser.MediaType('image', 'jpeg'),
+    // Llama a la función del servicio de conductor
+    try {
+      await ConductorService.crearConductor( // Asegúrate de definir apiIp en tu contexto
+        nombre: _nombreController.text,
+        patente: _patenteController.text,
+        tipoVehiculo: _tipoVehiculoController.text,
+        fotoConductor: _fotoConductor,
       );
-      request.files.add(file);
-    }
-
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      print('Conductor creado correctamente');
-      Fluttertoast.showToast(
-          msg: "Conductor $nombreConductor creado exitosamente",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: const Color.fromARGB(255, 17, 255, 0),
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-    } else if (response.statusCode == 400) {
-      // La patente ya está registrada
-      final errorMessage = await response.stream.bytesToString();
-      print('Error al crear conductor: $errorMessage');
-      mostrarError(errorMessage); // Mostrar el mensaje de error en un diálogo
-    } else {
-      print('Error al crear conductor: ${response.reasonPhrase}');
+    } catch (e) {
+      // Maneja cualquier excepción aquí, si es necesario
     }
   }
 

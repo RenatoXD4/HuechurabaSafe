@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/regex.dart';
-import 'package:frontend/services/ip_request.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
+import '../services/usuario_service.dart';
 
 class UsuarioForm extends StatefulWidget {
   const UsuarioForm({super.key});
@@ -45,34 +44,16 @@ class _UsuarioFormState extends State<UsuarioForm> {
 
      // Función para crear el usuario
   Future<void> _crearUsuario() async {
-    final url = Uri.parse('http://$apiIp:9090/api/crearUsuario');
-    final headers = {'Content-Type': 'application/json'};
-    final body = {
-      'username': _usernameController.text,
-      'email': _emailController.text,
-      'password': _passwordController.text,
-      'rol': "1", // ID del rol de Usuario
-    };
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body),
-    );
-
-    if (response.statusCode == 201) {
-      // Usuario creado correctamente
-      print('Usuario creado correctamente');
-    } else if (response.statusCode == 400) {
-      // El correo electrónico ya está registrado
-      final responseData = json.decode(response.body);
-      final errorMessage = responseData['error']; // Usar la clave correcta del mensaje de error
-      // Verificar si el widget está montado antes de mostrar el diálogo
-      if (mounted) {
-        mostrarError(errorMessage);
-      }
-    } else {
-      // Otro error
-      print('Error al crear usuario: ${response.statusCode}');
+    // Llama a la función del servicio de usuario
+    try {
+      await UsuarioService.crearUsuario(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text, // Asegúrate de que apiIp esté definido en tu contexto
+      );
+    } catch (e) {
+      // Maneja cualquier excepción aquí
+      mostrarError(e.toString());
     }
   }
 
