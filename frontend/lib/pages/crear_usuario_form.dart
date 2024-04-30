@@ -42,14 +42,12 @@ class _UsuarioFormState extends State<UsuarioForm> {
     );
   }
 
-     // Función para crear el usuario
   Future<void> _crearUsuario() async {
-    // Llama a la función del servicio de usuario
     try {
       await UsuarioService.crearUsuario(
         username: _usernameController.text,
         email: _emailController.text,
-        password: _passwordController.text, // Asegúrate de que apiIp esté definido en tu contexto
+        password: _passwordController.text, 
       );
     } catch (e) {
       // Maneja cualquier excepción aquí
