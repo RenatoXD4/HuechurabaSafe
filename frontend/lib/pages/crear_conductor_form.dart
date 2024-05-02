@@ -115,6 +115,9 @@ class _ConductorFormState extends State<ConductorForm> {
                 if (value == null || value.isEmpty) {
                   return 'Por favor, ingrese la patente';
                 }
+                if(value.length != 6){
+                      return 'La patente tiene que tener 6 carácteres';
+                }
                 return null;
               },
             ),

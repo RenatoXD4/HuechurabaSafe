@@ -19,8 +19,8 @@ class RouterPages {
         builder: (BuildContext context, GoRouterState state) => const Inicio(),
         routes: <RouteBase>[
           GoRoute(
-            path: 'perfilConductor',
-            builder: (BuildContext context, GoRouterState state) => const ConductorContent(),
+            path: 'perfilConductor/:patente',
+            builder: (BuildContext context, GoRouterState state) => ConductorContent(patente: state.pathParameters['patente'],),
           ),
           GoRoute(
             path: 'consultarPatente', // Ensure this path matches the one you're navigating to

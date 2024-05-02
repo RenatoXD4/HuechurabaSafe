@@ -76,6 +76,9 @@ class _ConsultaPatenteState extends State<ConsultaPatente> {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, ingrese la patente';
                     }
+                    if(value.length != 6){
+                      return 'La patente tiene que tener 6 carácteres';
+                    }
                     return null;
                   },
                 ),
@@ -85,7 +88,7 @@ class _ConsultaPatenteState extends State<ConsultaPatente> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Aquí puedes hacer algo con el valor de la patente
-                    context.go('/perfilConductor');
+                    context.go('/perfilConductor/${_patenteController.text}');
                   }
                 },
                 style: ElevatedButton.styleFrom(

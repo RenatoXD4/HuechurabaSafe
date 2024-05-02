@@ -57,7 +57,7 @@ class ConductorService {
     }
   }
 
-  Future<Conductor> fetchConductor(String patente) async { //Obtener un conductor por patente
+  static Future<Conductor> fetchConductor(String patente) async { //Obtener un conductor por patente
     final response = await http
         .get(Uri.parse('http://$apiIp:9090/api/obtenerConductor/$patente'));
 
@@ -68,7 +68,7 @@ class ConductorService {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Hubo un error al obtener el conductor');
     }
   }
 
