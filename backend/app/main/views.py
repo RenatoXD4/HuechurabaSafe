@@ -79,7 +79,7 @@ def obtenerConductor(patente):
         return jsonify({'conductor': {
             'nombre': conductor.nombre_conductor,
             'patente': conductor.patente,
-            'auto': conductor.auto,
+            'auto': conductor.nombre_vehiculo,
             'foto': conductor.foto
         }})
     else:
