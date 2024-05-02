@@ -77,7 +77,7 @@ def obtenerConductor(patente):
 
     if conductor:
         return jsonify({'conductor': {
-            'nombre': conductor.nombre,
+            'nombre': conductor.nombre_conductor,
             'patente': conductor.patente,
             'auto': conductor.auto,
             'foto': conductor.foto
