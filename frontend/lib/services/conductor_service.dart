@@ -61,6 +61,7 @@ class ConductorService {
     final response = await http
         .get(Uri.parse('http://$apiIp:9090/api/obtenerConductor/$patente'));
 
+
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -73,4 +74,11 @@ class ConductorService {
   }
 
   // Puedes agregar más funciones aquí según sea necesario
+}
+
+
+class ConductorError implements Exception {
+  final String message;
+  
+  ConductorError(this.message);
 }

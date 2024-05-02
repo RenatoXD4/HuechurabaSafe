@@ -6,7 +6,7 @@ import '../models/conductor_class.dart';
 import '../services/conductor_service.dart';
 
 class ConductorContent extends StatefulWidget {
-  final String? patente;
+  final String patente;
 
   const ConductorContent({super.key, required this.patente});
 
@@ -22,9 +22,8 @@ class _ConductorContentState extends State<ConductorContent> {
   @override
   void initState() {
     super.initState();
-    if (widget.patente != null) {
-    _futureConductor = ConductorService.fetchConductor(widget.patente!);
-    }
+    _futureConductor = ConductorService.fetchConductor(widget.patente);
+    
   }
 
   @override
@@ -83,7 +82,7 @@ class _ConductorContentState extends State<ConductorContent> {
                                 width: 20,
                               ),
                               image: DecorationImage(
-                                image: AssetImage(conductor.foto),
+                                image: NetworkImage(conductor.foto),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -110,7 +109,7 @@ class _ConductorContentState extends State<ConductorContent> {
                       context,
                       'assets/icon1.svg',
                       'Nombre',
-                      conductor.nombreConductor,
+                      conductor.nombre,
                     ),
                     _buildInfoRow(
                       context,
@@ -122,7 +121,7 @@ class _ConductorContentState extends State<ConductorContent> {
                       context,
                       'assets/icon3.svg',
                       'Vehículo',
-                      conductor.tipoVehiculo,
+                      conductor.auto,
                     ),
                     const SizedBox(height: 10),
                     TextButton(
@@ -188,6 +187,8 @@ class _ConductorContentState extends State<ConductorContent> {
       ),
     );
   }
+
+  
 
   TextStyle _textStyle(Color color, FontWeight fontWeight) {
     return TextStyle(
