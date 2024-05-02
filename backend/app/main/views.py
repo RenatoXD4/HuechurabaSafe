@@ -76,11 +76,14 @@ def obtenerConductor(patente):
     conductor = Conductor.query.filter_by(patente=patente).first()
 
     if conductor:
+        # Obtener la URL completa de la foto del conductor
+        foto_url = request.url_root + conductor.foto if conductor.foto else None
+
         return jsonify({'conductor': {
             'nombre': conductor.nombre_conductor,
             'patente': conductor.patente,
             'auto': conductor.nombre_vehiculo,
-            'foto': conductor.foto
+            'foto': foto_url
         }})
     else:
         return jsonify({'mensaje': 'Conductor no encontrado'}), 404
