@@ -69,10 +69,9 @@ def actualizar_conductor(id):
     return jsonify({'message': 'Conductor actualizado correctamente'}), 200
 
 
-@main_bp.route('/api/obtenerConductor/<string:patente>', methods = ['GET'])
+@main_bp.route('/api/obtenerConductor/<string:patente>', methods=['GET'])
 def obtenerConductor(patente):
     from models import Conductor
-    patente = any
 
     conductor = Conductor.query.filter_by(patente=patente).first()
 
