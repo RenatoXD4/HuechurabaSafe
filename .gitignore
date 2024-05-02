@@ -181,3 +181,4 @@ cython_debug/
 #.idea/
 /frontend/ios
 /frontend/android
+/frontend/linux
