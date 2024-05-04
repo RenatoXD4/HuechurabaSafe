@@ -40,7 +40,7 @@ def obtener_conductores():
             'nombre_conductor': conductor.nombre_conductor,
             'patente': conductor.patente,
             'nombre_vehiculo': conductor.nombre_vehiculo,
-            'foto_url': conductor.obtener_foto_url()
+            'foto': conductor.obtener_foto_url()
         }
         conductores_data.append(conductor_data)
     return jsonify(conductores_data)
