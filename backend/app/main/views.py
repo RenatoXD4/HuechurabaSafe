@@ -37,9 +37,9 @@ def obtener_conductores():
     for conductor in conductores:
         conductor_data = {
             'id': conductor.id,
-            'nombre_conductor': conductor.nombre_conductor,
+            'nombre': conductor.nombre_conductor,
             'patente': conductor.patente,
-            'nombre_vehiculo': conductor.nombre_vehiculo,
+            'auto': conductor.nombre_vehiculo,
             'foto': conductor.obtener_foto_url()
         }
         conductores_data.append(conductor_data)
