@@ -29,7 +29,7 @@ def crear_conductor():
 
     return jsonify({'mensaje': 'Conductor creado correctamente'}), 201
 
-@main_bp.route('/api/obtenerConductores', methods = ['GET'])
+@main_bp.route('/api/obtenerConductores', methods=['GET'])
 def obtener_conductores():
     from models import Conductor
     conductores = Conductor.query.all()
@@ -43,7 +43,7 @@ def obtener_conductores():
             'foto': conductor.obtener_foto_url()
         }
         conductores_data.append(conductor_data)
-    return jsonify(conductores_data)
+    return jsonify({'conductores': conductores_data})
 
 
 @main_bp.route('/api/updateConductor/<int:id>', methods=['PUT'])
