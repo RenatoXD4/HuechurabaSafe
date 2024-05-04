@@ -43,7 +43,7 @@ def obtener_conductores():
             'foto': conductor.obtener_foto_url()
         }
         conductores_data.append(conductor_data)
-    return jsonify({'conductores': conductores_data})
+    return jsonify({'conductor': conductores_data})
 
 
 @main_bp.route('/api/updateConductor/<int:id>', methods=['PUT'])
