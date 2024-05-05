@@ -35,12 +35,13 @@ def obtener_conductores():
     conductores = Conductor.query.all()
     conductores_data = []
     for conductor in conductores:
+        foto_url = request.url_root + conductor.foto if conductor.foto else None
         conductor_data = {
             'id': conductor.id,
             'nombre': conductor.nombre_conductor,
             'patente': conductor.patente,
             'auto': conductor.nombre_vehiculo,
-            'foto': conductor.obtener_foto_url()
+            'foto': foto_url
         }
         conductores_data.append(conductor_data)
     return jsonify({'conductor': conductores_data})
