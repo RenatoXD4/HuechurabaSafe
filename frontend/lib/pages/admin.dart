@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../models/conductor_class.dart';
+import '../services/conductor_service.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -11,12 +17,31 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  final List<Map<String, String>> _drivers = [
-    {'name': 'Nombre1', 'type': 'Tipo1', 'plate': 'Patente1'},
-    {'name': 'Nombre2', 'type': 'Tipo2', 'plate': 'Patente2'},
-    {'name': 'Nombre3', 'type': 'Tipo3', 'plate': 'Patente3'},
-    // Agrega más conductores aquí si es necesario
-  ];
+  final ImagePicker _picker = ImagePicker();
+  late Future<List<Conductor>> _futureConductores;
+  String? _fotoConductor;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _futureConductores = ConductorService.fetchConductores();
+    
+  }
+
+  Future<void> selectImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      final base64String = base64Encode(bytes);
+      setState(() {
+        _fotoConductor = base64String;
+      });
+    } else {
+      print('No se seleccionó ninguna imagen.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +71,29 @@ class _AdminPageState extends State<AdminPage> {
               title: 'Rol:',
               value: 'Administrador',
             ),
-            const SizedBox(height: 20),
             _buildSectionTitle('Administración de Conductores'),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: _buildDriverTable(context),
-              ),
+            FutureBuilder<List<Conductor>>(
+              future: _futureConductores,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  print('Error: ${snapshot.error}');
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final conductores = snapshot.data!;
+                  return Expanded(
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: _buildDriverTable(context, conductores),
+                    ),
+                  );
+                }
+              },
             ),
             ElevatedButton(
               onPressed: () {
-                 context.go('/crearConductor');
+                context.go('/crearConductor');
               },
               child: const Text('Agregar Conductor'),
             ),
@@ -97,7 +134,7 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  Widget _buildDriverTable(BuildContext context) {
+  Widget _buildDriverTable(BuildContext context, List<Conductor> conductores) {
     return DataTable(
       columnSpacing: 16, // Espaciado entre columnas
       columns: const [
@@ -106,18 +143,19 @@ class _AdminPageState extends State<AdminPage> {
         DataColumn(label: Text('Patente')),
         DataColumn(label: Text('Acciones')),
       ],
-      rows: _drivers
-          .map((driver) => _buildDriverDataRow(
+      rows: conductores
+          .map((conductor) => _buildDriverDataRow(
                 context,
-                driver['name'] ?? '',
-                driver['type'] ?? '',
-                driver['plate'] ?? '',
+                conductor.nombre,
+                conductor.auto,
+                conductor.patente,
+                conductor.id
               ))
           .toList(),
     );
   }
 
-  DataRow _buildDriverDataRow(BuildContext context, String name, String type, String plate) {
+  DataRow _buildDriverDataRow(BuildContext context, String name, String type, String plate, int id) {
     return DataRow(
       cells: [
         DataCell(Text(name)),
@@ -128,11 +166,13 @@ class _AdminPageState extends State<AdminPage> {
             children: [
               IconButton(
                 icon: const Icon(Icons.edit),
-                onPressed: () => _editDriver(context, name, type, plate),
+                onPressed: () {
+                  _editDriver(context, name, type, plate, _fotoConductor, id);
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.delete),
-                onPressed: () => _deleteDriver(name),
+                onPressed: () => _deleteDriver(id,name),
               ),
             ],
           ),
@@ -141,56 +181,100 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  void _editDriver(BuildContext context, String name, String type, String plate) {
+  void _editDriver(BuildContext context, String name, String type, String plate, String? fotoUrl, int idDriver) {
+    int id = idDriver;
+    String editedName = name;
+    String editedType = type;
+    String editedPlate = plate;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Editar Conductor'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: Theme.of(context).primaryColor, width: 10),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/persona.png'),
-                        fit: BoxFit.fitHeight,
-                      ),
+          content: Form(
+            key: _formKey, // Agregamos la clave del formulario
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  fotoUrl != null 
+                      ? Image.network(fotoUrl, width: 200, height: 200) 
+                      : Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Theme.of(context).primaryColor, width: 10),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/persona.png'),
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        ),
+                  const SizedBox(height: 10,),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(const Size(150, 30)),
+                      shape: MaterialStateProperty.all(LinearBorder.none),
                     ),
+                    onPressed: () {
+                      selectImage();
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.photo),
+                        SizedBox(width: 10),
+                        Text('Subir foto'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    initialValue: name,
+                    decoration: const InputDecoration(labelText: 'Nombre'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingresa un nombre válido.';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      editedName = value!;
+                    },
+                  ),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    initialValue: type,
+                    decoration: const InputDecoration(labelText: 'Tipo de Auto'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingresa un tipo de auto válido.';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      editedType = value!;
+                    },
+                  ),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    initialValue: plate,
+                    decoration: const InputDecoration(labelText: 'Patente'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingresa una patente válida.';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      editedPlate = value!;
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 10,),
-              ElevatedButton(
-                style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(const Size(150, 30)),
-                    shape: const MaterialStatePropertyAll(LinearBorder.none)),
-                onPressed: () {
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.photo),
-                    SizedBox(width: 10),
-                    Text('Subir foto')
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(labelText: 'Nombre', hintText: name),
-              ),
-              const SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(labelText: 'Tipo de Auto', hintText: type),
-              ),
-              const SizedBox(height: 10,),
-              TextField(
-                decoration: InputDecoration(labelText: 'Patente', hintText: plate),
-              ),
-            ],
+            ),
           ),
           actions: [
             TextButton(
@@ -201,8 +285,11 @@ class _AdminPageState extends State<AdminPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                _updateDriver(name, type, plate);
-                Navigator.pop(context);
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  _updateDriver(id, editedName, editedType, editedPlate); // Aquí pasas el ID correcto
+                  Navigator.pop(context);
+                }
               },
               child: const Text('Guardar'),
             ),
@@ -212,21 +299,57 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  void _updateDriver(String name, String type, String plate) {
-    setState(() {
-      // Encuentra y actualiza el conductor en la lista de conductores
-      final index = _drivers.indexWhere((driver) => driver['name'] == name);
-      if (index != -1) {
-        _drivers[index]['type'] = type;
-        _drivers[index]['plate'] = plate;
-      }
-    });
+  void _updateDriver(int id, String name, String type, String plate) async {
+    try {
+      // Llamar a la función para actualizar el conductor
+      await ConductorService.actualizarConductor(
+        id: id,
+        nombre: name,
+        patente: plate,
+        tipoVehiculo: type,
+        fotoConductor: _fotoConductor,
+      );
+
+    } catch (e) {
+       print('Error al actualizar conductor: $e');
+    }
   }
 
-  void _deleteDriver(String name) {
-    setState(() {
-      // Elimina el conductor de la lista de conductores
-      _drivers.removeWhere((driver) => driver['name'] == name);
-    });
-  }
+    void _deleteDriver(int id, String name) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Eliminar Conductor'),
+            content: Text('¿Estás seguro de que deseas eliminar al conductor $name?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Cerrar el diálogo sin eliminar al conductor
+                },
+                child: const Text('Cancelar'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await ConductorService.deleteConductor(id); // Llamar al servicio para eliminar al conductor
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Conductor $name eliminado correctamente'),
+                    ));
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Error al eliminar el conductor: $e'),
+                      backgroundColor: Colors.red,
+                    ));
+                  } finally {
+                    Navigator.pop(context); // Cerrar el diálogo después de eliminar al conductor
+                  }
+                },
+                child: const Text('Eliminar'),
+              ),
+            ],
+          );
+        },
+      );
+    }
 }

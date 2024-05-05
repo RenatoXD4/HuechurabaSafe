@@ -1,12 +1,14 @@
 
 
 class Conductor {
+  final int id;
   final String nombre;
   final String patente;
   final String auto;
   final String foto;
 
   Conductor({
+    required this.id,
     required this.nombre,
     required this.patente,
     required this.auto,
@@ -14,24 +16,16 @@ class Conductor {
   });
 
   factory Conductor.fromJson(Map<String, dynamic> json) {
-    final conductorJson = json['conductor'] as Map<String, dynamic>?;  //Obtener el objeto de conductor para acceder a sus propiedades
-
-    if (conductorJson != null) {
-      return Conductor(
-        nombre: conductorJson['nombre'] as String? ?? '',
-        patente: conductorJson['patente'] as String? ?? '',
-        auto: conductorJson['auto'] as String? ?? '',
-        foto: conductorJson['foto'] as String? ?? '',
-      );
-    } else {
-      throw const FormatException('Error al obtener datos del conductor desde el JSON.');
-    }
+    return Conductor(
+      id: json['id'] ?? '',
+      nombre: json['nombre'] ?? '',
+      patente: json['patente'] ?? '',
+      auto: json['auto'] ?? '',
+      foto: json['foto'] ?? '',
+    );
   }
 
-  Map<String, dynamic> toJson() => {
-    'nombre': nombre,
-    'patente': patente,
-    'auto': auto,
-    'foto': foto,
-  };
+  static List<Conductor> listFromJson(List<dynamic> jsonList) {
+    return jsonList.map((json) => Conductor.fromJson(json)).toList();
+  }
 }
