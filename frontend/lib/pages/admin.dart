@@ -149,13 +149,14 @@ class _AdminPageState extends State<AdminPage> {
                 conductor.nombre,
                 conductor.auto,
                 conductor.patente,
-                conductor.id
+                conductor.id,
+                conductor.foto
               ))
           .toList(),
     );
   }
 
-  DataRow _buildDriverDataRow(BuildContext context, String name, String type, String plate, int id) {
+  DataRow _buildDriverDataRow(BuildContext context, String name, String type, String plate, int id, String? fotoUrl) {
     return DataRow(
       cells: [
         DataCell(Text(name)),
@@ -167,7 +168,7 @@ class _AdminPageState extends State<AdminPage> {
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  _editDriver(context, name, type, plate, _fotoConductor, id);
+                  _editDriver(context, name, type, plate, fotoUrl, id);
                 },
               ),
               IconButton(
@@ -193,29 +194,32 @@ class _AdminPageState extends State<AdminPage> {
         return AlertDialog(
           title: const Text('Editar Conductor'),
           content: Form(
-            key: _formKey, // Agregamos la clave del formulario
+            key: _formKey,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  fotoUrl != null 
-                      ? Image.network(fotoUrl, width: 200, height: 200) 
-                      : Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Theme.of(context).primaryColor, width: 10),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/persona.png'),
-                              fit: BoxFit.fitHeight,
-                            ),
-                          ),
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(color: Theme.of(context).primaryColor, width: 10),
+                    image: fotoUrl != null 
+                      ? DecorationImage(
+                          image: NetworkImage(fotoUrl),
+                          fit: BoxFit.fitHeight,
+                        )
+                      : const DecorationImage(
+                          image: AssetImage('assets/persona.png'),
+                          fit: BoxFit.fitHeight,
                         ),
+                  ),
+                ),
                   const SizedBox(height: 10,),
                   ElevatedButton(
                     style: ButtonStyle(
-                      fixedSize: MaterialStateProperty.all(const Size(150, 30)),
+                      fixedSize: MaterialStateProperty.all(const Size(170, 30)),
                       shape: MaterialStateProperty.all(LinearBorder.none),
                     ),
                     onPressed: () {
@@ -226,7 +230,7 @@ class _AdminPageState extends State<AdminPage> {
                       children: [
                         Icon(Icons.photo),
                         SizedBox(width: 10),
-                        Text('Subir foto'),
+                        Text('Cambiar foto'),
                       ],
                     ),
                   ),
@@ -287,7 +291,7 @@ class _AdminPageState extends State<AdminPage> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  _updateDriver(id, editedName, editedType, editedPlate); // Aquí pasas el ID correcto
+                  _updateDriver(id, editedName, editedType, editedPlate);
                   Navigator.pop(context);
                 }
               },
@@ -298,6 +302,7 @@ class _AdminPageState extends State<AdminPage> {
       },
     );
   }
+
 
   void _updateDriver(int id, String name, String type, String plate) async {
     try {
@@ -336,6 +341,9 @@ class _AdminPageState extends State<AdminPage> {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text('Conductor $name eliminado correctamente'),
                     ));
+                          setState(() {
+                        _futureConductores = ConductorService.fetchConductores();
+                         });
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text('Error al eliminar el conductor: $e'),
