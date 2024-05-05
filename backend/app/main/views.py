@@ -91,14 +91,14 @@ def obtenerConductor(patente):
         return jsonify({'mensaje': 'Conductor no encontrado'}), 404
     
 
-@main_bp.route('/api/borrarConductor/<string:patente>', methods=['DELETE'])
-def borrarConductor(patente):
+@main_bp.route('/api/borrarConductor/<int:id>', methods=['DELETE'])
+def borrarConductor(id):
     from models import Conductor
-    conductor = Conductor.query.filter_by(patente=patente).first()
+    conductor = Conductor.query.filter_by(id=id).first()
 
     if conductor:
         db.session.delete(conductor)
         db.session.commit()
-        return jsonify({"message": "Conductor deleted successfully"})
+        return jsonify({"message": "Conductor borrado exitosamente"})
     else:
-        return jsonify({"message": "Conductor not found"}), 404
+        return jsonify({"message": "Conductor no encontrado"}), 404
