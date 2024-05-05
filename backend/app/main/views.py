@@ -59,11 +59,11 @@ def actualizar_conductor(id):
     if nueva_foto: 
         conductor.save_foto(nueva_foto)
 
-    if 'nombre_conductor' in data:
+    if 'nombre' in data:
         conductor.nombre_conductor = data['nombre_conductor']
     if 'patente' in data:
         conductor.patente = data['patente']
-    if 'nombre_vehiculo' in data:
+    if 'auto' in data:
         conductor.nombre_vehiculo = data['nombre_vehiculo']
 
     db.session.commit()
