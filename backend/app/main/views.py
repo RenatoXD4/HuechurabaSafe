@@ -47,6 +47,7 @@ def obtener_conductores():
     return jsonify({'conductor': conductores_data})
 
 
+
 @main_bp.route('/api/updateConductor/<int:id>', methods=['PUT'])
 def actualizar_conductor(id):
     from models import Conductor
@@ -54,18 +55,23 @@ def actualizar_conductor(id):
     if conductor is None:
         return jsonify({'error': 'Conductor no encontrado'}), 404
 
-    data = request.get_json()
-    nueva_foto = request.files.get('foto') 
+    # Obtener los datos del formulario
+    nombre = request.form.get('nombre')
+    patente = request.form.get('patente')
+    auto = request.form.get('auto')
+    nueva_foto = request.files.get('foto')
 
-    if nueva_foto: 
+    # Actualizar la foto si se proporciona una nueva
+    if nueva_foto:
         conductor.save_foto(nueva_foto)
 
-    if 'nombre' in data:
-        conductor.nombre_conductor = data['nombre']
-    if 'patente' in data:
-        conductor.patente = data['patente']
-    if 'auto' in data:
-        conductor.nombre_vehiculo = data['auto']
+    # Actualizar los otros campos si se proporcionan
+    if nombre:
+        conductor.nombre_conductor = nombre
+    if patente:
+        conductor.patente = patente
+    if auto:
+        conductor.nombre_vehiculo = auto
 
     db.session.commit()
 
