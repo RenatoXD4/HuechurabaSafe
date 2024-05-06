@@ -35,6 +35,7 @@ class _AdminPageState extends State<AdminPage> {
     if (pickedFile != null) {
       final bytes = await pickedFile.readAsBytes();
       final base64String = base64Encode(bytes);
+      print('Nueva foto seleccionada: $base64String'); // Verificar si se selecciona una nueva foto
       setState(() {
         _fotoConductor = base64String;
       });
@@ -199,23 +200,29 @@ class _AdminPageState extends State<AdminPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(color: Theme.of(context).primaryColor, width: 10),
-                    image: fotoUrl != null 
-                      ? DecorationImage(
-                          image: NetworkImage(fotoUrl),
-                          fit: BoxFit.fitHeight,
-                        )
-                      : const DecorationImage(
-                          image: AssetImage('assets/persona.png'),
-                          fit: BoxFit.fitHeight,
-                        ),
+                  Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: Theme.of(context).primaryColor, width: 10),
+                      image: fotoUrl != null 
+                        ? DecorationImage(
+                            image: NetworkImage(fotoUrl),
+                            fit: BoxFit.fitHeight,
+                          )
+                        : (_fotoConductor != null
+                            ? DecorationImage(
+                                image: MemoryImage(base64Decode(_fotoConductor!)),
+                                fit: BoxFit.fitHeight,
+                              )
+                            : const DecorationImage(
+                                image: AssetImage('assets/persona.png'),
+                                fit: BoxFit.fitHeight,
+                              )
+                          ),
+                    ),
                   ),
-                ),
                   const SizedBox(height: 10,),
                   ElevatedButton(
                     style: ButtonStyle(
@@ -291,7 +298,7 @@ class _AdminPageState extends State<AdminPage> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  _updateDriver(id, editedName, editedType, editedPlate);
+                  _updateDriver(id, editedName, editedType, editedPlate, fotoUrl ?? _fotoConductor!);
                   Navigator.pop(context);
                 }
               },
@@ -304,16 +311,30 @@ class _AdminPageState extends State<AdminPage> {
   }
 
 
-  void _updateDriver(int id, String name, String type, String plate) async {
+  void _updateDriver(int id, String name, String type, String plate, String fotoUrl) async {
     try {
-      // Llamar a la función para actualizar el conductor
-      await ConductorService.actualizarConductor(
+      
+      if(_fotoConductor != null){
+        await ConductorService.actualizarConductor(
         id: id,
         nombre: name,
         patente: plate,
         tipoVehiculo: type,
         fotoConductor: _fotoConductor,
-      );
+        );
+      }else{
+        await ConductorService.actualizarConductor(
+        id: id,
+        nombre: name,
+        patente: plate,
+        tipoVehiculo: type,
+        fotoConductor: fotoUrl,
+        );
+      }
+      setState(() {
+      _futureConductores = ConductorService.fetchConductores();
+      });
+      
 
     } catch (e) {
        print('Error al actualizar conductor: $e');
