@@ -53,8 +53,14 @@ class Conductor(db.Model):
             filename = f"{self.id}_foto.jpg"
             foto = os.path.join('static', 'img', filename) 
             foto_data.save(foto)
-            self.foto = f"/static/img/{filename}"
+            self.foto = url_for('static', filename=f'img/{filename}')
+
+            # Eliminar una barra diagonal adicional al principio de la URL si está presente
+            if self.foto.startswith('/'):
+                self.foto = self.foto[1:]
+
             db.session.commit()
+
 
     def obtener_foto_url(self):
         return url_for('static', filename=self.foto)
