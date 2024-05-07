@@ -158,7 +158,7 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  DataRow _buildDriverDataRow(BuildContext context, String name, String type, String plate, int id, String? fotoUrl) {
+  DataRow _buildDriverDataRow(BuildContext context, String name, String type, String plate, int id, String fotoUrl) {
     return DataRow(
       cells: [
         DataCell(Text(name)),
@@ -184,7 +184,7 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  void _editDriver(BuildContext context, String name, String type, String plate, String? fotoUrl, int idDriver) {
+  void _editDriver(BuildContext context, String name, String type, String plate, String fotoUrl, int idDriver) {
   int id = idDriver;
   String editedName = name;
   String editedType = type;
@@ -212,7 +212,7 @@ class _AdminPageState extends State<AdminPage> {
                         border: Border.all(color: Theme.of(context).primaryColor, width: 10),
                         image: _fotoConductor == null 
                           ? DecorationImage(
-                              image: NetworkImage(fotoUrl!),
+                              image: NetworkImage(fotoUrl),
                               fit: BoxFit.fitHeight,
                             )
                           : DecorationImage(
@@ -305,7 +305,7 @@ class _AdminPageState extends State<AdminPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    _updateDriver(id, editedName, editedType, editedPlate, _fotoConductor ?? fotoUrl!);
+                    _updateDriver(id, editedName, editedType, editedPlate, _fotoConductor ?? fotoUrl);
                     Navigator.pop(context);
                   }
                 },
@@ -323,17 +323,15 @@ class _AdminPageState extends State<AdminPage> {
 
   void _updateDriver(int id, String name, String type, String plate, String fotoUrl) async {
     try {
-      print('Foto actual: $fotoUrl');
 
       await ConductorService.actualizarConductor(
         id: id,
         nombre: name,
         patente: plate,
         tipoVehiculo: type,
-        fotoConductor: fotoUrl, // Usar la foto actual en la solicitud de actualización
+        fotoConductor: fotoUrl,
       );
      
-      print('Foto después de actualizar: $_fotoConductor');
       setState(() {
         _futureConductores = ConductorService.fetchConductores();
       });
