@@ -17,7 +17,7 @@ class Conductor {
 
   factory Conductor.fromJson(Map<String, dynamic> json) {
     return Conductor(
-      id: json['id'] ?? '',
+      id: json['id'] ?? 0, // Asigna un valor predeterminado si id es null
       nombre: json['nombre'] ?? '',
       patente: json['patente'] ?? '',
       auto: json['auto'] ?? '',

@@ -40,130 +40,135 @@ class _ConductorContentState extends State<ConductorContent> {
             },
           ),
         ),
-        body: Center(
-          child: FutureBuilder<Conductor>(
-            future: _futureConductor,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final conductor = snapshot.data!;
-                return Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 220,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Transform.translate(
-                          offset: const Offset(0, 30),
-                          child: Container(
-                            height: 280,
-                            width: 280,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(500),
-                              border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 20,
-                              ),
-                              image: DecorationImage(
-                                image: NetworkImage(conductor.foto),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                padding: const EdgeInsets.all(10),
-                                child: const Icon(
-                                  Icons.verified_user,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 45.0),
-                    _buildInfoRow(
-                      context,
-                      'assets/icon1.svg',
-                      'Nombre',
-                      conductor.nombre,
-                    ),
-                    _buildInfoRow(
-                      context,
-                      'assets/icon2.svg',
-                      'Patente',
-                      conductor.patente,
-                    ),
-                    _buildInfoRow(
-                      context,
-                      'assets/icon3.svg',
-                      'Vehículo',
-                      conductor.auto,
-                    ),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.red.shade600),
-                        fixedSize: MaterialStateProperty.all(
-                          const Size.fromWidth(270),
-                        ),
-                        shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      onPressed: () => context.go('/formReporte'),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+        body: SingleChildScrollView(
+          child: Center(
+            child: FutureBuilder<Conductor>(
+              future: _futureConductor,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  print('Error: ${snapshot.error}');
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final conductor = snapshot.data!;
+                  return Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.topCenter,
                         children: [
-                          SvgPicture.asset(
-                            'assets/danger.svg',
-                            height: 20,
-                            width: 20,
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 220,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(width: 10),
-                          _texto(
-                            'Reportar conductor',
-                            _textStyle(Colors.black, FontWeight.normal),
+                          Transform.translate(
+                            offset: const Offset(0, 30),
+                            child: Container(
+                              height: 280,
+                              width: 280,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(500),
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 20,
+                                ),
+                                image: DecorationImage(
+                                  image: NetworkImage(conductor.foto),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Icon(
+                                    Icons.verified_user,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                );
-              }
-            },
+                      const SizedBox(height: 40.0),
+                      _buildInfoRow(
+                        context,
+                        'assets/icon1.svg',
+                        'Nombre',
+                        conductor.nombre,
+                      ),
+                      _buildInfoRow(
+                        context,
+                        'assets/icon2.svg',
+                        'Patente',
+                        conductor.patente,
+                      ),
+                      _buildInfoRow(
+                        context,
+                        'assets/icon3.svg',
+                        'Vehículo',
+                        conductor.auto,
+                      ),
+                      const SizedBox(height: 10),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.red.shade600),
+                          fixedSize: MaterialStateProperty.all(
+                            const Size.fromWidth(270),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => context.go('/formReporte'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/danger.svg',
+                              height: 20,
+                              width: 20,
+                            ),
+                            const SizedBox(width: 10),
+                            _texto(
+                              'Reportar conductor',
+                              _textStyle(Colors.black, FontWeight.normal),
+                            ),
+                          ],
+                        ),  
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
     );
   }
+
 
   Widget _buildInfoRow(
     BuildContext context,
