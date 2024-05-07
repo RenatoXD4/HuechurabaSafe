@@ -113,7 +113,8 @@ class ConductorService {
       request.fields['patente'] = patente;
       request.fields['auto'] = tipoVehiculo;
 
-      if (fotoConductor != null) {
+      // Agregar la foto al formulario multipart solo si fotoConductor no es null y no es una URL absoluta
+      if (fotoConductor != null && !Uri.parse(fotoConductor).isAbsolute) {
         final bytes = base64Decode(fotoConductor);
         final file = http.MultipartFile.fromBytes(
           'foto',
@@ -136,7 +137,7 @@ class ConductorService {
           backgroundColor: const Color.fromARGB(255, 17, 255, 0),
           textColor: Colors.white,
           fontSize: 16.0
-      );
+        );
         // Maneja la respuesta según tus necesidades
       } else {
         // Manejo de errores

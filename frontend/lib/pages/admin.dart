@@ -20,6 +20,7 @@ class _AdminPageState extends State<AdminPage> {
   final ImagePicker _picker = ImagePicker();
   late Future<List<Conductor>> _futureConductores;
   String? _fotoConductor;
+  String? _tempFotoConductor;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -184,160 +185,160 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   void _editDriver(BuildContext context, String name, String type, String plate, String? fotoUrl, int idDriver) {
-    int id = idDriver;
-    String editedName = name;
-    String editedType = type;
-    String editedPlate = plate;
+  int id = idDriver;
+  String editedName = name;
+  String editedType = type;
+  String editedPlate = plate;
+  _tempFotoConductor = _fotoConductor; // Variable temporal para guardar la foto
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Editar Conductor'),
-          content: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: Theme.of(context).primaryColor, width: 10),
-                      image: fotoUrl != null 
-                        ? DecorationImage(
-                            image: NetworkImage(fotoUrl),
-                            fit: BoxFit.fitHeight,
-                          )
-                        : (_fotoConductor != null
-                            ? DecorationImage(
-                                image: MemoryImage(base64Decode(_fotoConductor!)),
-                                fit: BoxFit.fitHeight,
-                              )
-                            : const DecorationImage(
-                                image: AssetImage('assets/persona.png'),
-                                fit: BoxFit.fitHeight,
-                              )
-                          ),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Editar Conductor'),
+            content: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: Theme.of(context).primaryColor, width: 10),
+                        image: _fotoConductor == null 
+                          ? DecorationImage(
+                              image: NetworkImage(fotoUrl!),
+                              fit: BoxFit.fitHeight,
+                            )
+                          : DecorationImage(
+                              image: MemoryImage(base64Decode(_fotoConductor!)),
+                              fit: BoxFit.fitHeight,
+                            )
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10,),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      fixedSize: MaterialStateProperty.all(const Size(170, 30)),
-                      shape: MaterialStateProperty.all(LinearBorder.none),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize: MaterialStateProperty.all(const Size(170, 30)),
+                        shape: MaterialStateProperty.all(LinearBorder.none),
+                      ),
+                      onPressed: () {
+                        selectImage().then((value) {
+                          // Actualiza la foto del conductor
+                          setState(() {
+                            _fotoConductor = _fotoConductor; // Actualiza la vista previa
+                          });
+                        });
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.photo),
+                          SizedBox(width: 10),
+                          Text('Cambiar foto'),
+                        ],
+                      ),
                     ),
-                    onPressed: () {
-                      selectImage();
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.photo),
-                        SizedBox(width: 10),
-                        Text('Cambiar foto'),
-                      ],
+                    const SizedBox(height: 10,),
+                    TextFormField(
+                      initialValue: name,
+                      decoration: const InputDecoration(labelText: 'Nombre'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingresa un nombre válido.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        editedName = value!;
+                      },
                     ),
-                  ),
-                  const SizedBox(height: 10,),
-                  TextFormField(
-                    initialValue: name,
-                    decoration: const InputDecoration(labelText: 'Nombre'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, ingresa un nombre válido.';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      editedName = value!;
-                    },
-                  ),
-                  const SizedBox(height: 10,),
-                  TextFormField(
-                    initialValue: type,
-                    decoration: const InputDecoration(labelText: 'Tipo de Auto'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, ingresa un tipo de auto válido.';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      editedType = value!;
-                    },
-                  ),
-                  const SizedBox(height: 10,),
-                  TextFormField(
-                    initialValue: plate,
-                    decoration: const InputDecoration(labelText: 'Patente'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, ingresa una patente válida.';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      editedPlate = value!;
-                    },
-                  ),
-                ],
+                    const SizedBox(height: 10,),
+                    TextFormField(
+                      initialValue: type,
+                      decoration: const InputDecoration(labelText: 'Tipo de Auto'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingresa un tipo de auto válido.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        editedType = value!;
+                      },
+                    ),
+                    const SizedBox(height: 10,),
+                    TextFormField(
+                      initialValue: plate,
+                      decoration: const InputDecoration(labelText: 'Patente'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingresa una patente válida.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        editedPlate = value!;
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          actions: [
+            actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                  _updateDriver(id, editedName, editedType, editedPlate, fotoUrl ?? _fotoConductor!);
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Guardar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+            onPressed: () {
+              // Restaura la foto original desde la variable temporal
+              setState(() {
+                _fotoConductor = _tempFotoConductor;
+              });
+              Navigator.pop(context);
+            },
+            child: const Text('Cancelar'),
+          ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    _updateDriver(id, editedName, editedType, editedPlate, _fotoConductor ?? fotoUrl!);
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Guardar'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
 
 
   void _updateDriver(int id, String name, String type, String plate, String fotoUrl) async {
     try {
-      
-      if(_fotoConductor != null){
-        await ConductorService.actualizarConductor(
-        id: id,
-        nombre: name,
-        patente: plate,
-        tipoVehiculo: type,
-        fotoConductor: _fotoConductor,
-        );
-      }else{
-        await ConductorService.actualizarConductor(
-        id: id,
-        nombre: name,
-        patente: plate,
-        tipoVehiculo: type,
-        fotoConductor: fotoUrl,
-        );
-      }
-      setState(() {
-      _futureConductores = ConductorService.fetchConductores();
-      });
-      
+      print('Foto actual: $fotoUrl');
 
+      await ConductorService.actualizarConductor(
+        id: id,
+        nombre: name,
+        patente: plate,
+        tipoVehiculo: type,
+        fotoConductor: fotoUrl, // Usar la foto actual en la solicitud de actualización
+      );
+     
+      print('Foto después de actualizar: $_fotoConductor');
+      setState(() {
+        _futureConductores = ConductorService.fetchConductores();
+      });
     } catch (e) {
-       print('Error al actualizar conductor: $e');
+      print('Error al actualizar conductor: $e');
     }
   }
 
