@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:frontend/services/ip_request.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'toast_service.dart';
 
 class UsuarioService {
   static Future<void> crearUsuario({
@@ -24,7 +28,9 @@ class UsuarioService {
 
     if (response.statusCode == 201) {
       // Usuario creado correctamente
-      print('Usuario creado correctamente');
+      ToastService.toastService(
+        'Conductor creado exitosamente', const Color.fromARGB(255, 17, 255, 0)
+      );
     } else if (response.statusCode == 400) {
       //El correo ya existe
       final responseData = json.decode(response.body);
@@ -33,7 +39,9 @@ class UsuarioService {
       throw Exception(errorMessage);
     } else {
       // Otro error
-      print('Error al crear usuario: ${response.statusCode}');
+      if (kDebugMode) {
+        print('Error al crear usuario: ${response.statusCode}');
+      }
 
     }
   }

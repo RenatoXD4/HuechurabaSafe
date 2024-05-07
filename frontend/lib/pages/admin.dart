@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -35,13 +36,14 @@ class _AdminPageState extends State<AdminPage> {
 
     if (pickedFile != null) {
       final bytes = await pickedFile.readAsBytes();
-      final base64String = base64Encode(bytes);
-      print('Nueva foto seleccionada: $base64String'); // Verificar si se selecciona una nueva foto
+      final base64String = base64Encode(bytes); // Verificar si se selecciona una nueva foto
       setState(() {
         _fotoConductor = base64String;
       });
     } else {
-      print('No se seleccionó ninguna imagen.');
+      if (kDebugMode) {
+        print('No se seleccionó ninguna imagen.');
+      }
     }
   }
 
@@ -80,7 +82,9 @@ class _AdminPageState extends State<AdminPage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  print('Error: ${snapshot.error}');
+                  if (kDebugMode) {
+                    print('Error: ${snapshot.error}');
+                  }
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final conductores = snapshot.data!;
@@ -336,7 +340,9 @@ class _AdminPageState extends State<AdminPage> {
         _futureConductores = ConductorService.fetchConductores();
       });
     } catch (e) {
-      print('Error al actualizar conductor: $e');
+      if (kDebugMode) {
+        print('Error al actualizar conductor: $e');
+      }
     }
   }
 

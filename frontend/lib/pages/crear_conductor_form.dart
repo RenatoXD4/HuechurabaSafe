@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/regex.dart';
@@ -68,7 +69,9 @@ class _ConductorFormState extends State<ConductorForm> {
         _fotoConductor = base64String;
       });
     } else {
-      print('No se seleccionó ninguna imagen.');
+      if (kDebugMode) {
+        print('No se seleccionó ninguna imagen.');
+      }
     }
   }
 

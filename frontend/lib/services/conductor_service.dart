@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/services/ip_request.dart';
+import '../services/toast_service.dart';
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http_parser/http_parser.dart' as http_parser;
 
 import '../models/conductor_class.dart';
@@ -21,7 +22,6 @@ class ConductorService {
     request.fields['patente'] = patente;
     request.fields['auto'] = tipoVehiculo;
     request.headers['Content-Type'] = 'multipart/form-data';
-    String nombreConductor = nombre;
     if (fotoConductor != null) {
       final bytes = base64Decode(fotoConductor);
       final file = http.MultipartFile.fromBytes(
@@ -36,39 +36,28 @@ class ConductorService {
     final response = await request.send();
 
     if (response.statusCode == 201) {
-      print('Conductor creado correctamente');
-      Fluttertoast.showToast(
-          msg: "Conductor $nombreConductor creado exitosamente",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: const Color.fromARGB(255, 17, 255, 0),
-          textColor: Colors.white,
-          fontSize: 16.0
+      ToastService.toastService(
+        'Conductor creado exitosamente', const Color.fromARGB(255, 17, 255, 0)
       );
     } else if (response.statusCode == 400) {
-      // La patente ya está registrada
       final errorMessage = await response.stream.bytesToString();
-      print('Error al crear conductor: $errorMessage');
-      // Puedes manejar el error aquí según tus necesidades, como mostrar un mensaje de error
+      if (kDebugMode) {
+        print('Error al crear conductor: $errorMessage');
+      }
     } else {
-      print('Error al crear conductor: ${response.reasonPhrase}');
-      // Puedes manejar otros errores aquí según tus necesidades
+      if (kDebugMode) {
+        print('Error al crear conductor: ${response.reasonPhrase}');
+      }
     }
   }
 
   static Future<Conductor> fetchConductor(String patente) async { //Obtener un conductor por patente
-    final response = await http
-        .get(Uri.parse('http://$apiIp:9090/api/obtenerConductor/$patente'));
-
+    final response = await http.get(Uri.parse('http://$apiIp:9090/api/obtenerConductor/$patente'));
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
       return Conductor.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
+
       throw Exception('Hubo un error al obtener el conductor');
     }
   }
@@ -108,13 +97,14 @@ class ConductorService {
       String? fotoConductor,
     }) async {
       final url = Uri.parse('http://$apiIp:9090/api/updateConductor/$id');
+      
       final request = http.MultipartRequest('PUT', url);
       request.fields['nombre'] = nombre;
       request.fields['patente'] = patente;
       request.fields['auto'] = tipoVehiculo;
+      String nombreConductor = nombre;
 
-      // Agregar la foto al formulario multipart solo si fotoConductor no es null y no es una URL absoluta
-      if (fotoConductor != null && !Uri.parse(fotoConductor).isAbsolute) {
+      if (fotoConductor != null && !Uri.parse(fotoConductor).isAbsolute) { //Si la URL no es absoluta como una url de imagen dentro de la base de datos
         final bytes = base64Decode(fotoConductor);
         final file = http.MultipartFile.fromBytes(
           'foto',
@@ -128,21 +118,14 @@ class ConductorService {
       final response = await request.send();
 
       if (response.statusCode == 200) {
-        print('Conductor actualizado correctamente');
-        Fluttertoast.showToast(
-          msg: "Conductor actualizado exitosamente",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: const Color.fromARGB(255, 17, 255, 0),
-          textColor: Colors.white,
-          fontSize: 16.0
+        ToastService.toastService(
+        'Conductor $nombreConductor actualizado exitosamente', const Color.fromARGB(255, 17, 255, 0)
         );
-        // Maneja la respuesta según tus necesidades
       } else {
         // Manejo de errores
-        print('Error al actualizar conductor: ${response.reasonPhrase}');
-        // Puedes manejar otros errores aquí según tus necesidades
+        if (kDebugMode) {
+          print('Error al actualizar conductor: ${response.reasonPhrase}');
+        }
       }
   }
 
@@ -151,18 +134,13 @@ class ConductorService {
       final response = await http.delete(Uri.parse('http://$apiIp:9090/api/borrarConductor/$id'));
 
       if (response.statusCode == 200) {
-        // Si la eliminación es exitosa, no necesitamos devolver ningún dato
       } else {
-        // Si hay un error en la eliminación, lanzamos una excepción con el mensaje de error
         throw 'Error al eliminar el conductor: ${response.reasonPhrase}';
       }
     } catch (e) {
-      // Si ocurre una excepción, lanzamos la excepción con el mensaje de error
       throw 'Error al eliminar el conductor: $e';
     }
   }
-
-  // Puedes agregar más funciones aquí según sea necesario
 }
 
 
