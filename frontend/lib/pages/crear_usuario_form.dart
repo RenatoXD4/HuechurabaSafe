@@ -64,7 +64,7 @@ class _UsuarioFormState extends State<UsuarioForm> {
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              context.go('/home');
+              context.go('/');
             },
           )
       ),

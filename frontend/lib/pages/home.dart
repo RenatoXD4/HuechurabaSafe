@@ -1,10 +1,47 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/navbar.dart';
 import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
+import '../services/auth_service.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() {
+    return _HomePageState();
+  }
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _isLoggingOut = false;
+
+  Future<void> _logout() async {
+    setState(() {
+      _isLoggingOut = true;
+    });
+
+    final logoutSuccess = await AuthService.logout();
+
+    setState(() {
+      _isLoggingOut = false;
+    });
+
+    if (logoutSuccess) {
+      if (mounted) {
+        context.go('/');
+        if(kDebugMode){
+        print('Valor de logout: $logoutSuccess');
+      }
+      }
+    } else {
+      if(kDebugMode){
+        print('Hubo un error al cerrar sesión');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +87,16 @@ class HomePage extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () => context.go('/'),
+            onPressed: _isLoggingOut ? null : () => _logout(),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               padding: const EdgeInsets.all(20),
               backgroundColor: Colors.orange[800],
               foregroundColor: Colors.white,
             ),
-            child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 18)),
+            child: _isLoggingOut
+                ? const CircularProgressIndicator() // Muestra un indicador de progreso durante el cierre de sesión
+                : const Text('Cerrar Sesión', style: TextStyle(fontSize: 18)),
           ),
           const SizedBox(height: 20),
         ],

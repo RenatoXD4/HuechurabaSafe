@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'toast_service.dart';
 
 class UsuarioService {
+  
+  
   static Future<void> crearUsuario({
     required String username,
     required String email,
@@ -29,7 +31,7 @@ class UsuarioService {
     if (response.statusCode == 201) {
       // Usuario creado correctamente
       ToastService.toastService(
-        'Conductor creado exitosamente', const Color.fromARGB(255, 17, 255, 0)
+        'Se ha registrado exitosamente', const Color.fromARGB(255, 17, 255, 0)
       );
     } else if (response.statusCode == 400) {
       //El correo ya existe
@@ -45,4 +47,6 @@ class UsuarioService {
 
     }
   }
+
+
 }

@@ -363,20 +363,28 @@ class _AdminPageState extends State<AdminPage> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    await ConductorService.deleteConductor(id); // Llamar al servicio para eliminar al conductor
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Conductor $name eliminado correctamente'),
-                    ));
+                    await ConductorService.deleteConductor(id); 
+                    if(context.mounted){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Conductor $name eliminado correctamente'),
+                      ));
+                    }// Llamar al servicio para eliminar al conductor
                           setState(() {
                         _futureConductores = ConductorService.fetchConductores();
                          });
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Error al eliminar el conductor: $e'),
-                      backgroundColor: Colors.red,
-                    ));
+
+                    if(context.mounted){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Error al eliminar el conductor: $e'),
+                        backgroundColor: Colors.red,
+                      ));
+                    }
                   } finally {
-                    Navigator.pop(context); // Cerrar el diálogo después de eliminar al conductor
+
+                    if(context.mounted){
+                        Navigator.pop(context); 
+                    }
                   }
                 },
                 child: const Text('Eliminar'),

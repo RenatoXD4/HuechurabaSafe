@@ -48,7 +48,6 @@ class _ConductorContentState extends State<ConductorContent> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  print('Error: ${snapshot.error}');
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final conductor = snapshot.data!;

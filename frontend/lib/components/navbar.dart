@@ -23,12 +23,8 @@ class NavBar extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text('Inicio'),
-            onTap: () => context.go('/'),
-          ),
-          ListTile(
             title: const Text('Iniciar sesión'),
-            onTap: () => context.go('/iniciarSesion'),
+            onTap: () => context.go('/'),
           ),
           ListTile(
             title: const Text('Ver reportes'),
@@ -37,10 +33,6 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: const Text('Administrar'),
             onTap: () => context.go('/adminPanel'),
-          ),
-          ListTile(
-            title: const Text('Registrarse'),
-            onTap: () => context.go('/registrarse'),
           ),
         ],
       ),
