@@ -83,11 +83,11 @@ def eliminar_usuario(id):
 def login():
     from models import Usuario
     email = request.json.get('email')
-    password = request.json.get('password')
+    passwordp = request.json.get('password')
 
     usuario = Usuario.query.filter_by(email=email).first()
 
-    if usuario and Usuario.verificar_password(usuario.password, password):
+    if usuario and Usuario.verificar_password(usuario.password, passwordp):
         session['user_id'] = usuario.id
         return jsonify({'mensaje': 'Inicio de sesión exitoso'}), 200
     else:
