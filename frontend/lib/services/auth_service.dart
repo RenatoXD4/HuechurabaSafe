@@ -40,7 +40,7 @@ class AuthService{
       final response = await http.get(Uri.parse('http://$apiIp:9090/api/logout'));
 
       if (response.statusCode == 200) {
-        ToastService.toastService('Cerraste tu sesión',const Color.fromARGB(255, 255, 0, 0));
+        ToastService.toastService('Cerraste tu sesión',Color.fromARGB(255, 255, 9, 9));
 
         return true; // Cierre de sesión exitoso
       } else {
