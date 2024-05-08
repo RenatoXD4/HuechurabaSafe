@@ -89,7 +89,7 @@ def obtener_usuario_autenticado():
                 'id': usuario.id,
                 'username': usuario.username,
                 'email': usuario.email,
-                'rol_id': usuario.rol_id  # O cualquier otro dato que desees devolver
+                'rol_id': usuario.rol_id 
             }), 200
         else:
             return jsonify({'error': 'Usuario no encontrado'}), 404
