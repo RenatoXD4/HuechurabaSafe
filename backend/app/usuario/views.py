@@ -36,7 +36,7 @@ def obtener_usuario(id):
     # Crear un diccionario con los datos del usuario y su rol
     usuario_data = {
         'id': usuario.id,
-        'usuario': usuario.username,
+        'username': usuario.username,
         'email': usuario.email,
         'rol': {
             'id': rol_usuario.id,
@@ -55,7 +55,7 @@ def actualizar_usuario(id):
 
     data = request.json
     if 'username' in data:
-        usuario.username = data['usuario']
+        usuario.username = data['username']
     if 'email' in data:
         usuario.email = data['email']
     if 'password' in data:
@@ -82,10 +82,10 @@ def eliminar_usuario(id):
 @usuario_bp.route('/api/login', methods=['POST'])
 def login():
     from models import Usuario
-    username = request.json.get('username')
+    email = request.json.get('email')
     password = request.json.get('password')
 
-    usuario = Usuario.query.filter_by(username=username).first()
+    usuario = Usuario.query.filter_by(email=email).first()
 
     if usuario and Usuario.verificar_password(usuario.password, password):
         session['user_id'] = usuario.id
