@@ -23,7 +23,6 @@ class Usuario(db.Model):
 
     # Otro método para verificar la contraseña
     def verificar_password(self, password_ingresada):
-        # Verificar la contraseña ingresada con la contraseña hasheada
         return bcrypt.checkpw(password_ingresada.encode('utf-8'), self.password.encode('utf-8'))
     
 

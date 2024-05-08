@@ -87,7 +87,7 @@ def login():
 
     usuario = Usuario.query.filter_by(email=email).first()
 
-    if usuario and Usuario.verificar_password(Usuario.password, passwordp):
+    if usuario and usuario.verificar_password(passwordp):
         session['user_id'] = usuario.id
         return jsonify({'mensaje': 'Inicio de sesión exitoso'}), 200
     else:
