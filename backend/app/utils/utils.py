@@ -14,7 +14,7 @@ def generar_token(usuario_id):
         'exp': expiracion
     }
     
-    # Generar el token utilizando la biblioteca PyJWT
+
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     
     return token

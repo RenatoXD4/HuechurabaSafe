@@ -83,7 +83,6 @@ def eliminar_usuario(id):
 
 #Obtener la sesión del usuario
 @usuario_bp.route('/api/usuario', methods=['GET'])
-@verificar_token
 def obtener_usuario_autenticado():
     from models import Usuario
     if 'user_id' in session:
