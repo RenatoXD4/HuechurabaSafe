@@ -121,9 +121,7 @@ def login():
     else:
         return jsonify({'error': 'Nombre de usuario o contraseña incorrectos'}), 401
 
-# Ruta para cerrar sesión
 @usuario_bp.route('/api/logout')
 def logout():
-    # Eliminar el ID del usuario de la sesión
-    session.pop('user_id', None)
+
     return jsonify({'mensaje': 'Sesión cerrada correctamente'}), 200
