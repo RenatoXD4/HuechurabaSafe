@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request, session
 from extension import db
 
-usuario_bp = Blueprint('usuario', __name__)
+from usuario import verificar_token
+from usuario.utils import generar_token
 
+usuario_bp = Blueprint('usuario', __name__)
 
 @usuario_bp.route('/api/crearUsuario', methods=['POST'])
 def crear_usuario():
@@ -20,7 +22,9 @@ def crear_usuario():
     db.session.commit()
     return jsonify({'mensaje': 'Usuario creado correctamente'}), 201
 
+
 @usuario_bp.route('/api/usuario/<int:id>', methods=['GET'])
+@verificar_token
 def obtener_usuario(id):
     from models import Usuario
     from models import Rol
@@ -47,6 +51,7 @@ def obtener_usuario(id):
     return jsonify(usuario_data), 200
 
 @usuario_bp.route('/api/updateUsuario/<int:id>', methods=['PUT'])
+@verificar_token
 def actualizar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
@@ -66,6 +71,7 @@ def actualizar_usuario(id):
 
 
 @usuario_bp.route('/api/deleteUsuario/<int:id>', methods=['DELETE'])
+@verificar_token
 def eliminar_usuario(id):
     from models import Usuario
     usuario = Usuario.query.get(id)
@@ -79,6 +85,7 @@ def eliminar_usuario(id):
 
 #Obtener la sesión del usuario
 @usuario_bp.route('/api/usuario', methods=['GET'])
+@verificar_token
 def obtener_usuario_autenticado():
     from models import Usuario
     if 'user_id' in session:
@@ -98,6 +105,7 @@ def obtener_usuario_autenticado():
 
 
 
+
 # Ruta para iniciar sesión
 @usuario_bp.route('/api/login', methods=['POST'])
 def login():
@@ -108,8 +116,11 @@ def login():
     usuario = Usuario.query.filter_by(email=email).first()
 
     if usuario and usuario.verificar_password(passwordp):
-        session['user_id'] = usuario.id
-        return jsonify({'mensaje': 'Inicio de sesión exitoso'}), 200
+        # Generar un token JWT
+        token = generar_token(usuario.id)
+        
+        # Devolver el token como respuesta exitosa
+        return jsonify({'token': token.decode('utf-8')}), 200
     else:
         return jsonify({'error': 'Nombre de usuario o contraseña incorrectos'}), 401
 
