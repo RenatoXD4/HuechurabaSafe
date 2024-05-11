@@ -1,4 +1,5 @@
 import datetime
+from functools import wraps
 from flask import jsonify, request
 import jwt
 
@@ -20,6 +21,7 @@ def generar_token(usuario_id):
     return token
 
 def verificar_token(func):
+    @wraps(func)
     def verificar_token_wrapper(*args, **kwargs):
         token = request.headers.get('Authorization')
 
