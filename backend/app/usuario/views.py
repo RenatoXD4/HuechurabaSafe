@@ -117,7 +117,7 @@ def login():
         token = generar_token(usuario.id)
         
         # Devolver el token como respuesta exitosa
-        return jsonify({'token': token.decode('utf-8')}), 200
+        return jsonify({'token': token}), 200
     else:
         return jsonify({'error': 'Nombre de usuario o contraseña incorrectos'}), 401
 
