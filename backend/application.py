@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from config import Config
 from extension import db
 from app.main.views import main_bp
-from app.usuario.views import usuario_bp
+from usuario.views import usuario_bp
 from app.rol.views import rol_bp
 from app.reporte.views import reporte_bp
 from app.razon.views import razon_bp
