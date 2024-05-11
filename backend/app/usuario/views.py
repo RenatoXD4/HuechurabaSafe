@@ -81,24 +81,20 @@ def eliminar_usuario(id):
     return jsonify({'mensaje': 'Usuario eliminado correctamente'}), 200
 
 
-#Obtener la sesión del usuario
 @usuario_bp.route('/api/usuario', methods=['GET'])
-def obtener_usuario_autenticado():
+@verificar_token
+def obtener_usuario_autenticado(usuario_id):
     from models import Usuario
-    if 'user_id' in session:
-        user_id = session['user_id']
-        usuario = Usuario.query.get(user_id)
-        if usuario:
-            return jsonify({
-                'id': usuario.id,
-                'username': usuario.username,
-                'email': usuario.email,
-                'rol_id': usuario.rol_id 
-            }), 200
-        else:
-            return jsonify({'error': 'Usuario no encontrado'}), 404
+    usuario = Usuario.query.get(usuario_id)
+    if usuario:
+        return jsonify({
+            'id': usuario.id,
+            'username': usuario.username,
+            'email': usuario.email,
+            'rol_id': usuario.rol_id 
+        }), 200
     else:
-        return jsonify({'error': 'Usuario no autenticado'}), 401
+        return jsonify({'error': 'Usuario no encontrado'}), 404
 
 
 
