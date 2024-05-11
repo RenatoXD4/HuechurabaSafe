@@ -20,7 +20,7 @@ def generar_token(usuario_id):
     return token
 
 def verificar_token(func):
-    def wrapper(*args, **kwargs):
+    def verificar_token_wrapper(*args, **kwargs):
         token = request.headers.get('Authorization')
 
         if not token:
@@ -36,4 +36,4 @@ def verificar_token(func):
 
         return func(*args, **kwargs)
 
-    return wrapper
+    return verificar_token_wrapper
