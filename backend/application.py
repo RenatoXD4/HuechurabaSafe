@@ -9,11 +9,6 @@ from app.reporte.views import reporte_bp
 from app.razon.views import razon_bp
 from flask_cors import CORS
 
-import sys
-import os
-
-# Añadir el directorio raíz al PYTHONPATH
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 
 from models import Usuario, Rol, Conductor, Reporte, Razon
