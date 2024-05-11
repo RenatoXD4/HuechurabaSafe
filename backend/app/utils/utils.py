@@ -7,7 +7,7 @@ SECRET_KEY = 'tu_clave_secreta'
 
 def generar_token(usuario_id):
 
-    expiracion = datetime.utcnow() + datetime.timedelta(hours=4)
+    expiracion = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=4)
     
 
     payload = {
