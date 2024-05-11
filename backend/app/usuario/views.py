@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, session
 from extension import db
-from .utils import generar_token, verificar_token
+from utils import generar_token, verificar_token
 
 usuario_bp = Blueprint('usuario', __name__)
 
