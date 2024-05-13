@@ -3,8 +3,10 @@ import 'package:frontend/services/ip_request.dart';
 import 'package:frontend/services/toast_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../models/usuario_class.dart';
+const storage = FlutterSecureStorage();
+
 
 
 class AuthService{
@@ -22,35 +24,13 @@ class AuthService{
         );
 
         if (response.statusCode == 200) {
-
-          final sessionId = response.headers['session-id'];
-
-
-          final userResponse = await http.get(
-            Uri.parse('http://$apiIp:9090/api/usuario'),
-            headers: <String, String>{
-              'session-id': sessionId!,
-            },
-          );
-
-          if (userResponse.statusCode == 200) {
-
-            final userData = json.decode(userResponse.body);
-
-            final usuario = Usuario(
-              id: userData['id'],
-              username: userData['username'],
-              email: userData['email'],
-              password: '', // Recuerda, no estás enviando ni recibiendo la contraseña en texto plano
-              rolId: userData['rol_id'], // Asegúrate de usar el nombre correcto del campo de rol según tu modelo
+          // Almacena el token JWT en el almacenamiento seguro
+          final token = json.decode(response.body)['token'];
+          await storage.write(key: 'jwt_token', value: token);
+          ToastService.toastService(
+            'Inicio de sesión exitoso', const Color.fromARGB(255, 17, 255, 0)
             );
-
-            
-            return null;
-          } else {
-            // Manejar errores al obtener los detalles del usuario
-            return 'Error al obtener detalles del usuario';
-          }
+          return null;
         } else if (response.statusCode == 401) {
           // Nombre de usuario o contraseña incorrectos
           return 'Nombre de usuario o contraseña incorrectos';
@@ -64,12 +44,36 @@ class AuthService{
       }
     }
 
+    static Future<bool> getUserInfo() async {
+      try {
+        final token = await storage.read(key: 'jwt_token');
+        if(token != null) {
+          final parts = token.split('.');
+          final payload = parts[1];
+          final String decodedPayload = utf8.decode(base64Url.decode(payload));
+          final Map<String, dynamic> userInfo = json.decode(decodedPayload);
+          
+          print(userInfo);
+          // Verificar el rol del usuario
+          final rolId = userInfo['rol_id'];
+          print('Rol id del usuario $rolId');
+          if (rolId == 2) {
+            // El usuario tiene el rol de administrador
+            return true;
+          }
+        }
+      } catch (e) {
+        print('Error al obtener la información del usuario: $e');
+      }
+      return false;
+    }
+
   static Future<bool> logout() async {
     try {
       final response = await http.get(Uri.parse('http://$apiIp:9090/api/logout'));
 
       if (response.statusCode == 200) {
-        ToastService.toastService('Cerraste tu sesión',Color.fromARGB(255, 255, 9, 9));
+        ToastService.toastService('Cerraste tu sesión',const Color.fromARGB(255, 255, 9, 9));
 
         return true; // Cierre de sesión exitoso
       } else {
