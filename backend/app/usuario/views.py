@@ -110,7 +110,7 @@ def login():
 
     if usuario and usuario.verificar_password(passwordp):
         # Generar un token JWT
-        token = generar_token(usuario.id)
+        token = generar_token(usuario.id, usuario.rol_id)
         
         # Devolver el token como respuesta exitosa
         return jsonify({'token': token}), 200
