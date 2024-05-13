@@ -46,6 +46,8 @@ class _InicioState extends State<Inicio> {
         if (context.mounted) {
          
          context.go('/home');
+         _usernameController.clear();
+         _passwordController.clear();
         }
       } else {
         if(context.mounted){
@@ -165,8 +167,7 @@ class _InicioState extends State<Inicio> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       ),
                       onPressed: () {
-                        // Lógica para manejar la acción de "Ingresar como invitado"
-                        // Puedes agregar la lógica aquí
+  
                         context.go('/home');
                       },
                       child: const Text('Ingresar como invitado'),

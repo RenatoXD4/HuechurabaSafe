@@ -62,41 +62,25 @@ class _NavBarState extends State<NavBar> {
                 ),
               ),
             ),
-            // Mostrar diferentes opciones de menú según el estado de inicio de sesión y el rol del usuario
-            if (_isLoggedIn)
-              ListTile(
-                title: const Text('Cerrar sesión'),
-                onTap: () {
-                  // Cerrar sesión
-                  storage.delete(key: 'token');
-                  setState(() {
-                    _isLoggedIn = false; // Actualizar el estado de inicio de sesión
-                  });
-                  context.go('/');
-                },
-              ),
             if (_isAdmin)
             ListTile(
               title: const Text('Ver reportes'),
               onTap: () {
-                // Navegar a la pantalla de ver reportes
+
                 context.go('/verReportes');
               },
             ),
-            if (_isAdmin) // Mostrar opciones de administración solo si el usuario es administrador
+            if (_isAdmin) 
               ListTile(
                 title: const Text('Administrar'),
                 onTap: () {
-                  // Navegar a la pantalla de administración
                   context.go('/adminPanel');
                 },
               ),
-            // Agregar la opción de inicio de sesión solo si no está conectado
             if (!_isLoggedIn)
               ListTile(
                 title: const Text('Iniciar sesión'),
                 onTap: () {
-                  // Navegar a la pantalla de inicio de sesión
                   context.go('/');
                 },
               ),

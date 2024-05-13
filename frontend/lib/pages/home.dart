@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/navbar.dart';
@@ -16,32 +15,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isLoggingOut = false;
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoggedInStatus(); // Verificar el estado de inicio de sesión al inicializar el widget
+  }
+
+  // Método para verificar el estado de inicio de sesión
+  Future<void> checkLoggedInStatus() async {
+    final token = await storage.read(key: 'jwt_token');
+    setState(() {
+      _isLoggedIn = token != null; // Actualizar el estado según si hay un token almacenado
+    });
+  }
 
   Future<void> _logout() async {
-    setState(() {
-      _isLoggingOut = true;
-    });
-
     final logoutSuccess = await AuthService.logout();
-
-    setState(() {
-      _isLoggingOut = false;
-    });
-
     if (logoutSuccess) {
+      setState(() {
+        _isLoggedIn = false; // Cambiar el estado a false después de cerrar sesión
+      });
       if (mounted) {
         context.go('/');
-        if(kDebugMode){
-        print('Valor de logout: $logoutSuccess');
-      }
       }
     } else {
-      if(kDebugMode){
-        print('Hubo un error al cerrar sesión');
-      }
+      // Manejar error si el cierre de sesión falla
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,18 +89,29 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: _isLoggingOut ? null : () => _logout(),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              padding: const EdgeInsets.all(20),
-              backgroundColor: Colors.orange[800],
-              foregroundColor: Colors.white,
+          if (_isLoggedIn)
+            ElevatedButton(
+              onPressed: () => _logout()
+              ,
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.all(20),
+                backgroundColor: Colors.orange[800],
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 18)),
             ),
-            child: _isLoggingOut
-                ? const CircularProgressIndicator() // Muestra un indicador de progreso durante el cierre de sesión
-                : const Text('Cerrar Sesión', style: TextStyle(fontSize: 18)),
-          ),
+          if (!_isLoggedIn)
+            ElevatedButton(
+              onPressed: () => context.go('/'), // Ir a la pantalla de inicio de sesión
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.all(20),
+                backgroundColor: Colors.orange[800],
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Ir a Inicio', style: TextStyle(fontSize: 18)),
+            ),
           const SizedBox(height: 20),
         ],
       ),

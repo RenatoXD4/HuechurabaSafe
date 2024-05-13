@@ -56,6 +56,12 @@ class _AdminPageState extends State<AdminPage> {
           'Panel de Administrador',
           style: TextStyle(color: Colors.white),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/home');
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
