@@ -6,16 +6,14 @@ import jwt
 SECRET_KEY = 'tu_clave_secreta'
 
 def generar_token(usuario_id, id_rol):
-
     expiracion = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=4)
-    
+    expiracion_unix_timestamp = expiracion.timestamp()  # Convertir a UNIX timestamp
 
     payload = {
         'usuario_id': usuario_id,
         'rol_id': id_rol,
-        'exp': expiracion
+        'exp': expiracion_unix_timestamp  # Usar el timestamp como valor de expiración
     }
-    
 
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     
