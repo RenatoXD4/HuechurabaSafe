@@ -5,13 +5,14 @@ import jwt
 
 SECRET_KEY = 'tu_clave_secreta'
 
-def generar_token(usuario_id):
+def generar_token(usuario_id, id_rol):
 
     expiracion = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=4)
     
 
     payload = {
         'usuario_id': usuario_id,
+        'rol_id': id_rol,
         'exp': expiracion
     }
     
