@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/conductor_class.dart';
+import '../services/auth_service.dart';
 import '../services/conductor_service.dart';
 
 class ConductorContent extends StatefulWidget {
@@ -19,11 +20,23 @@ class ConductorContent extends StatefulWidget {
 class _ConductorContentState extends State<ConductorContent> {
   late Future<Conductor> _futureConductor;
 
+  bool _isLoggedIn = false;
+
+
   @override
   void initState() {
     super.initState();
     _futureConductor = ConductorService.fetchConductor(widget.patente);
+    super.initState();
+    checkLoggedInStatus();
     
+  }
+
+  Future<void> checkLoggedInStatus() async {
+    final token = await storage.read(key: 'jwt_token');
+    setState(() {
+      _isLoggedIn = token != null; // Actualizar el estado según si hay un token almacenado
+    });
   }
 
   @override
@@ -149,10 +162,11 @@ class _ConductorContentState extends State<ConductorContent> {
                               width: 20,
                             ),
                             const SizedBox(width: 10),
-                            _texto(
-                              'Reportar conductor',
-                              _textStyle(Colors.black, FontWeight.normal),
-                            ),
+                            if(_isLoggedIn)
+                              _texto(
+                                'Reportar conductor',
+                                _textStyle(Colors.black, FontWeight.normal),
+                              ),
                           ],
                         ),  
                       ),

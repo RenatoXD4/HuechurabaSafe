@@ -48,7 +48,7 @@ class AuthService{
       }
     }
 
-    static Future<bool> getUserInfo() async {
+    static Future<Map<String, dynamic>> getUserInfo() async {
       try {
         final token = await storage.read(key: 'jwt_token');
         if(token != null) {
@@ -58,7 +58,7 @@ class AuthService{
             if (kDebugMode) {
               print('El token no tiene el formato esperado');
             }
-            return false;
+            return {};
           }
           final payload = parts[1];
           final String decodedPayload = utf8.decode(base64Url.decode(payload));
@@ -67,15 +67,7 @@ class AuthService{
           if (kDebugMode) {
             print(userInfo);
           }
-          // Verificar el rol del usuario
-          final rolId = userInfo['rol_id'];
-          if (kDebugMode) {
-            print('Rol id del usuario $rolId');
-          }
-          if (rolId == 2) {
-            // El usuario tiene el rol de administrador
-            return true;
-          }
+          return userInfo;
         }
       } catch (e) {
         // Manejar errores de manera adecuada
@@ -83,7 +75,7 @@ class AuthService{
           print('Error al obtener la información del usuario: $e');
         }
       }
-      return false;
+      return {};
     }
     
     static Future<bool> logout() async {

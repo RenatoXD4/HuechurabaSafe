@@ -32,16 +32,18 @@ class _NavBarState extends State<NavBar> {
 
   Future<void> _loadUserInfo() async {
     try {
-      final isAdmin = await AuthService.getUserInfo();
-      if (isAdmin) {
+      final userInfo = await AuthService.getUserInfo();
+      if (userInfo.containsKey('rol_id')) {
+        final rolId = userInfo['rol_id'];
         setState(() {
-          _isAdmin = isAdmin; // Verificar si el usuario es administrador
+          _isAdmin = rolId == 2; // Verificar si el usuario es administrador
         });
       }
     } catch (e) {
       print('Error al cargar la información del usuario: $e');
     }
   }
+
 
 
   @override
