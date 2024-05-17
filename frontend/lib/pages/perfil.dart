@@ -65,6 +65,8 @@ class _ConductorContentState extends State<ConductorContent> {
                 } else {
                   final conductor = snapshot.data!;
                   final patente = conductor.patente;
+                  final id = conductor.id;
+                  print('Id del conductor: $id');
                   return Column(
                     children: [
                       Stack(
@@ -154,7 +156,7 @@ class _ConductorContentState extends State<ConductorContent> {
                             ),
                           ),
                         ),
-                        onPressed: () => context.go('/formReporte/$patente'),
+                        onPressed: () => context.go('/formReporte/$patente/$id'),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

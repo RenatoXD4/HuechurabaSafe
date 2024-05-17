@@ -13,7 +13,7 @@ class ReporteService {
   
   
   static Future<void> crearReporte({
-    required String razonReporte,
+    required int razonReporte,
     required String comentarios,
     required int idUsuario,
     required int idConductor 

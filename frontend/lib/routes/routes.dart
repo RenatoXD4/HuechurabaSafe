@@ -36,11 +36,13 @@ class RouterPages {
             builder: (BuildContext context, GoRouterState state) => const AdminPage(),
           ),
           GoRoute(
-            path: 'formReporte/:patente',
+            path: 'formReporte/:patente/:id',
             builder: (BuildContext context, GoRouterState state) {
               final patente = state.pathParameters['patente'];
+              final id = state.pathParameters['id'];
+              final idConductor = id != null ? int.parse(id) : null;
               return patente != null
-                  ? ReportForm(patente: patente)
+                  ? ReportForm(patente: patente, idConductor: idConductor!,)
                   : Container(); // Manejo del caso en que patente sea nulo
             },
           ),

@@ -57,7 +57,7 @@ class _ReportPanelState extends State<ReportPanel> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Reportado por: ${reports[index].nombreUsuario}'),
-                        Text('Patente: ${reports[index].patente}'),
+                        Text('Patente del conductor: ${reports[index].patente}'),
                       ],
                     ),
                     trailing: Row(
