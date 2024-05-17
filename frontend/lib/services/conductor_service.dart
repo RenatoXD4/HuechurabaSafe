@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/ip_request.dart';
 import '../services/toast_service.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,8 @@ class ConductorService {
     request.fields['nombre'] = nombre;
     request.fields['patente'] = patente;
     request.fields['auto'] = tipoVehiculo;
+    final token = await storage.read(key: 'jwt_token');
+    request.headers['Authorization'] = 'Bearer $token';
     request.headers['Content-Type'] = 'multipart/form-data';
     if (fotoConductor != null) {
       final bytes = base64Decode(fotoConductor);
@@ -102,6 +105,8 @@ class ConductorService {
       request.fields['nombre'] = nombre;
       request.fields['patente'] = patente;
       request.fields['auto'] = tipoVehiculo;
+      final token = await storage.read(key: 'jwt_token');
+      request.headers['Authorization'] = 'Bearer $token';
       String nombreConductor = nombre;
 
       if (fotoConductor != null && !Uri.parse(fotoConductor).isAbsolute) { //Si la URL no es absoluta como una url de imagen dentro de la base de datos
@@ -131,9 +136,14 @@ class ConductorService {
 
   static Future<void> deleteConductor(int id) async {
     try {
-      final response = await http.delete(Uri.parse('http://$apiIp:9090/api/borrarConductor/$id'));
+      final token = await storage.read(key: 'jwt_token');
+      final response = await http.delete(
+        Uri.parse('http://$apiIp:9090/api/borrarConductor/$id'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
+        // El conductor se eliminó correctamente
       } else {
         throw 'Error al eliminar el conductor: ${response.reasonPhrase}';
       }

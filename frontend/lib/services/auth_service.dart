@@ -25,7 +25,6 @@ class AuthService{
         );
 
         if (response.statusCode == 200) {
-          // Almacena el token JWT en el almacenamiento seguro
           final token = json.decode(response.body)['token'];
           await storage.write(key: 'jwt_token', value: token);
           if (kDebugMode) {
@@ -36,7 +35,6 @@ class AuthService{
             );
           return null;
         } else if (response.statusCode == 401) {
-          // Nombre de usuario o contraseña incorrectos
           return 'Nombre de usuario o contraseña incorrectos';
         } else {
           // Otro error
@@ -54,7 +52,6 @@ class AuthService{
         if(token != null) {
           final parts = token.split('.');
           if (parts.length != 3) {
-            // El token no tiene el formato esperado
             if (kDebugMode) {
               print('El token no tiene el formato esperado');
             }
@@ -70,7 +67,6 @@ class AuthService{
           return userInfo;
         }
       } catch (e) {
-        // Manejar errores de manera adecuada
         if (kDebugMode) {
           print('Error al obtener la información del usuario: $e');
         }
@@ -80,21 +76,15 @@ class AuthService{
     
     static Future<bool> logout() async {
       try {
-        // Eliminar el token JWT del almacenamiento seguro al cerrar sesión
         await storage.delete(key: 'jwt_token');
 
-        // Mostrar un mensaje de éxito al usuario
         ToastService.toastService('Cerraste tu sesión', const Color.fromARGB(255, 255, 9, 9));
 
-        // Indicar que el cierre de sesión fue exitoso
         return true;
       } catch (e) {
-        // Si ocurre un error al eliminar el token, proporcionar información sobre el error
         if (kDebugMode) {
           print('Error al cerrar sesión: $e');
         }
-
-        // Indicar que hubo un error al cerrar sesión
         return false;
       }
     }
