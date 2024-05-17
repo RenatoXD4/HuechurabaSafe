@@ -21,7 +21,7 @@ class Usuario(db.Model):
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
         return hashed_password
 
-    # Otro método para verificar la contraseña
+
     def verificar_password(self, password_ingresada):
         return bcrypt.checkpw(password_ingresada.encode('utf-8'), self.password.encode('utf-8'))
     

@@ -35,7 +35,7 @@ def obtener_reporte(id):
 
 @reporte_bp.route('/api/obtenerReportes', methods=['GET'])
 def obtener_todos_los_reportes():
-    from models import Reporte, Usuario, Conductor
+    from models import Reporte, Usuario, Conductor, Razon
     reportes = Reporte.query.all()
     if not reportes:
         return jsonify({'mensaje': 'No hay reportes disponibles'}), 404
@@ -44,14 +44,13 @@ def obtener_todos_los_reportes():
     for reporte in reportes:
         usuario = Usuario.query.get(reporte.id_usuario)
         conductor = Conductor.query.get(reporte.id_conductor)
+        razon_reporte = Razon.query.get(reporte.razon_reporte)
         
         reporte_info = {
             'id': reporte.id,
-            'razon_reporte': reporte.razon_reporte,
-            'id_usuario': reporte.id_usuario,
+            'razon_reporte': razon_reporte.razon,
             'nombre_usuario': usuario.username if usuario else 'Desconocido',
             'comentarios': reporte.comentarios,
-            'id_conductor': reporte.id_conductor,
             'patente_conductor': conductor.patente if conductor else 'Desconocido'
         }
         reportes_data.append(reporte_info)
