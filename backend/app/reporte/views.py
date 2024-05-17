@@ -48,8 +48,10 @@ def obtener_todos_los_reportes():
         reporte_info = {
             'id': reporte.id,
             'razon_reporte': reporte.razon_reporte,
+            'id_usuario': reporte.id_usuario,
             'nombre_usuario': usuario.username if usuario else 'Desconocido',
             'comentarios': reporte.comentarios,
+            'id_conductor': reporte.id_conductor,
             'patente_conductor': conductor.patente if conductor else 'Desconocido'
         }
         reportes_data.append(reporte_info)
