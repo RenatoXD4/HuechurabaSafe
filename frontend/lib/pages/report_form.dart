@@ -117,7 +117,9 @@ class _ReportFormState extends State<ReportForm> {
                   if(newValue != null) {
                     setState(() {
                       _selectedReasonId = newValue;
-                      print('Razón seleccionada: $_selectedReasonId');
+                      if (kDebugMode) {
+                        print('Razón seleccionada: $_selectedReasonId');
+                      }
                     });
                   }
                 },
