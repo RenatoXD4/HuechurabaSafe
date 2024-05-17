@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 
 class ReportForm extends StatelessWidget {
@@ -12,6 +13,12 @@ class ReportForm extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Reportar conductor'),
         backgroundColor: Colors.amber.shade600,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/perfilConductor');
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
