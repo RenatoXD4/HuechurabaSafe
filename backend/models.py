@@ -81,3 +81,9 @@ class Razon(db.Model):
 
     def __repr__(self):
         return f'<Reporte: {self.id}>'
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'razon': self.razon
+        }
