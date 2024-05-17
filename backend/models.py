@@ -80,7 +80,7 @@ class Razon(db.Model):
     razones = db.relationship('Reporte', backref="razon")
 
     def __repr__(self):
-        return f'<Reporte: {self.id}>'
+        return f'<Razón: {self.id}>'
     
     def serialize(self):
         return {
