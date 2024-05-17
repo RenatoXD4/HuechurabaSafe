@@ -89,6 +89,7 @@ def obtenerConductor(patente):
         foto_url = request.url_root + conductor.foto if conductor.foto else None
 
         return jsonify({
+            'id': conductor.id,
             'nombre': conductor.nombre_conductor,
             'patente': conductor.patente,
             'auto': conductor.nombre_vehiculo,
