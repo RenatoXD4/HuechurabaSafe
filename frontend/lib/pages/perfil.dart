@@ -64,6 +64,7 @@ class _ConductorContentState extends State<ConductorContent> {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final conductor = snapshot.data!;
+                  final patente = conductor.patente;
                   return Column(
                     children: [
                       Stack(
@@ -138,6 +139,7 @@ class _ConductorContentState extends State<ConductorContent> {
                         conductor.auto,
                       ),
                       const SizedBox(height: 10),
+                      if(_isLoggedIn)
                       TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Colors.red.shade600),
@@ -152,7 +154,7 @@ class _ConductorContentState extends State<ConductorContent> {
                             ),
                           ),
                         ),
-                        onPressed: () => context.go('/formReporte'),
+                        onPressed: () => context.go('/formReporte/$patente'),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -162,7 +164,6 @@ class _ConductorContentState extends State<ConductorContent> {
                               width: 20,
                             ),
                             const SizedBox(width: 10),
-                            if(_isLoggedIn)
                               _texto(
                                 'Reportar conductor',
                                 _textStyle(Colors.black, FontWeight.normal),

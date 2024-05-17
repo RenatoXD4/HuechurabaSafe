@@ -36,8 +36,13 @@ class RouterPages {
             builder: (BuildContext context, GoRouterState state) => const AdminPage(),
           ),
           GoRoute(
-            path: 'formReporte', // Ensure this path matches the one you're navigating to
-            builder: (BuildContext context, GoRouterState state) => ReportForm(),
+            path: 'formReporte/:patente',
+            builder: (BuildContext context, GoRouterState state) {
+              final patente = state.pathParameters['patente'];
+              return patente != null
+                  ? ReportForm(patente: patente)
+                  : Container(); // Manejo del caso en que patente sea nulo
+            },
           ),
           GoRoute(
             path: 'verReportes', // Ensure this path matches the one you're navigating to

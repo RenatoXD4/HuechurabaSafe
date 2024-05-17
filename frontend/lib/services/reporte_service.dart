@@ -77,6 +77,21 @@ class ReporteService {
     }
   }
 
+  static Future<List<String>> obtenerRazones() async {
+    try {
+      final response = await http.get(Uri.parse('http://$apiIp:9090/api/razones'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((item) => item['razon'].toString()).toList();
+      } else {
+        throw Exception('Error al obtener las razones');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return []; // Devuelve una lista vacía en caso de error
+    }
+  }
+
 
 
 
