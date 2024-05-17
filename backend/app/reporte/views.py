@@ -50,7 +50,6 @@ def obtener_todos_los_reportes():
             'razon_reporte': reporte.razon_reporte,
             'nombre_usuario': usuario.username if usuario else 'Desconocido',
             'comentarios': reporte.comentarios,
-            'id_conductor': reporte.id_conductor,
             'patente_conductor': conductor.patente if conductor else 'Desconocido'
         }
         reportes_data.append(reporte_info)
