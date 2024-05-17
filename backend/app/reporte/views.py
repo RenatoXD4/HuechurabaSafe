@@ -10,6 +10,7 @@ def crear_reporte():
     data = request.json
     nuevo_reporte = Reporte(
         razon_reporte=data['razon_reporte'],
+        comentarios=data['comentarios'],
         id_usuario=data['id_usuario'],
         id_conductor=data['id_conductor']
     )
@@ -27,6 +28,7 @@ def obtener_reporte(id):
         'id': reporte.id,
         'razon_reporte': reporte.razon_reporte,
         'id_usuario': reporte.id_usuario,
+        'comentarios': reporte.comentarios,
         'id_conductor': reporte.id_conductor
     }
     return jsonify(reporte_data), 200
@@ -44,6 +46,7 @@ def obtener_todos_los_reportes():
             'id': reporte.id,
             'razon_reporte': reporte.razon_reporte,
             'id_usuario': reporte.id_usuario,
+            'comentarios': reporte.comentarios,
             'id_conductor': reporte.id_conductor
         }
         reportes_data.append(reporte_info)
