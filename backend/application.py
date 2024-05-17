@@ -40,6 +40,18 @@ with app.app_context():
         rol_administrador = Rol(nombre_rol='Administrador')
         db.session.add(rol_administrador)
 
+    razones = [
+        'Alargar trayecto a propósito',
+        'Conducción peligrosa',
+        'Exceso de velocidad',
+        'Otro'
+    ]
+
+    for razon in razones:
+        if not Razon.query.filter_by(razon=razon).first():
+            nueva_razon = Razon(razon=razon)
+            db.session.add(nueva_razon)
+
     db.session.commit()
 
 if __name__ == "__main__":
