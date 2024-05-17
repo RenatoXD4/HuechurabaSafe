@@ -59,7 +59,7 @@ class _ReportFormState extends State<ReportForm> {
       if (userInfo.containsKey('usuario_id')) {
         final idUser = userInfo['usuario_id'];
         setState(() {
-          usuarioId = idUser; // Verificar si el usuario es administrador
+          usuarioId = idUser;
         });
       }
     } catch (e) {
