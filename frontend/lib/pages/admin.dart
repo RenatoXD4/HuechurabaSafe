@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:frontend/models/regex.dart';
 
 import '../models/conductor_class.dart';
 import '../services/conductor_service.dart';
@@ -23,6 +24,7 @@ class _AdminPageState extends State<AdminPage> {
   String? _fotoConductor;
   String? _tempFotoConductor;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Regex _regex = Regex();
 
   @override
   void initState() {
@@ -257,12 +259,13 @@ class _AdminPageState extends State<AdminPage> {
                     const SizedBox(height: 10,),
                     TextFormField(
                       initialValue: name,
-                      decoration: const InputDecoration(labelText: 'Nombre'),
+                      decoration: const InputDecoration(labelText: 'Nombre (Ej: Rodrigo Cáceres)'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Por favor, ingresa un nombre válido.';
+                          return 'Este campo es obligatorio.';
                         }
-                        return null;
+                        return _regex.formValidate(
+                        _regex.name, value, 'El nombre del conductor es inválido');
                       },
                       onSaved: (value) {
                         editedName = value!;
@@ -271,12 +274,13 @@ class _AdminPageState extends State<AdminPage> {
                     const SizedBox(height: 10,),
                     TextFormField(
                       initialValue: type,
-                      decoration: const InputDecoration(labelText: 'Tipo de Auto'),
+                      decoration: const InputDecoration(labelText: 'Tipo de Auto (Ej: Ford Fiesta)'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Por favor, ingresa un tipo de auto válido.';
+                          return 'Este campo es obligatorio.';
                         }
-                        return null;
+                        return _regex.formValidate(
+                        _regex.name, value, 'El nombre del auto es inválido');
                       },
                       onSaved: (value) {
                         editedType = value!;
@@ -289,6 +293,9 @@ class _AdminPageState extends State<AdminPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, ingresa una patente válida.';
+                        }
+                        if (value.length != 6) {
+                          return 'La patente debe contener 6 carácteres';
                         }
                         return null;
                       },
