@@ -30,6 +30,7 @@ def verificar_token(func):
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
             kwargs['usuario_id'] = payload['usuario_id']
+            kwargs['rol_id'] = payload['rol_id']
         except jwt.ExpiredSignatureError:
             return jsonify({'error': 'Token expirado'}), 401
         except jwt.InvalidTokenError:
