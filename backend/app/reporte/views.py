@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
 from extension import db
+from app.utils.utils import verificar_token
 
 reporte_bp = Blueprint('reporte', __name__)
 
 
 @reporte_bp.route('/api/crearReporte', methods=['POST'])
+@verificar_token
 def crear_reporte():
     from models import Reporte
     data = request.json
@@ -19,6 +21,7 @@ def crear_reporte():
     return jsonify({'mensaje': 'Reporte creado correctamente'}), 201
 
 @reporte_bp.route('/api/obtenerReporte/<int:id>', methods=['GET'])
+@verificar_token
 def obtener_reporte(id):
     from models import Reporte
     reporte = Reporte.query.get(id)
@@ -34,6 +37,7 @@ def obtener_reporte(id):
     return jsonify(reporte_data), 200
 
 @reporte_bp.route('/api/obtenerReportes', methods=['GET'])
+@verificar_token
 def obtener_todos_los_reportes():
     from models import Reporte, Usuario, Conductor, Razon
     reportes = Reporte.query.all()
@@ -59,6 +63,7 @@ def obtener_todos_los_reportes():
 
 
 @reporte_bp.route('/api/eliminarReporte/<int:id>', methods=['DELETE'])
+@verificar_token
 def eliminar_reporte(id):
     from models import Reporte
     reporte = Reporte.query.get(id)

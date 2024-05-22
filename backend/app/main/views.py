@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
 from extension import db
+from app.utils.utils import verificar_token
 
 main_bp = Blueprint('main', __name__)
 
 
 @main_bp.route('/api/crearConductor', methods=['POST'])
+@verificar_token
 def crear_conductor():
     from models import Conductor
 
@@ -30,6 +32,7 @@ def crear_conductor():
     return jsonify({'mensaje': 'Conductor creado correctamente'}), 201
 
 @main_bp.route('/api/obtenerConductores', methods=['GET'])
+@verificar_token
 def obtener_conductores():
     from models import Conductor
     conductores = Conductor.query.all()
@@ -49,6 +52,7 @@ def obtener_conductores():
 
 
 @main_bp.route('/api/updateConductor/<int:id>', methods=['PUT'])
+@verificar_token
 def actualizar_conductor(id):
     from models import Conductor
     conductor = Conductor.query.get(id)
@@ -100,6 +104,7 @@ def obtenerConductor(patente):
     
 
 @main_bp.route('/api/borrarConductor/<int:id>', methods=['DELETE'])
+@verificar_token
 def borrarConductor(id):
     from models import Conductor
     conductor = Conductor.query.filter_by(id=id).first()

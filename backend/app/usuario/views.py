@@ -116,8 +116,3 @@ def login():
         return jsonify({'token': token}), 200
     else:
         return jsonify({'error': 'Nombre de usuario o contraseña incorrectos'}), 401
-
-@usuario_bp.route('/api/logout')
-def logout():
-
-    return jsonify({'mensaje': 'Sesión cerrada correctamente'}), 200
