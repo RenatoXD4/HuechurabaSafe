@@ -27,6 +27,9 @@ def verificar_token(func):
         if not token:
             return jsonify({'error': 'Token no proporcionado'}), 401
 
+        if token.startswith("Bearer "):
+            token = token[len("Bearer "):]
+
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
             kwargs['usuario_id'] = payload['usuario_id']
