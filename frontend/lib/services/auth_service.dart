@@ -68,7 +68,7 @@ class AuthService{
         }
       } catch (e) {
         if (kDebugMode) {
-          print('Error al obtener la información del usuario: $e');
+          print('Error al obtener la información del usuario: ${e.toString()}');
         }
       }
       return {};

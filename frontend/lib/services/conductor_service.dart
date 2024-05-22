@@ -66,28 +66,40 @@ class ConductorService {
   }
 
   static Future<List<Conductor>> fetchConductores() async {
-    final response = await http.get(Uri.parse('http://$apiIp:9090/api/obtenerConductores'));
+    try {
+      final token = await storage.read(key: 'jwt_token');
+      if (token == null) {
+        throw Exception('No se proporcionó un token de autenticación.');
+      }
 
-    if (response.statusCode == 200) {
-      final dynamic jsonData = jsonDecode(response.body);
+      final response = await http.get(
+        Uri.parse('http://$apiIp:9090/api/obtenerConductores'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
-      if (jsonData is Map<String, dynamic> && jsonData.containsKey('conductor')) {
-        final List<dynamic> conductoresJson = jsonData['conductor'];
-        
-        if (conductoresJson.isNotEmpty) {
-          List<Conductor> conductores = conductoresJson
-              .map((json) => Conductor.fromJson(json))
-              .toList();
+      if (response.statusCode == 200) {
+        final dynamic jsonData = jsonDecode(response.body);
+
+        if (jsonData is Map<String, dynamic> && jsonData.containsKey('conductor')) {
+          final List<dynamic> conductoresJson = jsonData['conductor'];
           
-          return conductores;
+          if (conductoresJson.isNotEmpty) {
+            List<Conductor> conductores = conductoresJson
+                .map((json) => Conductor.fromJson(json))
+                .toList();
+            
+            return conductores;
+          } else {
+            throw Exception('La lista de conductores está vacía.');
+          }
         } else {
-          throw Exception('La lista de conductores está vacía.');
+          throw Exception('El JSON no contiene la clave "conductor" o no es un mapa válido.');
         }
       } else {
-        throw Exception('El JSON no contiene la clave "conductor" o no es un mapa válido.');
+        throw Exception('Hubo un error al obtener los conductores. Código de estado: ${response.statusCode}');
       }
-    } else {
-      throw Exception('Hubo un error al obtener los conductores. Código de estado: ${response.statusCode}');
+    } catch (e) {
+      throw Exception('Hubo un error al obtener los conductores: $e');
     }
   }
 
