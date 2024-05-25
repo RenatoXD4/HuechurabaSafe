@@ -65,11 +65,7 @@ class _ReportPanelState extends State<ReportPanel> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            setState(() {
-                              reports.removeAt(index);
-                            });
-                          },
+                          onPressed: () => _confirmDeleteReport(context, reports[index].id, index),
                         ),
                         IconButton(
                           icon: const Icon(Icons.info),
@@ -86,6 +82,34 @@ class _ReportPanelState extends State<ReportPanel> {
           }
         },
       ),
+    );
+  }
+
+  void _confirmDeleteReport(BuildContext context, int reportId, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar eliminación'),
+          content: const Text('¿Estás seguro de que deseas eliminar este reporte?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await ReporteService.borrarReporte(reportId);
+                setState(() {
+                  _futureReports = ReporteService.obtenerReportes();
+                });
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
     );
   }
 

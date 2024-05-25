@@ -92,6 +92,23 @@ class ReporteService {
     }
   }
 
+  static Future<void> borrarReporte(int id) async{
+      final token = await storage.read(key: 'jwt_token');
+      final response = await http.delete(
+        Uri.parse('http://$apiIp:9090/api/eliminarReporte/$id'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if(response.statusCode == 200){
+         ToastService.toastService('Reporte eliminado correctamente ', const Color.fromARGB(255, 17, 255, 0));
+      }else{
+          if (kDebugMode) {
+            print('Error al crear usuario: ${response.statusCode}');
+        }
+      }
+
+  }
+
 
 
 
