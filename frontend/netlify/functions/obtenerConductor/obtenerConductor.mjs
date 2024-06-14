@@ -3,13 +3,16 @@ const handler = async (event) => {
   try {
     const apiIp = process.env.API_IP;
     const { patente } = event.queryStringParameters;
+    const headers = {
+      'Access-Control-Allow-Origin': 'https://666cd6883d4ad0330faa68ba--astounding-sprinkles-f47c1e.netlify.app',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+    };
 
     if (!patente) {
       return {
         statusCode: 400,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers: headers,
         body: JSON.stringify({ error: 'No se proporcionó la patente.' }),
       };
     }
@@ -21,17 +24,13 @@ const handler = async (event) => {
         const jsonData = await response.json();
         return {
           statusCode: 200,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-          },
+          headers: headers,
           body: JSON.stringify(jsonData),
         };
       } else {
         return {
           statusCode: response.status,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-          },
+          headers: headers,
           body: JSON.stringify({ error: 'Hubo un error al obtener el conductor.' }),
         };
       }
