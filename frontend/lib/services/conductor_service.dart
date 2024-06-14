@@ -11,6 +11,9 @@ import '../models/conductor_class.dart';
 
 
 class ConductorService {
+  static const String netlifyUrl = 'https://melodious-kitten-bddc8a.netlify.app/.netlify/functions/obtenerConductor';
+
+
   static Future<void> crearConductor({
     required String nombre,
     required String patente,
@@ -54,15 +57,14 @@ class ConductorService {
     }
   }
 
-  static Future<Conductor> fetchConductor(String patente) async { //Obtener un conductor por patente
-    final response = await http.get(Uri.parse('https://melodious-kitten-bddc8a.netlify.app/api/obtenerConductor/$patente'));
+  static Future<Conductor> fetchConductor(String patente) async {
+      final response = await http.get(Uri.parse('$netlifyUrl?patente=$patente'));
 
-    if (response.statusCode == 200) {
-      return Conductor.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-
-      throw Exception('Hubo un error al obtener el conductor');
-    }
+      if (response.statusCode == 200) {
+        return Conductor.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        throw Exception('Hubo un error al obtener el conductor');
+      }
   }
 
   static Future<List<Conductor>> fetchConductores() async {
