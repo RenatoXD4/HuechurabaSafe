@@ -55,7 +55,7 @@ class ConductorService {
   }
 
   static Future<Conductor> fetchConductor(String patente) async { //Obtener un conductor por patente
-    final response = await http.get(Uri.parse('http://$apiIp:9090/api/obtenerConductor/$patente'));
+    final response = await http.get(Uri.parse('https://melodious-kitten-bddc8a.netlify.app/api/obtenerConductor/$patente'));
 
     if (response.statusCode == 200) {
       return Conductor.fromJson(jsonDecode(response.body) as Map<String, dynamic>);

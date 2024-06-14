@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_web_qrcode_scanner/flutter_web_qrcode_scanner.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class Scanner extends StatefulWidget {
   const Scanner({super.key});
@@ -15,71 +14,59 @@ class Scanner extends StatefulWidget {
 
 class _ScannerState extends State<Scanner> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  
   late QRViewController controller;
+  MobileScannerController cameraController = MobileScannerController();
   String? scannedUrl = '';
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        scannedUrl == null
-            ? Container()
-            : Center(
-                child: Text(
-                  scannedUrl!,
-                  style: const TextStyle(fontSize: 18, color: Colors.green),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-        FlutterWebQrcodeScanner(
-          cameraDirection: CameraDirection.back,
-          onGetResult: (result) {
-            setState(() {
-              scannedUrl = result;
-            });
-            _onQRViewCreated(controller);
-          },
-          stopOnFirstResult: true,
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.8,
-          onError: (error) {
-            if (kDebugMode) {
-              print(error.message);
-            }
-          },
-          onPermissionDeniedError: () {
-            //show alert dialog or something
-          },
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Mobile Scanner'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.flash_on),
+              onPressed: () => cameraController.toggleTorch(),
+            ),
+            IconButton(
+              icon: const Icon(Icons.cameraswitch),
+              onPressed: () => cameraController.switchCamera(),
+            ),
+          ],
         ),
-      ],
-    );
-  }
+        body: MobileScanner(
+         controller: cameraController,
+            onDetect: (barcode) async {
+              final Object code = barcode.raw ?? 'Failed to scan Barcode';
+              print('Barcode found! $code');
 
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) async {
-      setState(() {
-        scannedUrl = scanData.code!;
-      });
+              setState(() {
+                scannedUrl = code as String?;
+              });
 
-      if (await canLaunchUrlString(scannedUrl!)) {
-        await launchUrlString(scannedUrl!);
-      } else {
-        Text('No se puede validar la url:$scannedUrl');
-      }
+              if (await canLaunchUrlString(scannedUrl!)) {
+                await launchUrlString(scannedUrl!);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('No se puede validar la URL: $scannedUrl')),
+                );
+              }
 
-      // Reanudar la cámara después de lanzar el enlace
-      controller.resumeCamera();
-    });
-  }
+              // Reanudar la cámara después de lanzar el enlace
+              cameraController.stop();
+            },
+          ),
+      );
+    }
+
+
 
 
 
   @override
   void dispose() {
-    controller.dispose();
+    cameraController.dispose();
     super.dispose();
   }
 }

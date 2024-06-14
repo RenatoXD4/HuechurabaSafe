@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/obtenerConductores"
+  to = "/.netlify/functions/fetch_conductores"
+  status = 200
+  force = true
