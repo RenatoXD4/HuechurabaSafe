@@ -1,0 +1,21 @@
+[build]
+  # Define el directorio donde se encuentran los archivos generados por Flutter
+  publish = "build/web"
+
+[dev]
+  # Opciones para desarrollo local, por ejemplo, puerto
+  command = "flutter run -d chrome"
+  # Define los puertos a los que escuchará Netlify en desarrollo
+  port = 8888
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[functions]]
+  # Configuración para las funciones de Netlify
+  # Ejemplo de función 'fetch_conductor'
+  path = "netlify/functions/obtenerConductor"
+  # Si quieres redirigir todas las funciones a la misma carpeta
+  # path = "netlify/functions/*"
