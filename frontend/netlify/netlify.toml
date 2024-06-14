@@ -2,7 +2,7 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/api/obtenerConductores"
-  to = "/.netlify/functions/fetch_conductores"
+  from = "/api/obtenerConductor"
+  to = "/.netlify/functions/fetch_conductor"
   status = 200
   force = true
