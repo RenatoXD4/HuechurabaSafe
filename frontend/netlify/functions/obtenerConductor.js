@@ -1,46 +1,37 @@
 import fetch from 'node-fetch';
 
-export async function handler(event, context) {
-  const apiIp = process.env.API_IP;
-  const token = event.headers['authorization'];
-
-  if (!token) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: 'No se proporcionó un token de autenticación.' }),
-    };
-  }
-
-  try {
-    const response = await fetch(`http://${apiIp}:9090/api/obtenerConductores`, {
-      method: 'GET',
-      headers: { 'Authorization': token },
-    });
-
-    if (response.statusCode === 200) {
-      const jsonData = await response.json();
-
-      if (jsonData.conductor) {
+exports.handler = async (event, context) => {
+    const apiIp = process.env.API_IP;
+    const { patente } = event.queryStringParameters;
+  
+    if (!patente) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'No se proporcionó la patente.' }),
+      };
+    }
+  
+    try {
+      const response = await fetch(`http://${apiIp}:9090/api/obtenerConductor/${patente}`, {
+        method: 'GET',
+      });
+  
+      if (response.status === 200) {
+        const jsonData = await response.json();
         return {
           statusCode: 200,
-          body: JSON.stringify(jsonData.conductor),
+          body: JSON.stringify(jsonData),
         };
       } else {
         return {
-          statusCode: 400,
-          body: JSON.stringify({ error: 'El JSON no contiene la clave "conductor" o no es un mapa válido.' }),
+          statusCode: response.status,
+          body: JSON.stringify({ error: 'Hubo un error al obtener el conductor.' }),
         };
       }
-    } else {
+    } catch (error) {
       return {
-        statusCode: response.status,
-        body: JSON.stringify({ error: 'Hubo un error al obtener los conductores.' }),
+        statusCode: 500,
+        body: JSON.stringify({ error: `Hubo un error al obtener el conductor: ${error.message}` }),
       };
     }
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: `Hubo un error al obtener los conductores: ${error.message}` }),
-    };
-  }
-}
+  };
