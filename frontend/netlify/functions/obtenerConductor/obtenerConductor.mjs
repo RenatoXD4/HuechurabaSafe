@@ -1,4 +1,5 @@
-// Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
+import fetch from 'node-fetch';
+
 const handler = async (event) => {
   try {
     const apiIp = process.env.API_IP;
@@ -12,7 +13,7 @@ const handler = async (event) => {
     if (!patente) {
       return {
         statusCode: 400,
-        headers: headers,
+        headers,
         body: JSON.stringify({ error: 'No se proporcionó la patente.' }),
       };
     }
@@ -24,22 +25,20 @@ const handler = async (event) => {
         const jsonData = await response.json();
         return {
           statusCode: 200,
-          headers: headers,
+          headers,
           body: JSON.stringify(jsonData),
         };
       } else {
         return {
           statusCode: response.status,
-          headers: headers,
+          headers,
           body: JSON.stringify({ error: 'Hubo un error al obtener el conductor.' }),
         };
       }
     } catch (error) {
       return {
         statusCode: 500,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
+        headers,
         body: JSON.stringify({ error: `Hubo un error al obtener el conductor: ${error.message}` }),
       };
     }
@@ -47,12 +46,10 @@ const handler = async (event) => {
   } catch (error) {
     return {
       statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers,
       body: JSON.stringify({ error: `Hubo un error: ${error.message}` }),
     };
   }
 };
 
-export default { handler };
+export { handler };
