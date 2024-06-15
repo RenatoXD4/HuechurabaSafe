@@ -11,7 +11,7 @@ import '../models/conductor_class.dart';
 
 
 class ConductorService {
-  static const String netlifyUrl = 'https://666ccbcefd6b1ae5205c6c44--astounding-sprinkles-f47c1e.netlify.app/.netlify/functions/obtenerConductor';
+  static const String netlifyUrl = 'https://666cdab6633cce52b71698b3--astounding-sprinkles-f47c1e.netlify.app/.netlify/functions/obtenerConductor';
 
 
   static Future<void> crearConductor({
