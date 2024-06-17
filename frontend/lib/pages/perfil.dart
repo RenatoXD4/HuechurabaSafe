@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -66,7 +67,9 @@ class _ConductorContentState extends State<ConductorContent> {
                   final conductor = snapshot.data!;
                   final patente = conductor.patente;
                   final id = conductor.id;
-                  print('Id del conductor: $id');
+                  if (kDebugMode) {
+                    print('Id del conductor: $id');
+                  }
                   return Column(
                     children: [
                       Stack(

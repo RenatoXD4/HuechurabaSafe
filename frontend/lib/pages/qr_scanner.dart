@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/scanner_overlay.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -27,6 +28,12 @@ class _ScannerState extends State<Scanner> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Escanear QR'),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/home');
+            },
+          )
       ),
       body: Stack(
         children: [
@@ -44,15 +51,9 @@ class _ScannerState extends State<Scanner> {
                   await controller.stop();
                   await launchUrlString(_result!);
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('No se puede validar la URL: $_result')),
-                  );
+                  return;
                 }
               }
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('URL: $_result')),
-                  );
             },
           ),
           QRScannerOverlay(overlayColour: Colors.black.withOpacity(0.5)),

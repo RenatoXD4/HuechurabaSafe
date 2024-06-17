@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:go_router/go_router.dart';
@@ -40,7 +41,9 @@ class _NavBarState extends State<NavBar> {
         });
       }
     } catch (e) {
-      print('Error al cargar la información del usuario: $e');
+      if (kDebugMode) {
+        print('Error al cargar la información del usuario: $e');
+      }
     }
   }
 
