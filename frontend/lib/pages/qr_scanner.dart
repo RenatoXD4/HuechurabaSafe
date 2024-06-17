@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:frontend/pages/scanner_overlay.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+
+
+
 class Scanner extends StatefulWidget {
   const Scanner({super.key});
+
 
   @override
   State<Scanner> createState() { // Avoid using private types in public APIs.
@@ -13,60 +17,58 @@ class Scanner extends StatefulWidget {
 }
 
 class _ScannerState extends State<Scanner> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  final MobileScannerController controller = MobileScannerController();
   
-  late QRViewController controller;
-  MobileScannerController cameraController = MobileScannerController();
-  String? scannedUrl = '';
-
+  String? _result;
+  
   @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Mobile Scanner'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.flash_on),
-              onPressed: () => cameraController.toggleTorch(),
-            ),
-            IconButton(
-              icon: const Icon(Icons.cameraswitch),
-              onPressed: () => cameraController.switchCamera(),
-            ),
-          ],
-        ),
-        body: MobileScanner(
-         controller: cameraController,
-            onDetect: (barcode) async {
-              final Object code = barcode.raw ?? 'Failed to scan Barcode';
-              print('Barcode found! $code');
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Escanear QR'),
+      ),
+      body: Stack(
+        children: [
+          MobileScanner(
+            controller: controller,
+            onDetect: (BarcodeCapture capture) async {
+              List<Barcode> barcodes = capture.barcodes;
+              final barcode = barcodes.first;
+              debugPrint('Barcode found! $barcodes');
 
-              setState(() {
-                scannedUrl = code as String?;
-              });
+              if (barcode.rawValue != null) {
+                setResult(barcode.rawValue);
 
-              if (await canLaunchUrlString(scannedUrl!)) {
-                await launchUrlString(scannedUrl!);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('No se puede validar la URL: $scannedUrl')),
-                );
+              if (await canLaunchUrlString(_result!)) {
+                  await controller.stop();
+                  await launchUrlString(_result!);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('No se puede validar la URL: $_result')),
+                  );
+                }
               }
 
-              // Reanudar la cámara después de lanzar el enlace
-              cameraController.stop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('URL: $_result')),
+                  );
             },
           ),
-      );
-    }
+          QRScannerOverlay(overlayColour: Colors.black.withOpacity(0.5)),
+        ],
+      ),
+    );
+  }
 
-
-
+  void setResult(result) {
+    setState(() => _result = result);
+  }
 
 
   @override
   void dispose() {
-    cameraController.dispose();
+    controller.dispose();
     super.dispose();
   }
 }
