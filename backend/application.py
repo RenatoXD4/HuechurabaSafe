@@ -14,7 +14,7 @@ from flask_cors import CORS
 from models import Usuario, Rol, Conductor, Reporte, Razon
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "https://6678e0f5d230f515ae00e5da--astounding-sprinkles-f47c1e.netlify.app"}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config.from_object(Config)
 
 
