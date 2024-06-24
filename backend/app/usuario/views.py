@@ -10,7 +10,7 @@ def crear_usuario():
     data = request.json
     # Verificar si el correo electrónico ya está registrado
     if Usuario.query.filter_by(email=data['email']).first():
-        return jsonify({'error': 'El correo electrónico ya está registrado'}), 400
+        return jsonify({'error': 'El correo electrónico ya está registrado'}), 400, {'Content-Type': 'application/json; charset=utf-8'}
     # Si el correo electrónico no está registrado, crear un nuevo usuario
     nuevo_usuario = Usuario(username=data['username'], email=data['email'], rol_id=data['rol'])
     hashed_password = nuevo_usuario.hash_password(data['password'])
