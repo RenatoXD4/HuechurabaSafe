@@ -6,42 +6,19 @@ usuario_bp = Blueprint('usuario', __name__)
 
 @usuario_bp.route('/api/crearUsuario', methods=['POST'])
 def crear_usuario():
-    try:
-        from models import Usuario
-        data = request.json
-        
-        # Verificar si se proporcionaron todos los campos necesarios
-        username = data.get('username')
-        email = data.get('email')
-        password = data.get('password')
-        rol = data.get('rol')
+    from models import Usuario
+    data = request.json
+    # Verificar si el correo electrónico ya está registrado
+    if Usuario.query.filter_by(email=data['email']).first():
+        return jsonify({'error': 'El correo electrónico ya está registrado'}), 400
+    # Si el correo electrónico no está registrado, crear un nuevo usuario
+    nuevo_usuario = Usuario(username=data['username'], email=data['email'], rol_id=data['rol'])
+    hashed_password = nuevo_usuario.hash_password(data['password'])
+    nuevo_usuario.password = hashed_password
 
-        if not username or not email or not password or not rol:
-            return jsonify({'error': 'Faltan campos requeridos en la solicitud'}), 400
-        
-        # Verificar si el correo electrónico ya está registrado
-        if Usuario.query.filter_by(email=email).first():
-            return jsonify({'error': 'El correo electrónico ya está registrado'}), 400
-
-        # Crear un nuevo usuario
-        nuevo_usuario = Usuario(
-            username=username,
-            email=email,
-            rol_id=rol  # Suponiendo que rol_id es el campo correcto en tu modelo Usuario
-        )
-
-        hashed_password = nuevo_usuario.hash_password(password)
-        nuevo_usuario.password = hashed_password
-
-        db.session.add(nuevo_usuario)
-        db.session.commit()
-
-        return jsonify({'mensaje': 'Usuario creado correctamente'}), 201
-    
-    except KeyError as e:
-        return jsonify({'error': f'Campo faltante en la solicitud: {e}'}), 400
-    except Exception as e:
-        return jsonify({'error': f'Hubo un error al crear el usuario: {str(e)}'}), 500
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+    return jsonify({'mensaje': 'Usuario creado correctamente'}), 201
 
 
 @usuario_bp.route('/api/usuario/<int:id>', methods=['GET'])
