@@ -14,7 +14,7 @@ from flask_cors import CORS
 from models import Usuario, Rol, Conductor, Reporte, Razon
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.config.from_object(Config)
 
 
