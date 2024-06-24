@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/services/ip_request.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -8,13 +7,14 @@ import 'toast_service.dart';
 
 class UsuarioService {
   
+  static const String netlifyUrl = 'https://astounding-sprinkles-f47c1e.netlify.app/.netlify/functions/crearCuenta';
   
   static Future<void> crearUsuario({
     required String username,
     required String email,
     required String password,
   }) async {
-    final url = Uri.parse('http://$apiIp:9090/api/crearUsuario');
+    final url = Uri.parse(netlifyUrl);
     final headers = {'Content-Type': 'application/json'};
     final body = {
       'username': username,

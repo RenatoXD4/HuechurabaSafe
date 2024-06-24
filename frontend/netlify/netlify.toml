@@ -1,6 +1,6 @@
 [build]
-  # Define el directorio donde se encuentran los archivos generados por Flutter
-  publish = "build/web"
+  publish = "build"
+  functions = "functions"
 
 [dev]
   # Opciones para desarrollo local, por ejemplo, puerto
@@ -9,8 +9,8 @@
   port = 8888
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
 
 [[functions]]
@@ -19,3 +19,6 @@
   path = "netlify/functions/obtenerConductor"
   # Si quieres redirigir todas las funciones a la misma carpeta
   # path = "netlify/functions/*"
+
+[[functions]]
+  path = "netlify/functions/crearCuenta"

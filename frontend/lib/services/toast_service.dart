@@ -15,5 +15,4 @@ class ToastService{
           fontSize: 16.0
       );
   }
-
 }
