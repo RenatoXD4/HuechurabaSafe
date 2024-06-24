@@ -31,6 +31,13 @@ app.register_blueprint(razon_bp)
 db.init_app(app)
 migrate = Migrate(app, db)
 
+@app.after_request
+def after_request(response):
+    # Asegúrate de establecer charset=utf-8 para todos los tipos de contenido
+    if "Content-Type" in response.headers:
+        response.headers["Content-Type"] += "; charset=utf-8"
+    return response
+
 with app.app_context():
     if not Rol.query.filter_by(nombre_rol='Usuario').first():
         rol_usuario = Rol(nombre_rol='Usuario')
