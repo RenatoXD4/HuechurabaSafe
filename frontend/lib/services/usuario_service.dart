@@ -28,7 +28,7 @@ class UsuarioService {
       body: jsonEncode(body),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       // Usuario creado correctamente
       ToastService.toastService(
         'Se ha registrado exitosamente', const Color.fromARGB(255, 17, 255, 0)

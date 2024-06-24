@@ -11,7 +11,7 @@ class ToastService{
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 3,
           backgroundColor: backgroundColor,
-          textColor: Colors.white,
+          textColor: const Color.fromARGB(255, 255, 255, 255),
           fontSize: 16.0
       );
   }
