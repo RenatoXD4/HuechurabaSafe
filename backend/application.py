@@ -33,9 +33,7 @@ migrate = Migrate(app, db)
 
 @app.after_request
 def after_request(response):
-    # Asegúrate de establecer charset=utf-8 para todos los tipos de contenido
-    if "Content-Type" in response.headers:
-        response.headers["Content-Type"] += "; charset=utf-8"
+    response.headers["Content-Type"] = "application/json; charset=utf-8"
     return response
 
 with app.app_context():
