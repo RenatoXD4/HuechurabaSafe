@@ -31,10 +31,6 @@ app.register_blueprint(razon_bp)
 db.init_app(app)
 migrate = Migrate(app, db)
 
-@app.after_request
-def after_request(response):
-    response.headers["Content-Type"] = "application/json; charset=utf-8"
-    return response
 
 with app.app_context():
     if not Rol.query.filter_by(nombre_rol='Usuario').first():
