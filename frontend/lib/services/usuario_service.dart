@@ -35,7 +35,7 @@ class UsuarioService {
       );
     } else if (response.statusCode == 400) {
       //El correo ya existe
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
       final errorMessage = responseData['error'];
 
       throw Exception(errorMessage);

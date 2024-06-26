@@ -28,6 +28,7 @@ class _ScannerState extends State<Scanner> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Escanear QR'),
+        backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -44,7 +45,7 @@ class _ScannerState extends State<Scanner> {
               final barcode = barcodes.first;
               debugPrint('Barcode found! $barcodes');
 
-              if (barcode.rawValue != null) {
+              if (barcode.rawValue != null && barcode.rawValue!.contains('/perfilConductor')) {
                 setResult(barcode.rawValue);
 
               if (await canLaunchUrlString(_result!)) {
