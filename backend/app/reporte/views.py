@@ -7,7 +7,7 @@ reporte_bp = Blueprint('reporte', __name__)
 
 @reporte_bp.route('/api/crearReporte', methods=['POST'])
 @verificar_token
-def crear_reporte(id_rol):
+def crear_reporte(id_rol=None):
     if(id_rol):
         from models import Reporte
         data = request.json
@@ -42,7 +42,7 @@ def obtener_reporte(id):
 
 @reporte_bp.route('/api/obtenerReportes', methods=['GET'])
 @verificar_token
-def obtener_todos_los_reportes(id_rol):
+def obtener_todos_los_reportes(id_rol=None):
     if(id_rol == 2):
         from models import Reporte, Usuario, Conductor, Razon
         reportes = Reporte.query.all()
@@ -71,9 +71,8 @@ def obtener_todos_los_reportes(id_rol):
 
 @reporte_bp.route('/api/eliminarReporte/<int:id>', methods=['DELETE'])
 @verificar_token
-def eliminar_reporte(id, id_rol):
-
-    if(id_rol):
+def eliminar_reporte(id, id_rol=None):
+    if(id_rol == 2):
         from models import Reporte
         reporte = Reporte.query.get(id)
         if reporte is None:

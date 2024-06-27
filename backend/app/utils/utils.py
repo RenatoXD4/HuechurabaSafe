@@ -1,5 +1,6 @@
 import datetime
 from functools import wraps
+import inspect
 from flask import jsonify, request
 import jwt
 
@@ -33,7 +34,11 @@ def verificar_token(func):
 
         try:
            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-           kwargs['rol_id'] = payload['rol_id']
+           rol_id = payload.get('rol_id')
+
+           func_signature = inspect.signature(func)
+           if 'rol_id' in func_signature.parameters:
+                kwargs['rol_id'] = rol_id
            
         except jwt.ExpiredSignatureError:
             return jsonify({'error': 'Token expirado'}), 401
