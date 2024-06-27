@@ -7,8 +7,8 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/api/crearConductor', methods=['POST'])
 @verificar_token
-def crear_conductor(id_rol=None):
-    if(id_rol == 2):
+def crear_conductor(rol_id=None):
+    if(rol_id == 2):
         from models import Conductor
 
         # Acceder a los campos del formulario
@@ -36,8 +36,8 @@ def crear_conductor(id_rol=None):
 
 @main_bp.route('/api/obtenerConductores', methods=['GET'])
 @verificar_token
-def obtener_conductores(id_rol=None):
-    if(id_rol == 2):
+def obtener_conductores(rol_id=None):
+    if(rol_id == 2):
         from models import Conductor
         conductores = Conductor.query.all()
         conductores_data = []
@@ -59,9 +59,9 @@ def obtener_conductores(id_rol=None):
 
 @main_bp.route('/api/updateConductor/<int:id>', methods=['PUT'])
 @verificar_token
-def actualizar_conductor(id, id_rol=None):
+def actualizar_conductor(id, rol_id=None):
 
-    if(id_rol == 2):
+    if(rol_id == 2):
         from models import Conductor
         conductor = Conductor.query.get(id)
         if conductor is None:
@@ -116,8 +116,8 @@ def obtenerConductor(patente):
 
 @main_bp.route('/api/borrarConductor/<int:id>', methods=['DELETE'])
 @verificar_token
-def borrarConductor(id, id_rol=None):
-    if(id_rol == 2):
+def borrarConductor(id, rol_id=None):
+    if(rol_id == 2):
 
         from models import Conductor
         conductor = Conductor.query.filter_by(id=id).first()
