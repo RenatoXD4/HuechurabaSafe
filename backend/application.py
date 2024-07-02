@@ -10,7 +10,6 @@ from app.razon.views import razon_bp
 from flask_cors import CORS
 
 
-db.create_all()
 from models import Usuario, Rol, Conductor, Reporte, Razon
 
 app = Flask(__name__)
