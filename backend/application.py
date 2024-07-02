@@ -32,9 +32,15 @@ migrate = Migrate(app, db)
 
 
 with app.app_context():
-    if not db.engine.has_table('rol'):
+    # Crear las tablas en la base de datos si no existen
+    db.create_all()
+
+    # Verificar si la tabla Rol existe
+    inspector = db.inspect(db.engine)
+    if not inspector.has_table('rol'):
         db.create_all()
 
+    # Añadir roles si no existen
     if not Rol.query.filter_by(nombre_rol='Usuario').first():
         rol_usuario = Rol(nombre_rol='Usuario')
         db.session.add(rol_usuario)
@@ -43,6 +49,7 @@ with app.app_context():
         rol_administrador = Rol(nombre_rol='Administrador')
         db.session.add(rol_administrador)
 
+    # Añadir razones si no existen
     razones = [
         'Alargar trayecto a propósito',
         'Conducción peligrosa',
@@ -55,6 +62,7 @@ with app.app_context():
             nueva_razon = Razon(razon=razon)
             db.session.add(nueva_razon)
 
+    # Confirmar todos los cambios en la base de datos
     db.session.commit()
 
 if __name__ == "__main__":
