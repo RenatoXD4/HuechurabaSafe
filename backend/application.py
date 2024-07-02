@@ -33,6 +33,9 @@ migrate = Migrate(app, db)
 
 
 with app.app_context():
+    if not db.engine.has_table('rol'):
+        db.create_all()
+
     if not Rol.query.filter_by(nombre_rol='Usuario').first():
         rol_usuario = Rol(nombre_rol='Usuario')
         db.session.add(rol_usuario)
