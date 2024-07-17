@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/regex.dart';
 import '../services/conductor_service.dart';
+import 'package:go_router/go_router.dart';
 class ConductorForm extends StatefulWidget {
   const ConductorForm({super.key});
 
@@ -81,6 +82,12 @@ class _ConductorFormState extends State<ConductorForm> {
       appBar: AppBar(
         title: const Text('Crear Conductor'),
         backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/adminPanel');
+            },
+          )
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
