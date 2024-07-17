@@ -3,7 +3,7 @@ from extension import db
 
 razon_bp = Blueprint('razon', __name__)
 
-@razon_bp.route('/razones', methods=['GET'])
+@razon_bp.route('/api/razones', methods=['GET'])
 def obtener_razones():
     from models import Razon
     razones = Razon.query.all()
