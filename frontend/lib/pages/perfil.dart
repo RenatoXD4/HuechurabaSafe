@@ -1,9 +1,44 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class ConductorContent extends StatelessWidget {
-  const ConductorContent({super.key});
+import '../models/conductor_class.dart';
+import '../services/auth_service.dart';
+import '../services/conductor_service.dart';
+
+class ConductorContent extends StatefulWidget {
+  final String patente;
+
+  const ConductorContent({super.key, required this.patente});
+
+  @override
+  State<ConductorContent> createState() {
+    return _ConductorContentState();
+  }
+}
+
+class _ConductorContentState extends State<ConductorContent> {
+  late Future<Conductor> _futureConductor;
+
+  bool _isLoggedIn = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _futureConductor = ConductorService.fetchConductor(widget.patente);
+    super.initState();
+    checkLoggedInStatus();
+    
+  }
+
+  Future<void> checkLoggedInStatus() async {
+    final token = await storage.read(key: 'jwt_token');
+    setState(() {
+      _isLoggedIn = token != null; // Actualizar el estado según si hay un token almacenado
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,111 +52,142 @@ class ConductorContent extends StatelessWidget {
             onPressed: () {
               context.go('/consultarPatente');
             },
-          )
+          ),
         ),
-        body: Center(
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 220,
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor,     boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],),
-                  ),
-                  // Contenedor circular con imagen y SVG
-                  Transform.translate(
-                    offset: const Offset(0, 30), // Ajusta según sea necesario para el efecto deseado
-                    child: Container(
-                      height: 280,
-                      width: 280,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(500),
-                        border: Border.all(color: Theme.of(context).primaryColor, width: 20),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/persona.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          padding: const EdgeInsets.all(10),
-                              child: const Icon(
-                              Icons.verified_user,
-                              color: Colors.white,
+        body: SingleChildScrollView(
+          child: Center(
+            child: FutureBuilder<Conductor>(
+              future: _futureConductor,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final conductor = snapshot.data!;
+                  final patente = conductor.patente;
+                  final id = conductor.id;
+                  if (kDebugMode) {
+                    print('Id del conductor: $id');
+                  }
+                  return Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 220,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
                             ),
-                        ),
+                          ),
+                          Transform.translate(
+                            offset: const Offset(0, 30),
+                            child: Container(
+                              height: 280,
+                              width: 280,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(500),
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 20,
+                                ),
+                                image: DecorationImage(
+                                  image: NetworkImage(conductor.foto),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Icon(
+                                    Icons.verified_user,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 45.0),
-              _buildInfoRow(
-                context,
-                'assets/icon1.svg',
-                'Nombre',
-                'Juan Perez',
-              ),
-              _buildInfoRow(
-                context,
-                'assets/icon2.svg',
-                'Patente',
-                'DXDUI11',
-              ),
-              _buildInfoRow(
-                context,
-                'assets/icon3.svg',
-                'Vehículo',
-                'Ford Fiesta',
-              ),
-              const SizedBox(height: 10),
-              TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.red.shade600),
-                  fixedSize: MaterialStateProperty.all(
-                    const Size.fromWidth(270),
-                  ),
-                  shape: MaterialStateProperty.all(
-                    const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                  ),
-                ),
-                onPressed: () => context.go('/formReporte'),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/danger.svg',
-                      height: 20,
-                      width: 20,
-                    ),
-                    const SizedBox(width: 10),
-                    _texto(
-                      'Reportar conductor',
-                      _textStyle(Colors.black, FontWeight.normal),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                      const SizedBox(height: 40.0),
+                      _buildInfoRow(
+                        context,
+                        'assets/icon1.svg',
+                        'Nombre',
+                        conductor.nombre,
+                      ),
+                      _buildInfoRow(
+                        context,
+                        'assets/icon2.svg',
+                        'Patente',
+                        conductor.patente,
+                      ),
+                      _buildInfoRow(
+                        context,
+                        'assets/icon3.svg',
+                        'Vehículo',
+                        conductor.auto,
+                      ),
+                      const SizedBox(height: 10),
+                      if(_isLoggedIn)
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.red.shade600),
+                          fixedSize: MaterialStateProperty.all(
+                            const Size.fromWidth(270),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => context.go('/formReporte/$patente/$id'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/danger.svg',
+                              height: 20,
+                              width: 20,
+                            ),
+                            const SizedBox(width: 10),
+                              _texto(
+                                'Reportar conductor',
+                                _textStyle(Colors.black, FontWeight.normal),
+                              ),
+                          ],
+                        ),  
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
     );
   }
+
 
   Widget _buildInfoRow(
     BuildContext context,
@@ -145,6 +211,8 @@ class ConductorContent extends StatelessWidget {
       ),
     );
   }
+
+  
 
   TextStyle _textStyle(Color color, FontWeight fontWeight) {
     return TextStyle(

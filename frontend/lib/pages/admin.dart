@@ -1,4 +1,13 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:frontend/models/regex.dart';
+
+import '../models/conductor_class.dart';
+import '../services/conductor_service.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -10,11 +19,35 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  final List<Map<String, String>> _drivers = [
-    {'name': 'Nombre1', 'rut': 'RUT1', 'type': 'Tipo1', 'plate': 'Patente1'},
-    {'name': 'Nombre2', 'rut': 'RUT2', 'type': 'Tipo2', 'plate': 'Patente2'},
-    // Agrega más conductores aquí si es necesario
-  ];
+  final ImagePicker _picker = ImagePicker();
+  late Future<List<Conductor>> _futureConductores;
+  String? _fotoConductor;
+  String? _tempFotoConductor;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Regex _regex = Regex();
+
+  @override
+  void initState() {
+    super.initState();
+    _futureConductores = ConductorService.fetchConductores();
+    
+  }
+
+  Future<void> selectImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      final base64String = base64Encode(bytes); // Verificar si se selecciona una nueva foto
+      setState(() {
+        _fotoConductor = base64String;
+      });
+    } else {
+      if (kDebugMode) {
+        print('No se seleccionó ninguna imagen.');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +58,12 @@ class _AdminPageState extends State<AdminPage> {
           'Panel de Administrador',
           style: TextStyle(color: Colors.white),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              // Implementa la funcionalidad de cerrar sesión
-            },
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/home');
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -52,17 +83,31 @@ class _AdminPageState extends State<AdminPage> {
               title: 'Rol:',
               value: 'Administrador',
             ),
-            const SizedBox(height: 20),
             _buildSectionTitle('Administración de Conductores'),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: _buildDriverTable(context),
-              ),
+            FutureBuilder<List<Conductor>>(
+              future: _futureConductores,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  if (kDebugMode) {
+                    print('Error: ${snapshot.error}');
+                  }
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final conductores = snapshot.data!;
+                  return Expanded(
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: _buildDriverTable(context, conductores),
+                    ),
+                  );
+                }
+              },
             ),
             ElevatedButton(
               onPressed: () {
-                // Implementa la lógica para agregar un nuevo conductor
+                context.go('/crearConductor');
               },
               child: const Text('Agregar Conductor'),
             ),
@@ -103,114 +148,263 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  Widget _buildDriverTable(BuildContext context) {
+  Widget _buildDriverTable(BuildContext context, List<Conductor> conductores) {
     return DataTable(
       columnSpacing: 16, // Espaciado entre columnas
       columns: const [
         DataColumn(label: Text('Nombre')),
-        DataColumn(label: Text('RUT')),
         DataColumn(label: Text('Tipo de Auto')),
         DataColumn(label: Text('Patente')),
         DataColumn(label: Text('Acciones')),
       ],
-      rows: _drivers
-          .map((driver) => _buildDriverDataRow(
+      rows: conductores
+          .map((conductor) => _buildDriverDataRow(
                 context,
-                driver['name']!,
-                driver['rut']!,
-                driver['type']!,
-                driver['plate']!,
+                conductor.nombre,
+                conductor.auto,
+                conductor.patente,
+                conductor.id,
+                conductor.foto
               ))
           .toList(),
     );
   }
 
-  DataRow _buildDriverDataRow(BuildContext context, String name, String rut, String type, String plate) {
-    return DataRow(cells: [
-      DataCell(Text(name)),
-      DataCell(Text(rut)),
-      DataCell(Text(type)),
-      DataCell(Text(plate)),
-      DataCell(
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                _editDriver(context, name, rut, type, plate);
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                _deleteDriver(name);
-              },
-            ),
-          ],
-        ),
-      ),
-    ]);
-  }
-
-  void _editDriver(BuildContext context, String name, String rut, String type, String plate) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Editar Conductor'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+  DataRow _buildDriverDataRow(BuildContext context, String name, String type, String plate, int id, String fotoUrl) {
+    return DataRow(
+      cells: [
+        DataCell(Text(name)),
+        DataCell(Text(type)),
+        DataCell(Text(plate)),
+        DataCell(
+          Row(
             children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Nombre', hintText: name),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  _editDriver(context, name, type, plate, fotoUrl, id);
+                },
               ),
-              TextField(
-                decoration: InputDecoration(labelText: 'RUT', hintText: rut),
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Tipo de Auto', hintText: type),
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Patente', hintText: plate),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => _deleteDriver(id,name),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _updateDriver(name, rut, type, plate);
-                Navigator.pop(context);
-              },
-              child: const Text('Guardar'),
-            ),
-          ],
-        );
-      },
+        ),
+      ],
     );
   }
 
-  void _updateDriver(String name, String rut, String type, String plate) {
-    setState(() {
-      // Encuentra y actualiza el conductor en la lista de conductores
-      final index = _drivers.indexWhere((driver) => driver['name'] == name);
-      if (index != -1) {
-        _drivers[index]['rut'] = rut;
-        _drivers[index]['type'] = type;
-        _drivers[index]['plate'] = plate;
+  void _editDriver(BuildContext context, String name, String type, String plate, String fotoUrl, int idDriver) {
+  int id = idDriver;
+  String editedName = name;
+  String editedType = type;
+  String editedPlate = plate;
+  _tempFotoConductor = _fotoConductor; // Variable temporal para guardar la foto
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Editar Conductor'),
+            content: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: Theme.of(context).primaryColor, width: 10),
+                        image: _fotoConductor == null 
+                          ? DecorationImage(
+                              image: NetworkImage(fotoUrl),
+                              fit: BoxFit.fitHeight,
+                            )
+                          : DecorationImage(
+                              image: MemoryImage(base64Decode(_fotoConductor!)),
+                              fit: BoxFit.fitHeight,
+                            )
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize: MaterialStateProperty.all(const Size(170, 30)),
+                        shape: MaterialStateProperty.all(LinearBorder.none),
+                      ),
+                      onPressed: () {
+                        selectImage().then((value) {
+                          // Actualiza la foto del conductor
+                          setState(() {
+                            _fotoConductor = _fotoConductor; // Actualiza la vista previa
+                          });
+                        });
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.photo),
+                          SizedBox(width: 10),
+                          Text('Cambiar foto'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    TextFormField(
+                      initialValue: name,
+                      decoration: const InputDecoration(labelText: 'Nombre (Ej: Rodrigo Cáceres)'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Este campo es obligatorio.';
+                        }
+                        return _regex.formValidate(
+                        _regex.name, value, 'El nombre del conductor es inválido');
+                      },
+                      onSaved: (value) {
+                        editedName = value!;
+                      },
+                    ),
+                    const SizedBox(height: 10,),
+                    TextFormField(
+                      initialValue: type,
+                      decoration: const InputDecoration(labelText: 'Tipo de Auto (Ej: Ford Fiesta)'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Este campo es obligatorio.';
+                        }
+                        return _regex.formValidate(
+                        _regex.name, value, 'El nombre del auto es inválido');
+                      },
+                      onSaved: (value) {
+                        editedType = value!;
+                      },
+                    ),
+                    const SizedBox(height: 10,),
+                    TextFormField(
+                      initialValue: plate,
+                      decoration: const InputDecoration(labelText: 'Patente'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingresa una patente válida.';
+                        }
+                        if (value.length != 6) {
+                          return 'La patente debe contener 6 carácteres';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        editedPlate = value!;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+            TextButton(
+            onPressed: () {
+              // Restaura la foto original desde la variable temporal
+              setState(() {
+                _fotoConductor = _tempFotoConductor;
+              });
+              Navigator.pop(context);
+            },
+            child: const Text('Cancelar'),
+          ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    _updateDriver(id, editedName, editedType, editedPlate, _fotoConductor ?? fotoUrl);
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Guardar'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+
+
+  void _updateDriver(int id, String name, String type, String plate, String fotoUrl) async {
+    try {
+
+      await ConductorService.actualizarConductor(
+        id: id,
+        nombre: name,
+        patente: plate,
+        tipoVehiculo: type,
+        fotoConductor: fotoUrl,
+      );
+     
+      setState(() {
+        _futureConductores = ConductorService.fetchConductores();
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error al actualizar conductor: $e');
       }
-    });
+    }
   }
 
-  void _deleteDriver(String name) {
-    setState(() {
-      // Elimina el conductor de la lista de conductores
-      _drivers.removeWhere((driver) => driver['name'] == name);
-    });
-  }
+    void _deleteDriver(int id, String name) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Eliminar Conductor'),
+            content: Text('¿Estás seguro de que deseas eliminar al conductor $name?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Cerrar el diálogo sin eliminar al conductor
+                },
+                child: const Text('Cancelar'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await ConductorService.deleteConductor(id); 
+                    if(context.mounted){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Conductor $name eliminado correctamente'),
+                      ));
+                    }// Llamar al servicio para eliminar al conductor
+                          setState(() {
+                        _futureConductores = ConductorService.fetchConductores();
+                         });
+                  } catch (e) {
+
+                    if(context.mounted){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Error al eliminar el conductor: $e'),
+                        backgroundColor: Colors.red,
+                      ));
+                    }
+                  } finally {
+
+                    if(context.mounted){
+                        Navigator.pop(context); 
+                    }
+                  }
+                },
+                child: const Text('Eliminar'),
+              ),
+            ],
+          );
+        },
+      );
+    }
 }

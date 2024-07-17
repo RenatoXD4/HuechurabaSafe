@@ -1,11 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:frontend/pages/scanner_overlay.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+
+
+
 
 class Scanner extends StatefulWidget {
   const Scanner({super.key});
+
 
   @override
   State<Scanner> createState() { // Avoid using private types in public APIs.
@@ -14,70 +18,55 @@ class Scanner extends StatefulWidget {
 }
 
 class _ScannerState extends State<Scanner> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  late QRViewController controller;
-  String scannedUrl = '';
 
+  final MobileScannerController controller = MobileScannerController();
+  
+  String? _result;
+  
   @override
   Widget build(BuildContext context) {
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 250.0
-        : 300.0;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Escanee el QR"),
+        title: const Text('Escanear QR'),
         backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/home');
+            },
+          )
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-              overlay: QrScannerOverlayShape(
-                borderColor: Colors.red,
-                borderRadius: 10,
-                borderLength: 30,
-                borderWidth: 10,
-                cutOutSize: scanArea,
-              ),
-              onPermissionSet: (ctrl, p) =>
-                  _onPermissionSet(context, ctrl, p),
-            ),
+          MobileScanner(
+            controller: controller,
+            onDetect: (BarcodeCapture capture) async {
+              List<Barcode> barcodes = capture.barcodes;
+              final barcode = barcodes.first;
+              debugPrint('Barcode found! $barcodes');
+
+              if (barcode.rawValue != null && barcode.rawValue!.contains('/perfilConductor')) {
+                setResult(barcode.rawValue);
+
+              if (await canLaunchUrlString(_result!)) {
+                  await controller.stop();
+                  await launchUrlString(_result!);
+                } else {
+                  return;
+                }
+              }
+            },
           ),
+          QRScannerOverlay(overlayColour: Colors.black.withOpacity(0.5)),
         ],
       ),
     );
   }
 
-    void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) async {
-      setState(() {
-        scannedUrl = scanData.code!;
-      });
-
-      if (await canLaunchUrlString(scannedUrl)) {
-        await launchUrlString(scannedUrl);
-      } else {
-        Text('No se puede validar la url:$scannedUrl');
-      }
-
-      // Reanudar la cámara después de lanzar el enlace
-      controller.resumeCamera();
-    });
+  void setResult(result) {
+    setState(() => _result = result);
   }
 
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
-  }
 
   @override
   void dispose() {

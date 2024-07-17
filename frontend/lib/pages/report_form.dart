@@ -1,10 +1,93 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/services/reporte_service.dart';
+import 'package:go_router/go_router.dart';
+
+import '../services/auth_service.dart';
 
 
-class ReportForm extends StatelessWidget {
-  final List<String> items = ['Alargar trayecto a propósito', 'Conducción peligrosa', 'Exceso de velocidad'];
 
-  ReportForm({super.key});
+class ReportForm extends StatefulWidget {
+  final String patente;
+  final int idConductor;
+
+  const ReportForm({super.key, required this.patente, required this.idConductor});
+
+  @override
+  State<ReportForm> createState() {
+    return _ReportFormState();
+  }
+}
+
+class _ReportFormState extends State<ReportForm> {
+  List<String> _razones = [];
+  late int usuarioId;
+  final _formKey = GlobalKey<FormState>();
+  int _selectedReasonId = 1;
+  TextEditingController comentariosController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRazones();
+    _loadUserInfo();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    comentariosController.dispose();
+  }
+
+  Future<void> _fetchRazones() async {
+    try {
+      final razones = await ReporteService.obtenerRazones();
+      setState(() {
+        _razones = razones;
+      });
+    } catch (e) {
+      // Manejar el error
+      if (kDebugMode) {
+        print('Error al obtener las razones: $e');
+      }
+    }
+  }
+
+  Future<void> _loadUserInfo() async {
+    try {
+      final userInfo = await AuthService.getUserInfo();
+      if (userInfo.containsKey('usuario_id')) {
+        final idUser = userInfo['usuario_id'];
+        setState(() {
+          usuarioId = idUser;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error al cargar la información del usuario: $e');
+      }
+    }
+  }
+
+  Future<void> _enviarReporte() async {
+    if (!_formKey.currentState!.validate()) {
+      // Si el formulario no es válido, no se envía el reporte
+      return;
+    }
+
+    try {
+      await ReporteService.crearReporte(
+        idUsuario: usuarioId,
+        idConductor: widget.idConductor,
+        comentarios: comentariosController.text,
+        razonReporte: _selectedReasonId,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error al enviar reporte: $e');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,35 +95,56 @@ class ReportForm extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Reportar conductor'),
         backgroundColor: Colors.amber.shade600,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/perfilConductor/${widget.patente}');
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            const ReportField(label: 'Nombre'),
-            _ReportReasonField(items: items), // Utiliza el nuevo campo de selección de razón de reporte
-            const ReportField(label: 'Comentarios', isMultiline: true), // Hacer este campo multilínea
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Aquí puedes manejar la lógica para enviar el reporte
-              },
-              child: const Text('Enviar Reporte'),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              _ReportReasonField(
+                key: UniqueKey(),
+                selectedReasonId: _selectedReasonId,
+                items: _razones,
+                onChanged: (int? newValue) {
+                  if(newValue != null) {
+                    setState(() {
+                      _selectedReasonId = newValue;
+                      if (kDebugMode) {
+                        print('Razón seleccionada: $_selectedReasonId');
+                      }
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              ReportField(label: 'Comentarios (Opcional)', controller: comentariosController, isMultiline: true,),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _enviarReporte,
+                child: const Text('Enviar Reporte'),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-
 class ReportField extends StatelessWidget {
   final String label;
   final bool isMultiline;
+  final TextEditingController? controller;
 
-  const ReportField({super.key, required this.label, this.isMultiline = false});
+  const ReportField({super.key, required this.label, this.isMultiline = false, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +159,9 @@ class ReportField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
-          maxLines: isMultiline ? null : 1, // Permitir múltiples líneas si es multilínea
+        TextFormField(
+          controller: controller,
+          maxLines: isMultiline ? null : 1,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
           ),
@@ -67,19 +172,12 @@ class ReportField extends StatelessWidget {
   }
 }
 
+class _ReportReasonField extends StatelessWidget {
+  final List<String> items;
+  final ValueChanged<int?>? onChanged;
+  final int selectedReasonId;
 
-
-class _ReportReasonField extends StatefulWidget {
-  final List<String> items; //Definir un arreglo de strings
-
-  const _ReportReasonField({required this.items});
-
-  @override
-  _ReportReasonFieldState createState() => _ReportReasonFieldState();
-}
-
-class _ReportReasonFieldState extends State<_ReportReasonField> {
-  String _selectedReason = 'Alargar trayecto a propósito'; // Variable para almacenar la razón seleccionada
+  const _ReportReasonField({required super.key,required this.items,required this.onChanged,required this.selectedReasonId,}) ;
 
   @override
   Widget build(BuildContext context) {
@@ -95,28 +193,24 @@ class _ReportReasonFieldState extends State<_ReportReasonField> {
           ),
         ),
         const SizedBox(height: 8),
-        DropdownButton<String>(
+        DropdownButton<int>(
           isExpanded: false,
-          value: _selectedReason,
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedReason = newValue!;
-            });
-          },
-        items: widget.items.map((String value) {
-          return DropdownMenuItem<String>(
-            alignment: Alignment.center,
-            value: value,
-            child: SizedBox(
-              width: screenWidth < 600 ? screenWidth * 0.8 : screenWidth * 0.9, // Condición para ajustar el ancho del DropdownMenuItem
-              child: Text(value),
-            ),
-          );
-        }).toList(),
+          value: selectedReasonId,
+          onChanged: onChanged,
+          items: items.asMap().entries.map((entry) {
+            final index = entry.key;
+            final reason = entry.value;
+            return DropdownMenuItem<int>(
+              value: index + 1,
+              child: SizedBox(
+                width: screenWidth < 600 ? screenWidth * 0.8 : screenWidth * 0.9,
+                child: Text(reason),
+              ),
+            );
+          }).toList(),
         ),
         const SizedBox(height: 16),
       ],
     );
   }
 }
-

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/regex.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:go_router/go_router.dart';
+
+import '../services/usuario_service.dart';
 
 class UsuarioForm extends StatefulWidget {
   const UsuarioForm({super.key});
@@ -41,36 +42,16 @@ class _UsuarioFormState extends State<UsuarioForm> {
     );
   }
 
-     // Función para crear el usuario
   Future<void> _crearUsuario() async {
-    final url = Uri.parse('http://34.176.128.126:9090/api/crearUsuario');
-    final headers = {'Content-Type': 'application/json'};
-    final body = {
-      'username': _usernameController.text,
-      'email': _emailController.text,
-      'password': _passwordController.text,
-      'rol': "1", // ID del rol de Usuario
-    };
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body),
-    );
-
-    if (response.statusCode == 201) {
-      // Usuario creado correctamente
-      print('Usuario creado correctamente');
-    } else if (response.statusCode == 400) {
-      // El correo electrónico ya está registrado
-      final responseData = json.decode(response.body);
-      final errorMessage = responseData['error']; // Usar la clave correcta del mensaje de error
-      // Verificar si el widget está montado antes de mostrar el diálogo
-      if (mounted) {
-        mostrarError(errorMessage);
-      }
-    } else {
-      // Otro error
-      print('Error al crear usuario: ${response.statusCode}');
+    try {
+      await UsuarioService.crearUsuario(
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text, 
+      );
+    } catch (e) {
+      // Maneja cualquier excepción aquí
+      mostrarError(e.toString());
     }
   }
 
@@ -80,6 +61,12 @@ class _UsuarioFormState extends State<UsuarioForm> {
       appBar: AppBar(
         title: const Text('Registro de Usuario'),
         backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.go('/');
+            },
+          )
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
