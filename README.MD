@@ -6,7 +6,7 @@ HuechurabSafe es una plataforma diseñada para centralizar la información de co
 
 Funcionalidades Principales
 
-Identificación por Patente: Permite la búsqueda de un conductor mediante la patente de su vehículo, mostrando su perfil e historial.
+Identificación por Patente: Permite la búsqueda de un conductor mediante la patente de su vehículo.
 
 Código QR Dinámico: Cada conductor tiene un código QR asociado que enlaza directamente a su perfil en la base de datos. Esto facilita el acceso rápido y seguro a la información relevante desde cualquier dispositivo móvil.
 
