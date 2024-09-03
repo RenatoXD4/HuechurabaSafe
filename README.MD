@@ -16,7 +16,7 @@ Tecnologías Utilizadas
 
 Frontend: Flutter, para ofrecer una interfaz de usuario moderna, rápida y adaptable en dispositivos móviles.
 
-Backend: Flask, encargado de manejar la lógica del servidor y la interacción con la base de datos.
+Backend: Flask con MariaDB como gestor, encargado de manejar la lógica del servidor y la interacción con la base de datos.
 
 Base de Datos: Gestionada por Flask, permite un acceso rápido y seguro a la información de los conductores.
 
