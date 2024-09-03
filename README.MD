@@ -20,6 +20,8 @@ Backend: Flask con MariaDB como gestor, encargado de manejar la lógica del serv
 
 Base de Datos: Gestionada por Flask, permite un acceso rápido y seguro a la información de los conductores.
 
+Control de Versiones: Git y GitHub.
+
 Infraestructura en la Nube: Implementación en Google Cloud, utilizando una máquina virtual configurada para garantizar la escalabilidad, seguridad y disponibilidad del servicio.
 
 Objetivos del Proyecto
