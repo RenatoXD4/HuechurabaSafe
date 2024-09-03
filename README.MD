@@ -1,61 +1,38 @@
-"Proyecto de la Municipalidad de Huechuraba"
+HuechurabSafe
 
+Descripción del Proyecto
 
-CHANGE LOG
+HuechurabSafe es una plataforma diseñada para centralizar la información de conductores y facilitar su identificación a través de la patente de sus vehículos o mediante un código QR. Este proyecto tiene como objetivo mejorar la seguridad vial y la transparencia en la comunidad de Huechuraba, permitiendo a los usuarios acceder a datos verificados sobre los conductores registrados.
 
-VERSIÓN 0.0.1 - [26-02-2024]
+Funcionalidades Principales
 
-- Creación del frontend utilizando Flutter.
-- Desarrollo del backend con Flask.
-- Utilización de MariaDB como gestor de base de datos.
-- Creación de la tabla de conductor en el backend.
+Identificación por Patente: Permite la búsqueda de un conductor mediante la patente de su vehículo, mostrando su perfil e historial.
 
-- Creación de la tabla de conductor en el backend con las siguientes columnas:
-  - id (Integer, Primary Key)
-  - nombre_conductor (String, Not Null)
-  - patente (String, Unique, Not Null)
-  - nombre_vehiculo (String, Not Null)
-  Nota: Estas tablas pueden cambiar en un futuro, en caso de que cambien los requisitos actuales.
+Código QR Dinámico: Cada conductor tiene un código QR asociado que enlaza directamente a su perfil en la base de datos. Esto facilita el acceso rápido y seguro a la información relevante desde cualquier dispositivo móvil.
 
-- Se adoptó la decisión de utilizar claves primarias y únicas en la tabla de conductor para garantizar la integridad de los datos.
+Base de Datos Centralizada: Almacena de manera segura y eficiente la información de los conductores, garantizando que los datos estén siempre disponibles y actualizados.
 
-- Cambios a realizar próximamente:
-  - Crear las interfaces para el frontend a partir de los mockUps.
-  - Implementar la lógica de negocio para interactuar con las tablas creadas hasta ahora.
-  - Hacer las conexiones del backend hacia el frontend con sus end points.
-  - Crear las operaciones CRUD en la base de datos en Flask.
+Tecnologías Utilizadas
 
+Frontend: Flutter, para ofrecer una interfaz de usuario moderna, rápida y adaptable en dispositivos móviles.
 
-VERSIÓN 0.0.2 - [20-03-2024]
+Backend: Flask, encargado de manejar la lógica del servidor y la interacción con la base de datos.
 
-- Creación de la base de datos con 2 tablas más:
-  - Tabla de Usuario:
-      - ID
-      - username
-      - email
-      - ID_ROL
+Base de Datos: Gestionada por Flask, permite un acceso rápido y seguro a la información de los conductores.
 
-    - Tabla de Rol:
-      - ID
-      - Nombre_Rol
+Infraestructura en la Nube: Implementación en Google Cloud, utilizando una máquina virtual configurada para garantizar la escalabilidad, seguridad y disponibilidad del servicio.
 
-- Se modificó la tabla de conductor para guardar fotos y obtenerlas desde la base de datos.
-- Se completa la API de las 3 tablas. Conductor, Usuario y Rol.
+Objetivos del Proyecto
 
-- Se creó parte del diseño. Específicamente:
-  - El perfil del conductor.
-  - Barra de navegación.
-  - Formulario para buscar la patente del auto.
-  
-- Cambios a realizar próximamente:
-  - Crear formulario de creación de cuenta de Usuario y Login.
-  - Validar todos los formularios.
-  - Hacer el routing en el frontend.
-  - Conectar el frontend con el backend para hacer solicitudes CRUD.
-  - Implementación del QR para buscar por patente.
-  - Pestaña de Administrador con los conductores registrados.
-  - Temas de seguridad(Hasheo de contraseñas, proteger rutas, recuperar contraseña, etc).
+Seguridad: Mejorar la seguridad de los habitantes de Huechuraba al permitir una identificación rápida y precisa de los conductores.
 
+Accesibilidad: Proveer una herramienta fácil de usar que esté disponible desde cualquier dispositivo móvil.
+
+Transparencia: Facilitar el acceso a información relevante sobre los conductores, contribuyendo a una comunidad más segura y confiable.
+
+Implementación
+
+La aplicación de HuechurabSafe está diseñada para ser escalable y segura, utilizando la infraestructura en la nube de Google Cloud para asegurar un tiempo de actividad constante y un acceso rápido a la base de datos.
 
  
 
